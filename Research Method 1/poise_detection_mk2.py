@@ -1,0 +1,210 @@
+#CMU HCII REU Summer 2018
+#PI: Dr. Sieworek
+#Students:  Blake Capella & Deepak Subramanian
+#
+#
+
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+
+import tensorflow as tf
+from tensorflow.python.data import Dataset
+import numpy as np
+import pandas as pd
+import math 
+
+
+
+#Define Flags
+tf.app.flags.DEFINE_integer('batch_size',10,'number of randomly sampled images from the training set')
+tf.app.flags.DEFINE_float('learning_rate',0.01,'how quickly the model progresses along the loss curve during optimization')
+tf.app.flags.DEFINE_integer('epochs',10,'number of passes over the training data')
+tf.app.flags.DEFINE_float('regularization_rate',0.01,'Strength of regularization')
+FLAGS = tf.app.flags.FLAGS
+
+#store file names
+file_names =[
+'Head.csv',   
+'Neck.csv',    
+'SpineShoulder.csv', 
+'SpineMid.csv',
+'SpineBase.csv',    
+'ShoulderRight.csv', 
+'ShoulderLeft.csv',  
+'HipRight.csv',
+'HipLeft.csv', 
+'ElbowRight.csv',    
+'WristRight.csv',    
+'HandRight.csv',     
+'HandTipRight.csv',  
+'ThumbRight.csv',   
+'ElbowLeft.csv',     
+'WristLeft.csv',     
+'HandLeft.csv',     
+'HandTipLeft.csv',  
+'ThumbLeft.csv',    
+'HipRight.csv',
+'KneeRight.csv',    
+'AnkleRight.csv',   
+'FootRight.csv',     
+'HipLeft.csv', 
+'KneeLeft.csv',
+'AnkleLeft.csv',     
+'FootLeft.csv']
+
+#store file names
+bodyParts =[
+'Head',   
+'Neck',    
+'SpineShoulder', 
+'SpineMid',
+'SpineBase',    
+'ShoulderRight', 
+'ShoulderLeft',  
+'HipRight',
+'HipLeft', 
+'ElbowRight',    
+'WristRight',    
+'HandRight',     
+'HandTipRight',  
+'ThumbRight',   
+'ElbowLeft',     
+'WristLeft',     
+'HandLeft',     
+'HandTipLeft',  
+'ThumbLeft',    
+'HipRight',
+'KneeRight',    
+'AnkleRight',   
+'FootRight',     
+'HipLeft', 
+'KneeLeft',
+'AnkleLeft',     
+'FootLeft']
+
+numberTestFiles = open("C:\\Users\Deepak Subramanian\Documents\Internship\HCII Research (2018)\\task_sequencer_v2\Data\\TestNumber.txt", "r")
+numberTests = numberTestFiles.read()
+
+#read data from files
+#features [event] [body part] [time stamp]
+
+def extract_data():
+	data =  np.empty((int(numberTests),27,200,4))
+	data[:] = np.nan
+	for i in range(0, int(numberTests)):
+		for j in range(0, 27):
+			k = 0
+			for line in open("C:\\Users\Deepak Subramanian\Documents\Internship\HCII Research (2018)\\task_sequencer_v2\Data\\test" + str(i)+ "\\Position_" + file_names[j]):
+				row = line.split(',')
+				for l in range(0,3):
+					data[i][j][k][l] = row[l]
+				k = k +1
+	labels = []
+	#labels = np.empty((int(numberTests),1), dtype=str)
+	for i in range (0, int(numberTests)):
+		for line in open("C:\\Users\Deepak Subramanian\Documents\Internship\HCII Research (2018)\\task_sequencer_v2\Data\\test" + str(i)+ "\\label.csv"):
+			labels.append(line.strip('\n'))
+
+	shuffledData = np.empty(data.shape, dtype=data.dtype)
+	shuffledLabels = labels
+	permutation = np.random.permutation(len(labels))
+	for old_index, new_index in enumerate(permutation):
+		shuffledData[new_index] = data[old_index]
+		shuffledLabels[new_index] = labels[old_index]
+
+	shuffledLabels = np.asarray(shuffledLabels)
+
+	return shuffledData, shuffledLabels
+
+def partition_data(features, labels):
+	
+	train = math.floor(float(numberTests) * .7)
+	validation = math.floor(float(numberTests) * .2)
+	test = math.ceil(float(numberTests) * .1)
+
+	trainLabels = labels[:train]
+	trainFeatures = features[:train]
+	validationLabels = labels[train:train+validation]
+	validationFeatures = features[train:train+validation]
+	testLabels = labels[validation:validation+test]
+	testFeatures = features[validation:validation+test]
+
+	return trainLabels, trainFeatures, validationLabels, validationFeatures, testLabels, testFeatures
+
+def one_hot(labels):
+	one_hot_labels = []
+	for i in range(0,len(labels)):
+		if(labels[i].lower() == "y"):
+			one_hot_labels.append([1,0,0,0,0,0,0,0,0,0,0])
+		elif(labels[i].lower() == "cat"):
+			one_hot_labels.append([0,1,0,0,0,0,0,0,0,0,0])
+		elif(labels[i].lower() == "supine"):
+			one_hot_labels.append([0,0,1,0,0,0,0,0,0,0,0])
+		elif(labels[i].lower() == "seated"):
+			one_hot_labels.append([0,0,0,1,0,0,0,0,0,0,0])
+		elif(labels[i].lower() == "sumo"):
+			one_hot_labels.append([0,0,0,0,1,0,0,0,0,0,0])
+		elif(labels[i].lower() == "mermaid"):
+			one_hot_labels.append([0,0,0,0,0,1,0,0,0,0,0])
+		elif(labels[i].lower() == "towel"):
+			one_hot_labels.append([0,0,0,0,0,0,1,0,0,0,0])
+		elif(labels[i].lower() == "trunk"):
+			one_hot_labels.append([0,0,0,0,0,0,0,1,0,0,0])
+		elif(labels[i].lower() == "wall"):
+			one_hot_labels.append([0,0,0,0,0,0,0,0,1,0,0])
+		elif(labels[i].lower() == "pretzel"):
+			one_hot_labels.append([0,0,0,0,0,0,0,0,0,1,0])
+		else: #OOV
+			one_hot_labels.append([0,0,0,0,0,0,0,0,0,0,1])
+	one_hot_labels = np.asarray(one_hot_labels)
+	return one_hot_labels
+
+def constructFeatures():
+	return set ([tf.feature_column.numeric_column(bodyPartFeatures)
+		for bodyPartFeatures in bodyParts])
+	
+def my_input(bodyPartFeatures, labels, batch_size, numEpochs):
+	ds = Dataset.from_tensor_slices((bodyPartFeatures, labels))
+	ds = ds.batch(batch_size).repeat(numEpochs)
+	ds = ds.shuffle(int(numberTests))
+	feature_batch, label_batch, = ds.make_one_shot_iterator().get_next()
+
+	return feature_batch, label_batch
+
+def create_predict_fn(bodyPartFeatures, labels, batch_size):
+	ds = Dataset.from_tensor_slices((bodyPartFeatures, labels))
+	ds = ds.batch(batch_size) 
+	feature_batch, label_batch, = ds.make_one_shot_iterator().get_next()
+
+	return feature_batch, label_batch
+
+def train(steps, hiddenUnits, trainFeatures, trainLabels, vFeatures, vLabels):
+	numEpochs = FLAGS.epochs 
+	batchSize = FLAGS.batch_size
+	learningRate = FLAGS.learning_rate
+	
+	#regularizationRate = FLAGS.regularization_rate
+
+	period = 10
+	stepsPerPeriod = steps/period
+
+
+
+def main(argv = None):
+	features, labels = extract_data()
+	trainLabels, trainFeatures, vLabels, vFeatures, testLabels, testFeatures = partition_data(features, labels)
+	featureColumns = constructFeatures();
+
+	test, test2 = my_input(trainFeatures, trainLabels, 1, 1)
+	
+if __name__ == '__main__':
+	main()
+	
+	
+	
+	
+	
+	
+	
+
+	
