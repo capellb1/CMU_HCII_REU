@@ -4,6 +4,8 @@
 #
 #
 
+import math
+import io
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
@@ -12,6 +14,12 @@ from tensorflow.python.data import Dataset
 import numpy as np
 import pandas as pd
 import math 
+from IPython import display
+from matplotlib import cm
+from matplotlib import gridspec
+from matplotlib import pyplot as plt
+from sklearn import metrics
+import seaborn as sns
 
 
 
@@ -20,6 +28,7 @@ tf.app.flags.DEFINE_integer('batch_size',10,'number of randomly sampled images f
 tf.app.flags.DEFINE_float('learning_rate',0.01,'how quickly the model progresses along the loss curve during optimization')
 tf.app.flags.DEFINE_integer('epochs',10,'number of passes over the training data')
 tf.app.flags.DEFINE_float('regularization_rate',0.01,'Strength of regularization')
+
 FLAGS = tf.app.flags.FLAGS
 
 #store file names
@@ -163,22 +172,26 @@ def constructFeatures():
 	return set ([tf.feature_column.numeric_column(bodyPartFeatures)
 		for bodyPartFeatures in bodyParts])
 	
-def my_input(bodyPartFeatures, labels, batch_size, numEpochs):
-	ds = Dataset.from_tensor_slices((bodyPartFeatures, labels))
-	ds = ds.batch(batch_size).repeat(numEpochs)
-	ds = ds.shuffle(int(numberTests))
-	feature_batch, label_batch, = ds.make_one_shot_iterator().get_next()
+def createTrainingFunction (bodyPartFeatures, labels, batch_size, numEpochs):
+	def my_input(numEpochs):
+		ds = Dataset.from_tensor_slices((bodyPartFeatures, labels))
+		ds = ds.batch(batch_size).repeat(numEpochs)
+		ds = ds.shuffle(int(numberTests))
+		feature_batch, label_batch, = ds.make_one_shot_iterator().get_next()
 
-	return feature_batch, label_batch
+		return feature_batch, label_batch
+	return my_input
 
-def create_predict_fn(bodyPartFeatures, labels, batch_size):
-	ds = Dataset.from_tensor_slices((bodyPartFeatures, labels))
-	ds = ds.batch(batch_size) 
-	feature_batch, label_batch, = ds.make_one_shot_iterator().get_next()
+def createPredictFunction (bodyPartFeatures, labels, batch_size):	
+	def create_predict_fn():
+		ds = Dataset.from_tensor_slices((bodyPartFeatures, labels))
+		ds = ds.batch(batch_size) 
+		feature_batch, label_batch, = ds.make_one_shot_iterator().get_next()
 
-	return feature_batch, label_batch
+		return feature_batch, label_batch
+	return create_predict_fn
 
-def train(steps, hiddenUnits, trainFeatures, trainLabels, vFeatures, vLabels):
+def train(hiddenUnits, steps, trainFeatures, trainLabels, vFeatures, vLabels):
 	numEpochs = FLAGS.epochs 
 	batchSize = FLAGS.batch_size
 	learningRate = FLAGS.learning_rate
@@ -188,15 +201,74 @@ def train(steps, hiddenUnits, trainFeatures, trainLabels, vFeatures, vLabels):
 	period = 10
 	stepsPerPeriod = steps/period
 
+	predictTrainFunction = createPredictFunction(trainFeatures, trainLabels, batchSize)
+	predictValidationFunction = createPredictFunction(vFeatures, vLabels, batchSize)
+	trainingFunction = createTrainingFunction(trainFeatures, trainLabels, batchSize, numEpochs)
+
+	featureColumns = constructFeatures();
+
+	my_optimizer = tf.train.AdagradOptimizer(learning_rate = learningRate)
+	my_optimizer = tf.contrib.estimator.clip_gradients_by_norm(my_optimizer, 5.0)
+	classifier = tf.estimator.DNNClassifier (feature_columns = featureColumns, n_classes = 10, hiddenUnits = hiddenUnits, optimizer = my_optimizer, config = tf.contrib.learn.RunConfic(keep_checkpoint_max = 1))
+
+	print ("Training model...")
+	print ("LogLoss error (on validation data):")
+	training_errors = []
+	validation_errors = []
+	for period in range (0, periods):
+		classifier.train(
+			input_fn = trainingFunction, steps = stepsPerPeriod
+		)
+
+	training_predictions = list(classifier.predict(input_fn = predictTrainFunction))
+	training_probabilities = np.array([item['probablities'] for item in training_predictions])
+	training_pred_class_id = np.array([item['class_ides'][0] for item in training_predictions])
+	training_pred_one_hot = tf.keras.utils.to_categorical(training_pred_class_id, 10)
+
+	validation_predictions = list(classifier.predict(input_fn = predictValidationFunction))
+	validation_probabilities = np.array([item['probablities'] for item in validation_predictions])
+	validation_pred_class_id = np.array([item['class_ides'][0] for item in validation_predictions])
+	validation_pred_one_hot = tf.keras.utils.to_categorical(validation_pred_class_id, 10)
+
+	training_log_loss = metrics.log_loss(training_targets, training_pred_one_hot)
+	validation_log_loss = metrics.log_loss(validation_targets, validation_pred_one_hot)
+
+	print(" period %02d: %0.2f" % (period, validation_log_loss))
+	training_errors.append(training_log_loss)
+	print("Model training finished")
+
+	_ = map(os.remove, glob.glob(os.path.join(classifier.model_dir,'events.out.tfevents*')))
+
+	final_predictions = classifier.predict(input_fn = predictValidationFunction)
+	final_predictions = np.array([item['class_ids'][0] for item in final_predictions])
+
+	plt.ylabel("LogLoss")
+	plt.xlabel("Periods")
+	plt.title("Logloss vs Periods")
+	plt.plot(training_errors, label="training")
+	plt.plot(validation_errors, label="validation")
+	plt.legend()
+	plt.show()
+
+	cm = metrics.confusion_matrix(validation_targets, final_predictions)
+	cm_normalized = cm.astype("float") / cm.sum(axis=1) [:, np.newaxis]
+	ax = sns.heatmap(cm_normalized, cmap = "bone_r")
+	ax.set_aspect(1)
+	plt.title("Confusion matrix")
+	plt.ylabel("True label")
+	plt.xlabel ("Predicted label")
+	plt.show()
+
+	return classifier
 
 
 def main(argv = None):
 	features, labels = extract_data()
 	trainLabels, trainFeatures, vLabels, vFeatures, testLabels, testFeatures = partition_data(features, labels)
-	featureColumns = constructFeatures();
+	hiddenUnits = [100, 100]
+	classifier = train(hiddenUnits, 100, trainFeatures, trainLabels, vFeatures, vLabels)
 
-	test, test2 = my_input(trainFeatures, trainLabels, 1, 1)
-	
+
 if __name__ == '__main__':
 	main()
 	
