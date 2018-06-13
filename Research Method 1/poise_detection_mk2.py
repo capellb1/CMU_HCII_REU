@@ -91,19 +91,31 @@ bodyParts =[
 'AnkleLeft',     
 'FootLeft']
 
-numberTestFiles = open("C:\\Users\Deepak Subramanian\Documents\Internship\HCII Research (2018)\\task_sequencer_v2\Data\\TestNumber.txt", "r")
+numberTestFiles = open("D:\\CMU\\kinect_data\\TestNumber.txt", "r")
+#numberTestFiles = open("C:\\Users\Deepak Subramanian\Documents\Internship\HCII Research (2018)\\task_sequencer_v2\Data\\TestNumber.txt", "r")
+
 numberTests = numberTestFiles.read()
+
+maxEntries = 0
+for i in range(0,len(numberTests)):
+	numEntries = 0
+	for j in range(0,27):
+		for line in open ("D:\\CMU\kinect_data\\test" + str(i)+ "\\Position_" + file_names[j]):
+			numEntries = numEntries + 1
+		if (numEntries > maxEntries):
+			maxEntries = numEntries	
 
 #read data from files
 #features [event] [body part] [time stamp]
 
 def extract_data():
-	data =  np.empty((int(numberTests),27,200,4))
+	data =  np.empty((int(numberTests),27, maxEntries,3))
 	data[:] = np.nan
 	for i in range(0, int(numberTests)):
 		for j in range(0, 27):
 			k = 0
-			for line in open("C:\\Users\Deepak Subramanian\Documents\Internship\HCII Research (2018)\\task_sequencer_v2\Data\\test" + str(i)+ "\\Position_" + file_names[j]):
+			for line in open("D:\\CMU\kinect_data\\test" + str(i)+ "\\Position_" + file_names[j]):			
+			#for line in open("C:\\Users\Deepak Subramanian\Documents\Internship\HCII Research (2018)\\task_sequencer_v2\Data\\test" + str(i)+ "\\Position_" + file_names[j]):
 				row = line.split(',')
 				for l in range(0,3):
 					data[i][j][k][l] = row[l]
@@ -111,7 +123,8 @@ def extract_data():
 	labels = []
 	#labels = np.empty((int(numberTests),1), dtype=str)
 	for i in range (0, int(numberTests)):
-		for line in open("C:\\Users\Deepak Subramanian\Documents\Internship\HCII Research (2018)\\task_sequencer_v2\Data\\test" + str(i)+ "\\label.csv"):
+		for line in open("D:\\CMU\kinect_data\\test" + str(i)+ "\\label.csv"):			
+		#for line in open("C:\\Users\Deepak Subramanian\Documents\Internship\HCII Research (2018)\\task_sequencer_v2\Data\\test" + str(i)+ "\\label.csv"):
 			labels.append(line.strip('\n'))
 
 	shuffledData = np.empty(data.shape, dtype=data.dtype)
@@ -144,27 +157,27 @@ def one_hot(labels):
 	one_hot_labels = []
 	for i in range(0,len(labels)):
 		if(labels[i].lower() == "y"):
-			one_hot_labels.append([1,0,0,0,0,0,0,0,0,0,0])
+			one_hot_labels.append([0])
 		elif(labels[i].lower() == "cat"):
-			one_hot_labels.append([0,1,0,0,0,0,0,0,0,0,0])
+			one_hot_labels.append([1])
 		elif(labels[i].lower() == "supine"):
-			one_hot_labels.append([0,0,1,0,0,0,0,0,0,0,0])
+			one_hot_labels.append([2])
 		elif(labels[i].lower() == "seated"):
-			one_hot_labels.append([0,0,0,1,0,0,0,0,0,0,0])
+			one_hot_labels.append([3])
 		elif(labels[i].lower() == "sumo"):
-			one_hot_labels.append([0,0,0,0,1,0,0,0,0,0,0])
+			one_hot_labels.append([4])
 		elif(labels[i].lower() == "mermaid"):
-			one_hot_labels.append([0,0,0,0,0,1,0,0,0,0,0])
+			one_hot_labels.append([5])
 		elif(labels[i].lower() == "towel"):
-			one_hot_labels.append([0,0,0,0,0,0,1,0,0,0,0])
+			one_hot_labels.append([6])
 		elif(labels[i].lower() == "trunk"):
-			one_hot_labels.append([0,0,0,0,0,0,0,1,0,0,0])
+			one_hot_labels.append([7])
 		elif(labels[i].lower() == "wall"):
-			one_hot_labels.append([0,0,0,0,0,0,0,0,1,0,0])
+			one_hot_labels.append([8])
 		elif(labels[i].lower() == "pretzel"):
-			one_hot_labels.append([0,0,0,0,0,0,0,0,0,1,0])
+			one_hot_labels.append([9])
 		else: #OOV
-			one_hot_labels.append([0,0,0,0,0,0,0,0,0,0,1])
+			one_hot_labels.append([10])
 	one_hot_labels = np.asarray(one_hot_labels)
 	return one_hot_labels
 
@@ -172,9 +185,17 @@ def constructFeatures():
 	return set ([tf.feature_column.numeric_column(bodyPartFeatures)
 		for bodyPartFeatures in bodyParts])
 	
-def createTrainingFunction (bodyPartFeatures, labels, batch_size, numEpochs):
-	def my_input(numEpochs):
-		ds = Dataset.from_tensor_slices((bodyPartFeatures, labels))
+def createTrainingFunction (bodyPartFeatures, labels, batch_size, numEpochs = None):
+	def my_input(numEpochs = None):
+		featureDictionary = dict()
+		for i in range(0,27):
+			tempArray = []
+			for j in range(0,len(bodyPartFeatures)):
+				tempArray.append(bodyPartFeatures[j][i])
+			tempArray = np.asarray(tempArray)
+			featureDictionary[bodyParts[i]] = tempArray
+		
+		ds = Dataset.from_tensor_slices((featureDictionary, labels))
 		ds = ds.batch(batch_size).repeat(numEpochs)
 		ds = ds.shuffle(int(numberTests))
 		feature_batch, label_batch, = ds.make_one_shot_iterator().get_next()
@@ -184,7 +205,15 @@ def createTrainingFunction (bodyPartFeatures, labels, batch_size, numEpochs):
 
 def createPredictFunction (bodyPartFeatures, labels, batch_size):	
 	def create_predict_fn():
-		ds = Dataset.from_tensor_slices((bodyPartFeatures, labels))
+		featureDictionary = dict()
+		for i in range(0,27):
+			tempArray = []
+			for j in range(0,len(bodyPartFeatures)):
+				tempArray.append(bodyPartFeatures[j][i])
+			tempArray = np.asarray(tempArray)
+			featureDictionary[bodyParts[i]] = tempArray
+		
+		ds = Dataset.from_tensor_slices((featureDictionary, labels))
 		ds = ds.batch(batch_size) 
 		feature_batch, label_batch, = ds.make_one_shot_iterator().get_next()
 
@@ -197,9 +226,8 @@ def train(hiddenUnits, steps, trainFeatures, trainLabels, vFeatures, vLabels):
 	learningRate = FLAGS.learning_rate
 	
 	#regularizationRate = FLAGS.regularization_rate
-
-	period = 10
-	stepsPerPeriod = steps/period
+	periods = 10
+	stepsPerPeriod = steps/periods
 
 	predictTrainFunction = createPredictFunction(trainFeatures, trainLabels, batchSize)
 	predictValidationFunction = createPredictFunction(vFeatures, vLabels, batchSize)
@@ -209,7 +237,7 @@ def train(hiddenUnits, steps, trainFeatures, trainLabels, vFeatures, vLabels):
 
 	my_optimizer = tf.train.AdagradOptimizer(learning_rate = learningRate)
 	my_optimizer = tf.contrib.estimator.clip_gradients_by_norm(my_optimizer, 5.0)
-	classifier = tf.estimator.DNNClassifier (feature_columns = featureColumns, n_classes = 10, hiddenUnits = hiddenUnits, optimizer = my_optimizer, config = tf.contrib.learn.RunConfic(keep_checkpoint_max = 1))
+	classifier = tf.estimator.DNNClassifier(feature_columns = featureColumns, n_classes = 11, hidden_units = hiddenUnits, optimizer = my_optimizer, config = tf.estimator.RunConfig(keep_checkpoint_max = 1))
 
 	print ("Training model...")
 	print ("LogLoss error (on validation data):")
@@ -223,12 +251,12 @@ def train(hiddenUnits, steps, trainFeatures, trainLabels, vFeatures, vLabels):
 	training_predictions = list(classifier.predict(input_fn = predictTrainFunction))
 	training_probabilities = np.array([item['probablities'] for item in training_predictions])
 	training_pred_class_id = np.array([item['class_ides'][0] for item in training_predictions])
-	training_pred_one_hot = tf.keras.utils.to_categorical(training_pred_class_id, 10)
+	training_pred_one_hot = tf.keras.utils.to_categorical(training_pred_class_id, 11)
 
 	validation_predictions = list(classifier.predict(input_fn = predictValidationFunction))
 	validation_probabilities = np.array([item['probablities'] for item in validation_predictions])
 	validation_pred_class_id = np.array([item['class_ides'][0] for item in validation_predictions])
-	validation_pred_one_hot = tf.keras.utils.to_categorical(validation_pred_class_id, 10)
+	validation_pred_one_hot = tf.keras.utils.to_categorical(validation_pred_class_id, 11)
 
 	training_log_loss = metrics.log_loss(training_targets, training_pred_one_hot)
 	validation_log_loss = metrics.log_loss(validation_targets, validation_pred_one_hot)
@@ -264,6 +292,7 @@ def train(hiddenUnits, steps, trainFeatures, trainLabels, vFeatures, vLabels):
 
 def main(argv = None):
 	features, labels = extract_data()
+	labels= one_hot(labels)
 	trainLabels, trainFeatures, vLabels, vFeatures, testLabels, testFeatures = partition_data(features, labels)
 	hiddenUnits = [100, 100]
 	classifier = train(hiddenUnits, 100, trainFeatures, trainLabels, vFeatures, vLabels)
