@@ -20,12 +20,13 @@ from matplotlib import gridspec
 from matplotlib import pyplot as plt
 from sklearn import metrics
 import seaborn as sns
+import glob
 
 
 
 #Define Flags
 tf.app.flags.DEFINE_integer('batch_size',10,'number of randomly sampled images from the training set')
-tf.app.flags.DEFINE_float('learning_rate',0.01,'how quickly the model progresses along the loss curve during optimization')
+tf.app.flags.DEFINE_float('learning_rate',0.001,'how quickly the model progresses along the loss curve during optimization')
 tf.app.flags.DEFINE_integer('epochs',10,'number of passes over the training data')
 tf.app.flags.DEFINE_float('regularization_rate',0.01,'Strength of regularization')
 
@@ -91,8 +92,8 @@ bodyParts =[
 'AnkleLeft',     
 'FootLeft']
 
-numberTestFiles = open("D:\\CMU\\kinect_data\\TestNumber.txt", "r")
-#numberTestFiles = open("C:\\Users\Deepak Subramanian\Documents\Internship\HCII Research (2018)\\task_sequencer_v2\Data\\TestNumber.txt", "r")
+#numberTestFiles = open("D:\\CMU\\kinect_data\\TestNumber.txt", "r")
+numberTestFiles = open("C:\\Users\Deepak Subramanian\Documents\Internship\HCII Research (2018)\\task_sequencer_v2\Data\\TestNumber.txt", "r")
 
 numberTests = numberTestFiles.read()
 
@@ -100,7 +101,9 @@ maxEntries = 0
 for i in range(0,len(numberTests)):
 	numEntries = 0
 	for j in range(0,27):
-		for line in open ("D:\\CMU\kinect_data\\test" + str(i)+ "\\Position_" + file_names[j]):
+		#for line in open ("D:\\CMU\kinect_data\\test" + str(i)+ "\\Position_" + file_names[j]):
+		for line in open("C:\\Users\Deepak Subramanian\Documents\Internship\HCII Research (2018)\\task_sequencer_v2\Data\\test" + str(i)+ "\\Position_" + file_names[j]):
+
 			numEntries = numEntries + 1
 		if (numEntries > maxEntries):
 			maxEntries = numEntries	
@@ -110,12 +113,11 @@ for i in range(0,len(numberTests)):
 
 def extract_data():
 	data =  np.empty((int(numberTests),27, maxEntries,3))
-	data[:] = np.nan
 	for i in range(0, int(numberTests)):
 		for j in range(0, 27):
 			k = 0
-			for line in open("D:\\CMU\kinect_data\\test" + str(i)+ "\\Position_" + file_names[j]):			
-			#for line in open("C:\\Users\Deepak Subramanian\Documents\Internship\HCII Research (2018)\\task_sequencer_v2\Data\\test" + str(i)+ "\\Position_" + file_names[j]):
+			#for line in open("D:\\CMU\kinect_data\\test" + str(i)+ "\\Position_" + file_names[j]):			
+			for line in open("C:\\Users\Deepak Subramanian\Documents\Internship\HCII Research (2018)\\task_sequencer_v2\Data\\test" + str(i)+ "\\Position_" + file_names[j]):
 				row = line.split(',')
 				for l in range(0,3):
 					data[i][j][k][l] = row[l]
@@ -123,8 +125,8 @@ def extract_data():
 	labels = []
 	#labels = np.empty((int(numberTests),1), dtype=str)
 	for i in range (0, int(numberTests)):
-		for line in open("D:\\CMU\kinect_data\\test" + str(i)+ "\\label.csv"):			
-		#for line in open("C:\\Users\Deepak Subramanian\Documents\Internship\HCII Research (2018)\\task_sequencer_v2\Data\\test" + str(i)+ "\\label.csv"):
+		#for line in open("D:\\CMU\kinect_data\\test" + str(i)+ "\\label.csv"):			
+		for line in open("C:\\Users\Deepak Subramanian\Documents\Internship\HCII Research (2018)\\task_sequencer_v2\Data\\test" + str(i)+ "\\label.csv"):
 			labels.append(line.strip('\n'))
 
 	shuffledData = np.empty(data.shape, dtype=data.dtype)
@@ -181,12 +183,44 @@ def one_hot(labels):
 	one_hot_labels = np.asarray(one_hot_labels)
 	return one_hot_labels
 
+def oneHotArray(labels):
+	one_hot_labels = []
+	for i in range(0,len(labels)):
+		if(labels[i] == 0):
+			one_hot_labels.append([1,0,0,0,0,0,0,0,0,0,0])
+		elif(labels[i] == 1):
+			one_hot_labels.append([0,1,0,0,0,0,0,0,0,0,0])
+		elif(labels[i] == 2):
+			one_hot_labels.append([0,0,1,0,0,0,0,0,0,0,0])
+		elif(labels[i] == 3):
+			one_hot_labels.append([0,0,0,1,0,0,0,0,0,0,0])
+		elif(labels[i] == 4):
+			one_hot_labels.append([0,0,0,0,1,0,0,0,0,0,0])
+		elif(labels[i] == 5):
+			one_hot_labels.append([0,0,0,0,0,1,0,0,0,0,0])
+		elif(labels[i] == 6):
+			one_hot_labels.append([0,0,0,0,0,0,1,0,0,0,0])
+		elif(labels[i] == 7):
+			one_hot_labels.append([0,0,0,0,0,0,0,1,0,0,0])
+		elif(labels[i] == 8):
+			one_hot_labels.append([0,0,0,0,0,0,0,0,1,0,0])
+		elif(labels[i] == 9):
+			one_hot_labels.append([0,0,0,0,0,0,0,0,0,1,0])
+		else: #OOV
+			one_hot_labels.append([0,0,0,0,0,0,0,0,0,0,1])
+	one_hot_labels = np.asarray(one_hot_labels)
+	return one_hot_labels
+
 def constructFeatures():
-	return set ([tf.feature_column.numeric_column(bodyPartFeatures)
+	return set ([tf.feature_column.numeric_column(bodyPartFeatures, shape=[maxEntries,3])
 		for bodyPartFeatures in bodyParts])
 	
 def createTrainingFunction (bodyPartFeatures, labels, batch_size, numEpochs = None):
 	def my_input(numEpochs = None):
+		print(len(bodyPartFeatures))
+		print(len(bodyPartFeatures[0]))
+		print(len(bodyPartFeatures[0][1]))
+		print(len(bodyPartFeatures[0][0][0]))
 		featureDictionary = dict()
 		for i in range(0,27):
 			tempArray = []
@@ -196,6 +230,8 @@ def createTrainingFunction (bodyPartFeatures, labels, batch_size, numEpochs = No
 			featureDictionary[bodyParts[i]] = tempArray
 		
 		ds = Dataset.from_tensor_slices((featureDictionary, labels))
+		
+
 		ds = ds.batch(batch_size).repeat(numEpochs)
 		ds = ds.shuffle(int(numberTests))
 		feature_batch, label_batch, = ds.make_one_shot_iterator().get_next()
@@ -243,32 +279,38 @@ def train(hiddenUnits, steps, trainFeatures, trainLabels, vFeatures, vLabels):
 	print ("LogLoss error (on validation data):")
 	training_errors = []
 	validation_errors = []
+	trainLabels = oneHotArray(trainLabels)
+	vLabels2 = oneHotArray(vLabels)
 	for period in range (0, periods):
+		print("Training in for")
 		classifier.train(
 			input_fn = trainingFunction, steps = stepsPerPeriod
 		)
 
-	training_predictions = list(classifier.predict(input_fn = predictTrainFunction))
-	training_probabilities = np.array([item['probablities'] for item in training_predictions])
-	training_pred_class_id = np.array([item['class_ides'][0] for item in training_predictions])
-	training_pred_one_hot = tf.keras.utils.to_categorical(training_pred_class_id, 11)
+		training_predictions = list(classifier.predict(input_fn = predictTrainFunction))
+		training_probabilities = np.array([item['probabilities'] for item in training_predictions])
+		training_pred_class_id = np.array([item['class_ids'][0] for item in training_predictions])
+		training_pred_one_hot = tf.keras.utils.to_categorical(training_pred_class_id, 11)
 
-	validation_predictions = list(classifier.predict(input_fn = predictValidationFunction))
-	validation_probabilities = np.array([item['probablities'] for item in validation_predictions])
-	validation_pred_class_id = np.array([item['class_ides'][0] for item in validation_predictions])
-	validation_pred_one_hot = tf.keras.utils.to_categorical(validation_pred_class_id, 11)
+		validation_predictions = list(classifier.predict(input_fn = predictValidationFunction))
+		validation_probabilities = np.array([item['probabilities'] for item in validation_predictions])
+		validation_pred_class_id = np.array([item['class_ids'][0] for item in validation_predictions])
+		validation_pred_one_hot = tf.keras.utils.to_categorical(validation_pred_class_id, 11)
 
-	training_log_loss = metrics.log_loss(training_targets, training_pred_one_hot)
-	validation_log_loss = metrics.log_loss(validation_targets, validation_pred_one_hot)
+		training_log_loss = metrics.log_loss(trainLabels, training_pred_one_hot)
+		validation_log_loss = metrics.log_loss(vLabels2, validation_pred_one_hot)
 
-	print(" period %02d: %0.2f" % (period, validation_log_loss))
-	training_errors.append(training_log_loss)
+		print(" period %02d: %0.2f" % (period, validation_log_loss))
+		training_errors.append(training_log_loss)
 	print("Model training finished")
 
 	_ = map(os.remove, glob.glob(os.path.join(classifier.model_dir,'events.out.tfevents*')))
 
 	final_predictions = classifier.predict(input_fn = predictValidationFunction)
 	final_predictions = np.array([item['class_ids'][0] for item in final_predictions])
+
+	accuracy = metrics.accuracy_score(vLabels, final_predictions)
+	print("Final accuracy (on vlidation data): %0.2f" % accuracy)
 
 	plt.ylabel("LogLoss")
 	plt.xlabel("Periods")
@@ -278,7 +320,7 @@ def train(hiddenUnits, steps, trainFeatures, trainLabels, vFeatures, vLabels):
 	plt.legend()
 	plt.show()
 
-	cm = metrics.confusion_matrix(validation_targets, final_predictions)
+	cm = metrics.confusion_matrix(vLabels, final_predictions)
 	cm_normalized = cm.astype("float") / cm.sum(axis=1) [:, np.newaxis]
 	ax = sns.heatmap(cm_normalized, cmap = "bone_r")
 	ax.set_aspect(1)
@@ -295,7 +337,16 @@ def main(argv = None):
 	labels= one_hot(labels)
 	trainLabels, trainFeatures, vLabels, vFeatures, testLabels, testFeatures = partition_data(features, labels)
 	hiddenUnits = [100, 100]
+	print ("About to train")
 	classifier = train(hiddenUnits, 100, trainFeatures, trainLabels, vFeatures, vLabels)
+
+	predict_test_input_fn = createPredictFunction(testFeatures, testLabels, 100)
+
+	test_predictions = classifier.predict(input_fn=predict_test_input_fn)
+	test_predictions = np.array([item['class_ids'][0] for item in test_predictions])
+
+	accuracy = metrics.accuracy_score(testLabels, test_predictions)
+	print("Final accuracy (on test data): %0.2f" % accuracy)
 
 
 if __name__ == '__main__':
