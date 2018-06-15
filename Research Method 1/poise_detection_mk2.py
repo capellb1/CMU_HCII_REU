@@ -2,7 +2,7 @@
 #PI: Dr. Sieworek
 #Students:  Blake Capella & Deepak Subramanian
 #
-#
+#MUST HAVE AT LEAST 5 files
 
 import math
 import io
@@ -92,20 +92,19 @@ bodyParts =[
 'AnkleLeft',     
 'FootLeft']
 
-#numberTestFiles = open("D:\\CMU\\kinect_data\\TestNumber.txt", "r")
-numberTestFiles = open("C:\\Users\Deepak Subramanian\Documents\Internship\HCII Research (2018)\\task_sequencer_v2\Data\\TestNumber.txt", "r")
+dirname = os.path.realpath('.')
+filename = dirname + '\\Data\\TestNumber.txt'
 
+numberTestFiles = open(filename,"r")
 numberTests = numberTestFiles.read()
 
 maxEntries = 0
 for i in range(0,len(numberTests)):
 	numEntries = 0
 	for j in range(0,27):
-		#for line in open ("D:\\CMU\kinect_data\\test" + str(i)+ "\\Position_" + file_names[j]):
-		for line in open("C:\\Users\Deepak Subramanian\Documents\Internship\HCII Research (2018)\\task_sequencer_v2\Data\\test" + str(i)+ "\\Position_" + file_names[j]):
-
+		for line in open(dirname + "\\Data\\test" + str(i) + "\\Position_" + file_names[j]):
 			numEntries = numEntries + 1
-		if (numEntries > maxEntries):
+		if numEntries > maxEntries:
 			maxEntries = numEntries	
 
 #read data from files
@@ -116,8 +115,7 @@ def extract_data():
 	for i in range(0, int(numberTests)):
 		for j in range(0, 27):
 			k = 0
-			#for line in open("D:\\CMU\kinect_data\\test" + str(i)+ "\\Position_" + file_names[j]):			
-			for line in open("C:\\Users\Deepak Subramanian\Documents\Internship\HCII Research (2018)\\task_sequencer_v2\Data\\test" + str(i)+ "\\Position_" + file_names[j]):
+			for line in open(dirname + "\\Data\\test" + str(i)+ "\\Position_" + file_names[j]):
 				row = line.split(',')
 				for l in range(0,3):
 					data[i][j][k][l] = row[l]
@@ -125,9 +123,8 @@ def extract_data():
 	labels = []
 	#labels = np.empty((int(numberTests),1), dtype=str)
 	for i in range (0, int(numberTests)):
-		#for line in open("D:\\CMU\kinect_data\\test" + str(i)+ "\\label.csv"):			
-		for line in open("C:\\Users\Deepak Subramanian\Documents\Internship\HCII Research (2018)\\task_sequencer_v2\Data\\test" + str(i)+ "\\label.csv"):
-			labels.append(line.strip('\n'))
+		for line in open(dirname + "\\Data\\test" + str(i)+ "\\label.csv"):
+			labels.append(str(line.split()))
 
 	shuffledData = np.empty(data.shape, dtype=data.dtype)
 	shuffledLabels = labels
@@ -158,25 +155,25 @@ def partition_data(features, labels):
 def one_hot(labels):
 	one_hot_labels = []
 	for i in range(0,len(labels)):
-		if(labels[i].lower() == "y"):
+		if labels[i].lower() == "y":
 			one_hot_labels.append([0])
-		elif(labels[i].lower() == "cat"):
+		elif labels[i].lower() == "cat":
 			one_hot_labels.append([1])
-		elif(labels[i].lower() == "supine"):
+		elif labels[i].lower() == "supine":
 			one_hot_labels.append([2])
-		elif(labels[i].lower() == "seated"):
+		elif labels[i].lower() == "seated":
 			one_hot_labels.append([3])
-		elif(labels[i].lower() == "sumo"):
+		elif labels[i].lower() == "sumo":
 			one_hot_labels.append([4])
-		elif(labels[i].lower() == "mermaid"):
+		elif labels[i].lower() == "mermaid":
 			one_hot_labels.append([5])
-		elif(labels[i].lower() == "towel"):
+		elif labels[i].lower() == "towel":
 			one_hot_labels.append([6])
-		elif(labels[i].lower() == "trunk"):
+		elif labels[i].lower() == "trunk":
 			one_hot_labels.append([7])
-		elif(labels[i].lower() == "wall"):
+		elif labels[i].lower() == "wall":
 			one_hot_labels.append([8])
-		elif(labels[i].lower() == "pretzel"):
+		elif labels[i].lower() == "pretzel":
 			one_hot_labels.append([9])
 		else: #OOV
 			one_hot_labels.append([10])
@@ -186,25 +183,25 @@ def one_hot(labels):
 def oneHotArray(labels):
 	one_hot_labels = []
 	for i in range(0,len(labels)):
-		if(labels[i] == 0):
+		if labels[i] == 0:
 			one_hot_labels.append([1,0,0,0,0,0,0,0,0,0,0])
-		elif(labels[i] == 1):
+		elif labels[i] == 1:
 			one_hot_labels.append([0,1,0,0,0,0,0,0,0,0,0])
-		elif(labels[i] == 2):
+		elif labels[i] == 2:
 			one_hot_labels.append([0,0,1,0,0,0,0,0,0,0,0])
-		elif(labels[i] == 3):
+		elif labels[i] == 3:
 			one_hot_labels.append([0,0,0,1,0,0,0,0,0,0,0])
-		elif(labels[i] == 4):
+		elif labels[i] == 4:
 			one_hot_labels.append([0,0,0,0,1,0,0,0,0,0,0])
-		elif(labels[i] == 5):
+		elif labels[i] == 5:
 			one_hot_labels.append([0,0,0,0,0,1,0,0,0,0,0])
-		elif(labels[i] == 6):
+		elif labels[i] == 6:
 			one_hot_labels.append([0,0,0,0,0,0,1,0,0,0,0])
-		elif(labels[i] == 7):
+		elif labels[i] == 7:
 			one_hot_labels.append([0,0,0,0,0,0,0,1,0,0,0])
-		elif(labels[i] == 8):
+		elif labels[i] == 8:
 			one_hot_labels.append([0,0,0,0,0,0,0,0,1,0,0])
-		elif(labels[i] == 9):
+		elif labels[i] == 9:
 			one_hot_labels.append([0,0,0,0,0,0,0,0,0,1,0])
 		else: #OOV
 			one_hot_labels.append([0,0,0,0,0,0,0,0,0,0,1])
@@ -217,10 +214,6 @@ def constructFeatures():
 	
 def createTrainingFunction (bodyPartFeatures, labels, batch_size, numEpochs = None):
 	def my_input(numEpochs = None):
-		print(len(bodyPartFeatures))
-		print(len(bodyPartFeatures[0]))
-		print(len(bodyPartFeatures[0][1]))
-		print(len(bodyPartFeatures[0][0][0]))
 		featureDictionary = dict()
 		for i in range(0,27):
 			tempArray = []
@@ -269,7 +262,7 @@ def train(hiddenUnits, steps, trainFeatures, trainLabels, vFeatures, vLabels):
 	predictValidationFunction = createPredictFunction(vFeatures, vLabels, batchSize)
 	trainingFunction = createTrainingFunction(trainFeatures, trainLabels, batchSize, numEpochs)
 
-	featureColumns = constructFeatures();
+	featureColumns = constructFeatures()
 
 	my_optimizer = tf.train.AdagradOptimizer(learning_rate = learningRate)
 	my_optimizer = tf.contrib.estimator.clip_gradients_by_norm(my_optimizer, 5.0)
@@ -282,7 +275,6 @@ def train(hiddenUnits, steps, trainFeatures, trainLabels, vFeatures, vLabels):
 	trainLabels = oneHotArray(trainLabels)
 	vLabels2 = oneHotArray(vLabels)
 	for period in range (0, periods):
-		print("Training in for")
 		classifier.train(
 			input_fn = trainingFunction, steps = stepsPerPeriod
 		)
@@ -337,7 +329,6 @@ def main(argv = None):
 	labels= one_hot(labels)
 	trainLabels, trainFeatures, vLabels, vFeatures, testLabels, testFeatures = partition_data(features, labels)
 	hiddenUnits = [100, 100]
-	print ("About to train")
 	classifier = train(hiddenUnits, 100, trainFeatures, trainLabels, vFeatures, vLabels)
 
 	predict_test_input_fn = createPredictFunction(testFeatures, testLabels, 100)
