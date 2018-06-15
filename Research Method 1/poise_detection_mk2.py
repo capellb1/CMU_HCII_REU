@@ -136,8 +136,8 @@ def extract_data():
 	#seperate the label from the name and event number stored within the label.csv file(s)
 	for i in range (0, int(numberTests)):
 		for line in open(dirname + "\\Data\\test" + str(i)+ "\\label.csv"):
-			temporaryLabel = str(line.split())
-			labels.append(temporaryLabel[0])
+			temporaryLabel = line.split()
+			labels.append(str(temporaryLabel[0]))
 	
 	#shuffle the data
 	shuffledData = np.empty(data.shape, dtype=data.dtype)
