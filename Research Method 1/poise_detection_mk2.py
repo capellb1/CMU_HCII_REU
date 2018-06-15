@@ -4,16 +4,22 @@
 #
 #MUST HAVE AT LEAST 5 files
 
+#Import Libraries
 import math
 import io
+
+#to get rid of warning
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
+#Tensorflow and Data Processing Library
 import tensorflow as tf
 from tensorflow.python.data import Dataset
 import numpy as np
 import pandas as pd
 import math 
+
+#Display libraries for visualization
 from IPython import display
 from matplotlib import cm
 from matplotlib import gridspec
@@ -22,15 +28,16 @@ from sklearn import metrics
 import seaborn as sns
 import glob
 
-
-
-#Define Flags
+#Define Flags to change the Hyperperameters
 tf.app.flags.DEFINE_integer('batch_size',10,'number of randomly sampled images from the training set')
 tf.app.flags.DEFINE_float('learning_rate',0.001,'how quickly the model progresses along the loss curve during optimization')
 tf.app.flags.DEFINE_integer('epochs',10,'number of passes over the training data')
 tf.app.flags.DEFINE_float('regularization_rate',0.01,'Strength of regularization')
-
 FLAGS = tf.app.flags.FLAGS
+
+TRAIN_PERCENT = 0.7
+VALIDATION_PERCENT = 0.2
+TEST_PERCENT = 0.1
 
 #store file names
 file_names =[
@@ -62,7 +69,7 @@ file_names =[
 'AnkleLeft.csv',     
 'FootLeft.csv']
 
-#store file names
+#store bodypart names without the file extensions
 bodyParts =[
 'Head',   
 'Neck',    
@@ -92,12 +99,17 @@ bodyParts =[
 'AnkleLeft',     
 'FootLeft']
 
+#Set the read path to the data folder of the current working directory (allows github upload of data)
 dirname = os.path.realpath('.')
 filename = dirname + '\\Data\\TestNumber.txt'
 
+#Read the number of files(events) that the data contains from the TestNumber.txt file
 numberTestFiles = open(filename,"r")
 numberTests = numberTestFiles.read()
+print("Number of Filed Detected: ", numberTests)
 
+#Determine the maximum/longest running event in the group of seperate tests
+#used to define size of the arrays
 maxEntries = 0
 for i in range(0,len(numberTests)):
 	numEntries = 0
@@ -106,10 +118,10 @@ for i in range(0,len(numberTests)):
 			numEntries = numEntries + 1
 		if numEntries > maxEntries:
 			maxEntries = numEntries	
-
+print("Maximum Number of Entries in a Single Exercise: ", maxEntries)
 #read data from files
-#features [event] [body part] [time stamp]
-
+#features [event] [body part] [time stamp] [axis]
+#i.e [towel][head][0][x] retrieves the X position of the head during the towel event
 def extract_data():
 	data =  np.empty((int(numberTests),27, maxEntries,3))
 	for i in range(0, int(numberTests)):
@@ -121,11 +133,12 @@ def extract_data():
 					data[i][j][k][l] = row[l]
 				k = k +1
 	labels = []
-	#labels = np.empty((int(numberTests),1), dtype=str)
+	#seperate the label from the name and event number stored within the label.csv file(s)
 	for i in range (0, int(numberTests)):
 		for line in open(dirname + "\\Data\\test" + str(i)+ "\\label.csv"):
 			labels.append(str(line.split()))
-
+	
+	#shuffle the data
 	shuffledData = np.empty(data.shape, dtype=data.dtype)
 	shuffledLabels = labels
 	permutation = np.random.permutation(len(labels))
@@ -134,14 +147,18 @@ def extract_data():
 		shuffledLabels[new_index] = labels[old_index]
 
 	shuffledLabels = np.asarray(shuffledLabels)
-
+	print("Shuffled Labels: (Directly from file)", shuffledLabels)
 	return shuffledData, shuffledLabels
 
 def partition_data(features, labels):
-	
-	train = math.floor(float(numberTests) * .7)
-	validation = math.floor(float(numberTests) * .2)
-	test = math.ceil(float(numberTests) * .1)
+	#Divides the total data up into training, validation, and test sets
+	#division based off of percentages stored at the top of the code
+	train = math.floor(float(numberTests) * TRAIN_PERCENT)
+	validation = math.floor(float(numberTests) * VALIDATION_PERCENT)
+	test = math.ceil(float(numberTests) * TEST_PERCENT)
+	print("Number of Training Cases: ", train)
+	print("Number of Validation Cases: ", validation)
+	print("Number of Test Cases: ", test)
 
 	trainLabels = labels[:train]
 	trainFeatures = features[:train]
@@ -153,6 +170,8 @@ def partition_data(features, labels):
 	return trainLabels, trainFeatures, validationLabels, validationFeatures, testLabels, testFeatures
 
 def one_hot(labels):
+	#give each exercise a single numeric representation
+	#necessary for converting to tf.DataFrame
 	one_hot_labels = []
 	for i in range(0,len(labels)):
 		if labels[i].lower() == "y":
@@ -178,9 +197,12 @@ def one_hot(labels):
 		else: #OOV
 			one_hot_labels.append([10])
 	one_hot_labels = np.asarray(one_hot_labels)
+	print("Lable Encoding Complete")
 	return one_hot_labels
 
 def oneHotArray(labels):
+	#convert the integer one hot encoding into a binary array
+	#necessary for actual training of the net
 	one_hot_labels = []
 	for i in range(0,len(labels)):
 		if labels[i] == 0:
@@ -206,14 +228,20 @@ def oneHotArray(labels):
 		else: #OOV
 			one_hot_labels.append([0,0,0,0,0,0,0,0,0,0,1])
 	one_hot_labels = np.asarray(one_hot_labels)
+	print("One Hot Encoding Complete")
 	return one_hot_labels
 
 def constructFeatures():
+	#creates the features columns used to train the model
+	#each feature column corresponds to a single bodypart and is independent of event
+	print("Feature Columns Constructed")
 	return set ([tf.feature_column.numeric_column(bodyPartFeatures, shape=[maxEntries,3])
 		for bodyPartFeatures in bodyParts])
 	
 def createTrainingFunction (bodyPartFeatures, labels, batch_size, numEpochs = None):
+	#wrap the function definition to allow the creation of multiple input functions later in the code
 	def my_input(numEpochs = None):
+		#first modify the 
 		featureDictionary = dict()
 		for i in range(0,27):
 			tempArray = []
@@ -224,11 +252,9 @@ def createTrainingFunction (bodyPartFeatures, labels, batch_size, numEpochs = No
 		
 		ds = Dataset.from_tensor_slices((featureDictionary, labels))
 		
-
 		ds = ds.batch(batch_size).repeat(numEpochs)
 		ds = ds.shuffle(int(numberTests))
 		feature_batch, label_batch, = ds.make_one_shot_iterator().get_next()
-
 		return feature_batch, label_batch
 	return my_input
 
@@ -244,6 +270,7 @@ def createPredictFunction (bodyPartFeatures, labels, batch_size):
 		
 		ds = Dataset.from_tensor_slices((featureDictionary, labels))
 		ds = ds.batch(batch_size) 
+		ds = ds.shuffle(int(numberTests))
 		feature_batch, label_batch, = ds.make_one_shot_iterator().get_next()
 
 		return feature_batch, label_batch
@@ -261,7 +288,7 @@ def train(hiddenUnits, steps, trainFeatures, trainLabels, vFeatures, vLabels):
 	predictTrainFunction = createPredictFunction(trainFeatures, trainLabels, batchSize)
 	predictValidationFunction = createPredictFunction(vFeatures, vLabels, batchSize)
 	trainingFunction = createTrainingFunction(trainFeatures, trainLabels, batchSize, numEpochs)
-
+	print("Prediction and Training Input Functions Created")
 	featureColumns = constructFeatures()
 
 	my_optimizer = tf.train.AdagradOptimizer(learning_rate = learningRate)
@@ -303,6 +330,7 @@ def train(hiddenUnits, steps, trainFeatures, trainLabels, vFeatures, vLabels):
 
 	accuracy = metrics.accuracy_score(vLabels, final_predictions)
 	print("Final accuracy (on vlidation data): %0.2f" % accuracy)
+	print("Training Errors: ", training_errors)
 
 	plt.ylabel("LogLoss")
 	plt.xlabel("Periods")
@@ -330,7 +358,7 @@ def main(argv = None):
 	trainLabels, trainFeatures, vLabels, vFeatures, testLabels, testFeatures = partition_data(features, labels)
 	hiddenUnits = [100, 100]
 	classifier = train(hiddenUnits, 100, trainFeatures, trainLabels, vFeatures, vLabels)
-
+	print("--Training Complete--")
 	predict_test_input_fn = createPredictFunction(testFeatures, testLabels, 100)
 
 	test_predictions = classifier.predict(input_fn=predict_test_input_fn)
