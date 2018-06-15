@@ -136,7 +136,8 @@ def extract_data():
 	#seperate the label from the name and event number stored within the label.csv file(s)
 	for i in range (0, int(numberTests)):
 		for line in open(dirname + "\\Data\\test" + str(i)+ "\\label.csv"):
-			labels.append(str(line.split()))
+			temporaryLabel = str(line.split())
+			labels.append(temporaryLabel[0])
 	
 	#shuffle the data
 	shuffledData = np.empty(data.shape, dtype=data.dtype)
@@ -241,7 +242,8 @@ def constructFeatures():
 def createTrainingFunction (bodyPartFeatures, labels, batch_size, numEpochs = None):
 	#wrap the function definition to allow the creation of multiple input functions later in the code
 	def my_input(numEpochs = None):
-		#first modify the 
+		#first modify the format of the data into a dictionary organizing the position values by their respective bodyparts
+		#no longer tied together by event
 		featureDictionary = dict()
 		for i in range(0,27):
 			tempArray = []
@@ -250,8 +252,11 @@ def createTrainingFunction (bodyPartFeatures, labels, batch_size, numEpochs = No
 			tempArray = np.asarray(tempArray)
 			featureDictionary[bodyParts[i]] = tempArray
 		
+		#create a tf.Dataset to allow for easy entry into the net
 		ds = Dataset.from_tensor_slices((featureDictionary, labels))
 		
+		#set up the batch mechanic (number of datapoints taken per epoch) along with further shuffling the data
+		#create the one shot iterator
 		ds = ds.batch(batch_size).repeat(numEpochs)
 		ds = ds.shuffle(int(numberTests))
 		feature_batch, label_batch, = ds.make_one_shot_iterator().get_next()
