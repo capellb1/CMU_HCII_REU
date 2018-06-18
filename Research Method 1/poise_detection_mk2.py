@@ -33,6 +33,8 @@ tf.app.flags.DEFINE_integer('batch_size',10,'number of randomly sampled images f
 tf.app.flags.DEFINE_float('learning_rate',0.001,'how quickly the model progresses along the loss curve during optimization')
 tf.app.flags.DEFINE_integer('epochs',10,'number of passes over the training data')
 tf.app.flags.DEFINE_float('regularization_rate',0.01,'Strength of regularization')
+tf.app.flags.DEFINE_string('label','Test','This is the name of the test')
+
 FLAGS = tf.app.flags.FLAGS
 
 TRAIN_PERCENT = 0.7
@@ -105,15 +107,26 @@ bodyParts =[
 dirname = os.path.realpath('.')
 filename = dirname + '\\Data\\TestNumber.txt'
 
+#Creating a folder to save the results
+folderName = FLAGS.label
+newDir = dirname + '\\ModelsAndResults\\' + folderName
+if not (os.path.exists(newDir)):
+	os.makedirs(newDir)
+
+resultsFile = open(newDir + '\\Results.txt',"w+")
+modelsFile = open(newDir + '\\Models.py',"w+")
+
 #Read the number of files(events) that the data contains from the TestNumber.txt file
 numberTestFiles = open(filename,"r")
-numberTests = numberTestFiles.read()
+#numberTests = numberTestFiles.read()
+numberTests = 6
 print("Number of Filed Detected: ", numberTests)
+resultsFile.write("Number of Filed Detected: " + numberTests + '\n')
 
 #Determine the maximum/longest running event in the group of seperate tests
 #used to define size of the arrays
 maxEntries = 0
-for i in range(0,int(numberTests)):
+for i in range(0, int(numberTests)):
 	numEntries = 0
 	for j in range(0,27):
 		for line in open(dirname + "\\Data\\test" + str(i) + "\\Position_" + file_names[j]):
@@ -121,6 +134,8 @@ for i in range(0,int(numberTests)):
 		if numEntries > maxEntries:
 			maxEntries = numEntries	
 print("Maximum Number of Entries in a Single Exercise: ", maxEntries)
+resultsFile.write("Maximum Number of Entries in a Single Exercise: " + maxEntries + '\n')
+
 #read data from files
 #features [event] [body part] [time stamp] [axis]
 #i.e [towel][head][0][x] retrieves the X position of the head during the towel event
@@ -158,6 +173,13 @@ def partition_data(features, labels):
 	train = math.floor(float(numberTests) * TRAIN_PERCENT)
 	validation = math.floor(float(numberTests) * VALIDATION_PERCENT)
 	test = math.ceil(float(numberTests) * TEST_PERCENT)
+	print("Number of Training Cases: ", train)
+	resultsFile.write("Number of Training Cases: "+ train + '\n')
+	print("Number of Validation Cases: ", validation)
+	resultsFile.write("Number of Validation Cases: " + validation +'\n')
+	print("Number of Test Cases: ", test)
+	resultsFile.write("Number of Test Cases: " + test + '\n')
+
 
 	trainLabels = labels[:train]
 	trainFeatures = features[:train]
@@ -319,6 +341,8 @@ def train(hiddenUnits, steps, trainFeatures, trainLabels, vFeatures, vLabels):
 
 	print ("Training model...")
 	print ("LogLoss error (on validation data):")
+	resultsFile.write("Training model...\n")
+	resultsFile.write("LogLoss error (on validation data):\n")
 	
 	#create lists to store the error over time
 	training_errors = []
@@ -350,11 +374,15 @@ def train(hiddenUnits, steps, trainFeatures, trainLabels, vFeatures, vLabels):
 		validation_log_loss = metrics.log_loss(vLabels2, validation_pred_one_hot)
 
 		print(" period %02d: %0.2f" % (period, validation_log_loss))
+		resultsFile.write(" period %02d: %0.2f" % (period, validation_log_loss) + '\n')
+
+		#store the training error
 		
 		#store the training error and validation error
 		training_errors.append(training_log_loss)
 		validation_errors.append(validation_log_loss)
 	print("Model training finished")
+	resultsFile.write("Model training finished \n")
 	
 	#tbh not sure what this is doing but seems important
 	_ = map(os.remove, glob.glob(os.path.join(classifier.model_dir,'events.out.tfevents*')))
@@ -367,6 +395,8 @@ def train(hiddenUnits, steps, trainFeatures, trainLabels, vFeatures, vLabels):
 	accuracy = metrics.accuracy_score(vLabels, final_predictions)
 	print("Final accuracy (on validation data): %0.2f" % accuracy)
 	print("Training Errors: ", training_errors)
+	resultsFile.write("Final accuracy (on validation data): %0.2f" % accuracy + '\n')
+	resultsFile.write("Training Errors: " + training_errors + '\n')
 
 	#display loss over time curve to aid optimization
 	plt.ylabel("LogLoss")
@@ -375,6 +405,7 @@ def train(hiddenUnits, steps, trainFeatures, trainLabels, vFeatures, vLabels):
 	plt.plot(training_errors, label="training")
 	plt.plot(validation_errors, label="validation")
 	plt.legend()
+	plt.savefig(newDir +'\\logLoss.png')
 	plt.show()
 
 	#display confusion matrix to aid in debugging
@@ -385,6 +416,7 @@ def train(hiddenUnits, steps, trainFeatures, trainLabels, vFeatures, vLabels):
 	plt.title("Confusion matrix")
 	plt.ylabel("True label")
 	plt.xlabel ("Predicted label")
+	plt.savefig(newDir + '\\confusionMatrix.png')
 	plt.show()
 	#confusing because not sure what each label means (0,1,2 etc)
 
@@ -398,6 +430,7 @@ def main(argv = None):
 	trainLabels, trainFeatures, vLabels, vFeatures, testLabels, testFeatures = partition_data(features, labels)
 	classifier = train(hiddenUnits, 100, trainFeatures, trainLabels, vFeatures, vLabels)
 	print("--Training Complete--")
+	resultsFile.write("--Training Complete-- '\n")
 	predict_test_input_fn = createPredictFunction(testFeatures, testLabels, 100)
 
 	#store and log data on test predictions
@@ -407,6 +440,15 @@ def main(argv = None):
 	#Determine test accuracy
 	accuracy = metrics.accuracy_score(testLabels, test_predictions)
 	print("Final accuracy (on test data): %0.2f" % accuracy)
+	resultsFile.write("Final accuracy (on test data): %0.2f" % accuracy +'\n')
+
+	#Maybe Exporting Model
+	featureColumnsExport = constructFeatures()
+	feature_spec = tf.feature_column.make_parse_example_spec(feature_columns)
+    export_input_fn = tf.estimator.export.build_parsing_serving_input_receiver_fn(feature_spec)
+    classifier.export_savedmodel( newDir, export_input_fn)
+
+
 
 #needed in order to call main
 if __name__ == '__main__':
