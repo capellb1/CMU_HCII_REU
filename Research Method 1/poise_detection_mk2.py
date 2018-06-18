@@ -38,6 +38,8 @@ FLAGS = tf.app.flags.FLAGS
 TRAIN_PERCENT = 0.7
 VALIDATION_PERCENT = 0.2
 TEST_PERCENT = 0.1
+hiddenUnits = [16, 16]
+
 
 #store file names
 file_names =[
@@ -111,7 +113,7 @@ print("Number of Filed Detected: ", numberTests)
 #Determine the maximum/longest running event in the group of seperate tests
 #used to define size of the arrays
 maxEntries = 0
-for i in range(0,len(numberTests)):
+for i in range(0,int(numberTests)):
 	numEntries = 0
 	for j in range(0,27):
 		for line in open(dirname + "\\Data\\test" + str(i) + "\\Position_" + file_names[j]):
@@ -148,7 +150,6 @@ def extract_data():
 		shuffledLabels[new_index] = labels[old_index]
 
 	shuffledLabels = np.asarray(shuffledLabels)
-	print("Shuffled Labels: (Directly from file)", shuffledLabels)
 	return shuffledData, shuffledLabels
 
 def partition_data(features, labels):
@@ -157,9 +158,6 @@ def partition_data(features, labels):
 	train = math.floor(float(numberTests) * TRAIN_PERCENT)
 	validation = math.floor(float(numberTests) * VALIDATION_PERCENT)
 	test = math.ceil(float(numberTests) * TEST_PERCENT)
-	print("Number of Training Cases: ", train)
-	print("Number of Validation Cases: ", validation)
-	print("Number of Test Cases: ", test)
 
 	trainLabels = labels[:train]
 	trainFeatures = features[:train]
@@ -167,7 +165,17 @@ def partition_data(features, labels):
 	validationFeatures = features[train:train+validation]
 	testLabels = labels[validation:validation+test]
 	testFeatures = features[validation:validation+test]
-
+	
+	#Output details on the data we are using
+	print("Number of Training Cases: ", train)
+	print("Training Labels (Randomized): ", trainLabels)
+	
+	print("Number of Validation Cases: ", validation)
+	print("Validation Labels (Randomized): ", validationLabels)
+	
+	print("Number of Test Cases: ", test)
+	print("Test Lables (Randomized): ", testLabels)
+	
 	return trainLabels, trainFeatures, validationLabels, validationFeatures, testLabels, testFeatures
 
 def one_hot(labels):
@@ -343,8 +351,9 @@ def train(hiddenUnits, steps, trainFeatures, trainLabels, vFeatures, vLabels):
 
 		print(" period %02d: %0.2f" % (period, validation_log_loss))
 		
-		#store the training error
+		#store the training error and validation error
 		training_errors.append(training_log_loss)
+		validation_errors.append(validation_log_loss)
 	print("Model training finished")
 	
 	#tbh not sure what this is doing but seems important
@@ -387,7 +396,6 @@ def main(argv = None):
 	features, labels = extract_data()
 	labels= one_hot(labels)
 	trainLabels, trainFeatures, vLabels, vFeatures, testLabels, testFeatures = partition_data(features, labels)
-	hiddenUnits = [100, 100]
 	classifier = train(hiddenUnits, 100, trainFeatures, trainLabels, vFeatures, vLabels)
 	print("--Training Complete--")
 	predict_test_input_fn = createPredictFunction(testFeatures, testLabels, 100)
