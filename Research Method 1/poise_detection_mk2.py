@@ -242,7 +242,7 @@ def constructFeatures():
 def createTrainingFunction (bodyPartFeatures, labels, batch_size, numEpochs = None):
 	#wrap the function definition to allow the creation of multiple input functions later in the code
 	def my_input(numEpochs = None):
-		#first modify the format of the data into a dictionary organizing the position values by their respective bodyparts
+		#first modify the format of the data into a dictionary: organize the position (x,y,z) by their respective bodyparts
 		#no longer tied together by event
 		featureDictionary = dict()
 		for i in range(0,27):
@@ -253,10 +253,11 @@ def createTrainingFunction (bodyPartFeatures, labels, batch_size, numEpochs = No
 			featureDictionary[bodyParts[i]] = tempArray
 		
 		#create a tf.Dataset to allow for easy entry into the net
+		#think of features organized in columns of bodyparts and the labels are rows
 		ds = Dataset.from_tensor_slices((featureDictionary, labels))
 		
 		#set up the batch mechanic (number of datapoints taken per epoch) along with further shuffling the data
-		#create the one shot iterator
+		#create the one shot iterator.. actually does the work of selecting which data to train
 		ds = ds.batch(batch_size).repeat(numEpochs)
 		ds = ds.shuffle(int(numberTests))
 		feature_batch, label_batch, = ds.make_one_shot_iterator().get_next()
@@ -264,7 +265,9 @@ def createTrainingFunction (bodyPartFeatures, labels, batch_size, numEpochs = No
 	return my_input
 
 def createPredictFunction (bodyPartFeatures, labels, batch_size):	
+	#wrap the function definition to allow the creation of multiple input functions later in the code
 	def create_predict_fn():
+		#same as above, change data into a dictionary
 		featureDictionary = dict()
 		for i in range(0,27):
 			tempArray = []
@@ -273,6 +276,7 @@ def createPredictFunction (bodyPartFeatures, labels, batch_size):
 			tempArray = np.asarray(tempArray)
 			featureDictionary[bodyParts[i]] = tempArray
 		
+		#same as above except there is no epoch mechanic because it is being used for predictions (dont want to repeat data being predicted)
 		ds = Dataset.from_tensor_slices((featureDictionary, labels))
 		ds = ds.batch(batch_size) 
 		ds = ds.shuffle(int(numberTests))
@@ -282,61 +286,80 @@ def createPredictFunction (bodyPartFeatures, labels, batch_size):
 	return create_predict_fn
 
 def train(hiddenUnits, steps, trainFeatures, trainLabels, vFeatures, vLabels):
+	#define flags as variables
 	numEpochs = FLAGS.epochs 
 	batchSize = FLAGS.batch_size
 	learningRate = FLAGS.learning_rate
-	
 	#regularizationRate = FLAGS.regularization_rate
+	
 	periods = 10
 	stepsPerPeriod = steps/periods
-
+	
+	#Create the input and predict functions
 	predictTrainFunction = createPredictFunction(trainFeatures, trainLabels, batchSize)
 	predictValidationFunction = createPredictFunction(vFeatures, vLabels, batchSize)
 	trainingFunction = createTrainingFunction(trainFeatures, trainLabels, batchSize, numEpochs)
 	print("Prediction and Training Input Functions Created")
 	featureColumns = constructFeatures()
-
+	
+	#Define the optimizer
 	my_optimizer = tf.train.AdagradOptimizer(learning_rate = learningRate)
 	my_optimizer = tf.contrib.estimator.clip_gradients_by_norm(my_optimizer, 5.0)
+	
+	#Define the model
 	classifier = tf.estimator.DNNClassifier(feature_columns = featureColumns, n_classes = 11, hidden_units = hiddenUnits, optimizer = my_optimizer, config = tf.estimator.RunConfig(keep_checkpoint_max = 1))
 
 	print ("Training model...")
 	print ("LogLoss error (on validation data):")
+	
+	#create lists to store the error over time
 	training_errors = []
 	validation_errors = []
+	
+	#convert from encoding to one hot array 
 	trainLabels = oneHotArray(trainLabels)
 	vLabels2 = oneHotArray(vLabels)
+	
+	#Perform the training in steps so we can visualize progression of error
 	for period in range (0, periods):
 		classifier.train(
-			input_fn = trainingFunction, steps = stepsPerPeriod
-		)
-
+			input_fn = trainingFunction, steps = stepsPerPeriod)
+		
+		#Store Metrics about training data and predictions
 		training_predictions = list(classifier.predict(input_fn = predictTrainFunction))
 		training_probabilities = np.array([item['probabilities'] for item in training_predictions])
 		training_pred_class_id = np.array([item['class_ids'][0] for item in training_predictions])
 		training_pred_one_hot = tf.keras.utils.to_categorical(training_pred_class_id, 11)
 
+		#Store metrics about validation data and predictions
 		validation_predictions = list(classifier.predict(input_fn = predictValidationFunction))
 		validation_probabilities = np.array([item['probabilities'] for item in validation_predictions])
 		validation_pred_class_id = np.array([item['class_ids'][0] for item in validation_predictions])
 		validation_pred_one_hot = tf.keras.utils.to_categorical(validation_pred_class_id, 11)
 
+		#Calculate overall log loss
 		training_log_loss = metrics.log_loss(trainLabels, training_pred_one_hot)
 		validation_log_loss = metrics.log_loss(vLabels2, validation_pred_one_hot)
 
 		print(" period %02d: %0.2f" % (period, validation_log_loss))
+		
+		#store the training error
 		training_errors.append(training_log_loss)
 	print("Model training finished")
-
+	
+	#tbh not sure what this is doing but seems important
 	_ = map(os.remove, glob.glob(os.path.join(classifier.model_dir,'events.out.tfevents*')))
 
+	#store metrics about validation data and predictions
 	final_predictions = classifier.predict(input_fn = predictValidationFunction)
 	final_predictions = np.array([item['class_ids'][0] for item in final_predictions])
 
+	#Determine overall validation accuracy
 	accuracy = metrics.accuracy_score(vLabels, final_predictions)
-	print("Final accuracy (on vlidation data): %0.2f" % accuracy)
+	print("Final accuracy (on validation data): %0.2f" % accuracy)
 	print("Training Errors: ", training_errors)
 
+	#display loss over time curve to aid optimization
 	plt.ylabel("LogLoss")
 	plt.xlabel("Periods")
 	plt.title("Logloss vs Periods")
@@ -345,6 +368,7 @@ def train(hiddenUnits, steps, trainFeatures, trainLabels, vFeatures, vLabels):
 	plt.legend()
 	plt.show()
 
+	#display confusion matrix to aid in debugging
 	cm = metrics.confusion_matrix(vLabels, final_predictions)
 	cm_normalized = cm.astype("float") / cm.sum(axis=1) [:, np.newaxis]
 	ax = sns.heatmap(cm_normalized, cmap = "bone_r")
@@ -353,11 +377,13 @@ def train(hiddenUnits, steps, trainFeatures, trainLabels, vFeatures, vLabels):
 	plt.ylabel("True label")
 	plt.xlabel ("Predicted label")
 	plt.show()
+	#confusing because not sure what each label means (0,1,2 etc)
 
 	return classifier
 
 
 def main(argv = None):
+	#Call all methods defined above and determine the shape of the network
 	features, labels = extract_data()
 	labels= one_hot(labels)
 	trainLabels, trainFeatures, vLabels, vFeatures, testLabels, testFeatures = partition_data(features, labels)
@@ -366,13 +392,15 @@ def main(argv = None):
 	print("--Training Complete--")
 	predict_test_input_fn = createPredictFunction(testFeatures, testLabels, 100)
 
+	#store and log data on test predictions
 	test_predictions = classifier.predict(input_fn=predict_test_input_fn)
 	test_predictions = np.array([item['class_ids'][0] for item in test_predictions])
 
+	#Determine test accuracy
 	accuracy = metrics.accuracy_score(testLabels, test_predictions)
 	print("Final accuracy (on test data): %0.2f" % accuracy)
 
-
+#needed in order to call main
 if __name__ == '__main__':
 	main()
 	
