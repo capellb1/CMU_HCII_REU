@@ -40,6 +40,8 @@ FLAGS = tf.app.flags.FLAGS
 TRAIN_PERCENT = 0.7
 VALIDATION_PERCENT = 0.2
 TEST_PERCENT = 0.1
+hiddenUnits = [16, 16]
+
 
 #store file names
 file_names =[
@@ -163,7 +165,6 @@ def extract_data():
 		shuffledLabels[new_index] = labels[old_index]
 
 	shuffledLabels = np.asarray(shuffledLabels)
-	print("Shuffled Labels: (Directly from file)", shuffledLabels)
 	return shuffledData, shuffledLabels
 
 def partition_data(features, labels):
@@ -179,13 +180,24 @@ def partition_data(features, labels):
 	print("Number of Test Cases: ", test)
 	resultsFile.write("Number of Test Cases: " + test + '\n')
 
+
 	trainLabels = labels[:train]
 	trainFeatures = features[:train]
 	validationLabels = labels[train:train+validation]
 	validationFeatures = features[train:train+validation]
 	testLabels = labels[validation:validation+test]
 	testFeatures = features[validation:validation+test]
-
+	
+	#Output details on the data we are using
+	print("Number of Training Cases: ", train)
+	print("Training Labels (Randomized): ", trainLabels)
+	
+	print("Number of Validation Cases: ", validation)
+	print("Validation Labels (Randomized): ", validationLabels)
+	
+	print("Number of Test Cases: ", test)
+	print("Test Lables (Randomized): ", testLabels)
+	
 	return trainLabels, trainFeatures, validationLabels, validationFeatures, testLabels, testFeatures
 
 def one_hot(labels):
@@ -365,7 +377,10 @@ def train(hiddenUnits, steps, trainFeatures, trainLabels, vFeatures, vLabels):
 		resultsFile.write(" period %02d: %0.2f" % (period, validation_log_loss) + '\n')
 
 		#store the training error
+		
+		#store the training error and validation error
 		training_errors.append(training_log_loss)
+		validation_errors.append(validation_log_loss)
 	print("Model training finished")
 	resultsFile.write("Model training finished \n")
 	
@@ -413,7 +428,6 @@ def main(argv = None):
 	features, labels = extract_data()
 	labels= one_hot(labels)
 	trainLabels, trainFeatures, vLabels, vFeatures, testLabels, testFeatures = partition_data(features, labels)
-	hiddenUnits = [100, 100]
 	classifier = train(hiddenUnits, 100, trainFeatures, trainLabels, vFeatures, vLabels)
 	print("--Training Complete--")
 	resultsFile.write("--Training Complete-- '\n")
