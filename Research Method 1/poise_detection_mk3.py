@@ -269,6 +269,7 @@ def createTrainingFunction (bodyPartFeatures, labels, batch_size, numEpochs = No
 		ds = ds.batch(batch_size).repeat(numEpochs)
 		ds = ds.shuffle(int(numberTests))
 		feature_batch, label_batch, = ds.make_one_shot_iterator().get_next()
+		print(feature_batch)
 		return feature_batch, label_batch
 	return my_input
 

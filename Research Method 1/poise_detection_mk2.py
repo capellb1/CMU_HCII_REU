@@ -121,7 +121,7 @@ numberTestFiles = open(filename,"r")
 #numberTests = numberTestFiles.read()
 numberTests = 6
 print("Number of Filed Detected: ", numberTests)
-resultsFile.write("Number of Filed Detected: " + numberTests + '\n')
+resultsFile.write("Number of Filed Detected: " + str(numberTests) + '\n')
 
 #Determine the maximum/longest running event in the group of seperate tests
 #used to define size of the arrays
@@ -134,7 +134,7 @@ for i in range(0, int(numberTests)):
 		if numEntries > maxEntries:
 			maxEntries = numEntries	
 print("Maximum Number of Entries in a Single Exercise: ", maxEntries)
-resultsFile.write("Maximum Number of Entries in a Single Exercise: " + maxEntries + '\n')
+resultsFile.write("Maximum Number of Entries in a Single Exercise: " + str(maxEntries) + '\n')
 
 #read data from files
 #features [event] [body part] [time stamp] [axis]
@@ -174,11 +174,11 @@ def partition_data(features, labels):
 	validation = math.floor(float(numberTests) * VALIDATION_PERCENT)
 	test = math.ceil(float(numberTests) * TEST_PERCENT)
 	print("Number of Training Cases: ", train)
-	resultsFile.write("Number of Training Cases: "+ train + '\n')
+	resultsFile.write("Number of Training Cases: "+ str(train) + '\n')
 	print("Number of Validation Cases: ", validation)
-	resultsFile.write("Number of Validation Cases: " + validation +'\n')
+	resultsFile.write("Number of Validation Cases: " + str(validation) +'\n')
 	print("Number of Test Cases: ", test)
-	resultsFile.write("Number of Test Cases: " + test + '\n')
+	resultsFile.write("Number of Test Cases: " + str(test) + '\n')
 
 
 	trainLabels = labels[:train]
@@ -291,6 +291,7 @@ def createTrainingFunction (bodyPartFeatures, labels, batch_size, numEpochs = No
 		ds = ds.batch(batch_size).repeat(numEpochs)
 		ds = ds.shuffle(int(numberTests))
 		feature_batch, label_batch, = ds.make_one_shot_iterator().get_next()
+		print(feature_batch)
 		return feature_batch, label_batch
 	return my_input
 
@@ -396,7 +397,7 @@ def train(hiddenUnits, steps, trainFeatures, trainLabels, vFeatures, vLabels):
 	print("Final accuracy (on validation data): %0.2f" % accuracy)
 	print("Training Errors: ", training_errors)
 	resultsFile.write("Final accuracy (on validation data): %0.2f" % accuracy + '\n')
-	resultsFile.write("Training Errors: " + training_errors + '\n')
+	resultsFile.write("Training Errors: " + str(training_errors) + '\n')
 
 	#display loss over time curve to aid optimization
 	plt.ylabel("LogLoss")
@@ -445,8 +446,8 @@ def main(argv = None):
 	#Maybe Exporting Model
 	featureColumnsExport = constructFeatures()
 	feature_spec = tf.feature_column.make_parse_example_spec(feature_columns)
-    export_input_fn = tf.estimator.export.build_parsing_serving_input_receiver_fn(feature_spec)
-    classifier.export_savedmodel( newDir, export_input_fn)
+	export_input_fn = tf.estimator.export.build_parsing_serving_input_receiver_fn(feature_spec)
+	classifier.export_savedmodel( newDir, export_input_fn)
 
 
 
