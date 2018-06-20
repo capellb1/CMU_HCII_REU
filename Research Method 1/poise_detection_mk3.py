@@ -33,13 +33,16 @@ tf.app.flags.DEFINE_integer('batch_size',10,'number of randomly sampled images f
 tf.app.flags.DEFINE_float('learning_rate',0.001,'how quickly the model progresses along the loss curve during optimization')
 tf.app.flags.DEFINE_integer('epochs',10,'number of passes over the training data')
 tf.app.flags.DEFINE_float('regularization_rate',0.01,'Strength of regularization')
+tf.app.flags.DEFINE_string('regularization', 'default', 'This is the regularization function used in cost calcuations')
+tf.app.flags.DEFINE_string('activation', 'default', 'This is the activation function to use in the layers')
+tf.app.flags.DEFINE_string('label', ' ', 'This is the label name where the files are saved')
+
 FLAGS = tf.app.flags.FLAGS
 
 TRAIN_PERCENT = 0.7
 VALIDATION_PERCENT = 0.2
 TEST_PERCENT = 0.1
 hiddenUnits = [16, 16]
-
 
 #store file names
 file_names =[
@@ -105,10 +108,30 @@ bodyParts =[
 dirname = os.path.realpath('.')
 filename = dirname + '\\Data\\TestNumber.txt'
 
+#Creating a folder to save the results
+folderName = FLAGS.label
+newDir = dirname + '\\ModelsAndResults_mk3\\' + folderName
+if not (os.path.exists(newDir)):
+	os.makedirs(newDir)
+
+resultsFile = open(newDir + '\\Results.txt',"w+")
+
 #Read the number of files(events) that the data contains from the TestNumber.txt file
 numberTestFiles = open(filename,"r")
 numberTests = numberTestFiles.read()
 print("Number of Filed Detected: ", numberTests)
+resultsFile.write("Number of Filed Detected: " + str(numberTests) + '\n')
+
+
+#GLOBAL
+#network parameters:
+hiddenLayer1 = 16
+hiddenLayer2 = 16
+hiddenLayer3 = 16
+numberClasses = 11
+
+#batch Index variable
+batchIndex = 0
 
 #Determine the maximum/longest running event in the group of seperate tests
 #used to define size of the arrays
@@ -121,19 +144,23 @@ for i in range(0,int(numberTests)):
 		if numEntries > maxEntries:
 			maxEntries = numEntries	
 print("Maximum Number of Entries in a Single Exercise: ", maxEntries)
+resultsFile.write("Maximum Number of Entries in Single Exercise: " + str(maxEntries) + '\n')
+
 #read data from files
 #features [event] [body part] [time stamp] [axis]
 #i.e [towel][head][0][x] retrieves the X position of the head during the towel event
-def extract_data():
-	data =  np.empty((int(numberTests),27, maxEntries,3))
+
+def extractData():
+	data =  np.empty((int(numberTests), int(26*maxEntries*3)))
+
 	for i in range(0, int(numberTests)):
+		k = 0
 		for j in range(0, 27):
-			k = 0
 			for line in open(dirname + "\\Data\\test" + str(i)+ "\\Position_" + file_names[j]):
 				row = line.split(',')
 				for l in range(0,3):
-					data[i][j][k][l] = row[l]
-				k = k +1
+					data[i][k] = row[l]
+					k = k +1
 	labels = []
 	#seperate the label from the name and event number stored within the label.csv file(s)
 	for i in range (0, int(numberTests)):
@@ -152,7 +179,7 @@ def extract_data():
 	shuffledLabels = np.asarray(shuffledLabels)
 	return shuffledData, shuffledLabels
 
-def partition_data(features, labels):
+def partitionData(features, labels):
 	#Divides the total data up into training, validation, and test sets
 	#division based off of percentages stored at the top of the code
 	train = math.floor(float(numberTests) * TRAIN_PERCENT)
@@ -168,17 +195,20 @@ def partition_data(features, labels):
 	
 	#Output details on the data we are using
 	print("Number of Training Cases: ", train)
+	resultsFile.write("Number of Training Cases: " + str(train) + '\n')
 	print("Training Labels (Randomized): ", trainLabels)
 	
 	print("Number of Validation Cases: ", validation)
+	resultsFile.write("Number of Validation Cases: " + str(validation) + '\n')
 	print("Validation Labels (Randomized): ", validationLabels)
 	
 	print("Number of Test Cases: ", test)
+	resultsFile.write("Number of Test Cases: " + str(test) + '\n')
 	print("Test Lables (Randomized): ", testLabels)
 	
-	return trainLabels, trainFeatures, validationLabels, validationFeatures, testLabels, testFeatures
+	return trainLabels, trainFeatures, train, validationLabels, validationFeatures, validation, testLabels, testFeatures, test
 
-def one_hot(labels):
+def oneHot(labels):
 	#give each exercise a single numeric representation
 	#necessary for converting to tf.DataFrame
 	one_hot_labels = []
@@ -240,225 +270,166 @@ def oneHotArray(labels):
 	print("One Hot Encoding Complete")
 	return one_hot_labels
 
-def constructFeatures():
-	#creates the features columns used to train the model
-	#each feature column corresponds to a single bodypart and is independent of event
-	print("Feature Columns Constructed")
-	return set ([tf.feature_column.numeric_column(bodyPartFeatures, shape=[maxEntries,3])
-		for bodyPartFeatures in bodyParts])
-	
-def createTrainingFunction (bodyPartFeatures, labels, batch_size, numEpochs = None):
-	#wrap the function definition to allow the creation of multiple input functions later in the code
-	def my_input(numEpochs = None):
-		#first modify the format of the data into a dictionary: organize the position (x,y,z) by their respective bodyparts
-		#no longer tied together by event
-		featureDictionary = dict()
-		for i in range(0,27):
-			tempArray = []
-			for j in range(0,len(bodyPartFeatures)):
-				tempArray.append(bodyPartFeatures[j][i])
-			tempArray = np.asarray(tempArray)
-			featureDictionary[bodyParts[i]] = tempArray
-		
-		#create a tf.Dataset to allow for easy entry into the net
-		#think of features organized in columns of bodyparts and the labels are rows
-		ds = Dataset.from_tensor_slices((featureDictionary, labels))
-		
-		#set up the batch mechanic (number of datapoints taken per epoch) along with further shuffling the data
-		#create the one shot iterator.. actually does the work of selecting which data to train
-		ds = ds.batch(batch_size).repeat(numEpochs)
-		ds = ds.shuffle(int(numberTests))
-		feature_batch, label_batch, = ds.make_one_shot_iterator().get_next()
-		print(feature_batch)
-		return feature_batch, label_batch
-	return my_input
+#creates the model
+def multilayer_perception(x, weights, biases):
+	activation = FLAGS.activation
+	if (activation == "sigmoid"):
+		print('Activation Layer: sigmoid \n')
+		#Layers
+		layer1 = tf.nn.sigmoid(tf.add(tf.matmul(x, weights['h1']), biases['b1']))
+		layer2 = tf.nn.sigmoid(tf.add(tf.matmul(layer1, weights['h2']), biases['b2']))
+		layer3 = tf.nn.sigmoid(tf.add(tf.matmul(layer1, weights['h3']), biases['b3']))
+		outLayer = tf.add(tf.matmul(layer2, weights['out']), biases['out'])
+		return outLayer
+	elif (activation == "tanh"):
+		print('Activation Layer: tanh \n')
+		#Layers
+		layer1 = tf.nn.tanh(tf.add(tf.matmul(x, weights['h1']), biases['b1']))
+		layer2 = tf.nn.tanh(tf.add(tf.matmul(layer1, weights['h2']), biases['b2']))
+		layer3 = tf.nn.tanh(tf.add(tf.matmul(layer1, weights['h3']), biases['b3']))
+		outLayer = tf.add(tf.matmul(layer2, weights['out']), biases['out'])
+		return outLayer
+	elif (activation == "relu"):
+		print('Activation Layer: relu \n')
+		#Layers
+		layer1 = tf.nn.relu(tf.add(tf.matmul(x, weights['h1']), biases['b1']))
+		layer2 = tf.nn.relu(tf.add(tf.matmul(layer1, weights['h2']), biases['b2']))
+		layer3 = tf.nn.relu(tf.add(tf.matmul(layer1, weights['h3']), biases['b3']))
+		outLayer = tf.add(tf.matmul(layer2, weights['out']), biases['out'])
+		return outLayer
+	else:
+		print('Activation Layer: none \n')
+		#Layers
+		layer1 = tf.add(tf.matmul(x, weights['h1']), biases['b1'])
+		layer2 = tf.add(tf.matmul(layer1, weights['h2']), biases['b2'])
+		layer3 = tf.add(tf.matmul(layer1, weights['h3']), biases['b3'])
+		outLayer = tf.add(tf.matmul(layer2, weights['out']), biases['out'])
+		return outLayer
 
-def createPredictFunction (bodyPartFeatures, labels, batch_size):	
-	#wrap the function definition to allow the creation of multiple input functions later in the code
-	def create_predict_fn():
-		#same as above, change data into a dictionary
-		featureDictionary = dict()
-		for i in range(0,27):
-			tempArray = []
-			for j in range(0,len(bodyPartFeatures)):
-				tempArray.append(bodyPartFeatures[j][i])
-			tempArray = np.asarray(tempArray)
-			featureDictionary[bodyParts[i]] = tempArray
-		
-		#same as above except there is no epoch mechanic because it is being used for predictions (dont want to repeat data being predicted)
-		ds = Dataset.from_tensor_slices((featureDictionary, labels))
-		ds = ds.batch(batch_size) 
-		ds = ds.shuffle(int(numberTests))
-		feature_batch, label_batch, = ds.make_one_shot_iterator().get_next()
-
-		return feature_batch, label_batch
-	return create_predict_fn
-
-def my_model_fn(
-	features, #a batch of features taken from input_fn
-	labels, #a batch of labels taken from input_fn
-	mode, #an instance of tf.estimator.ModeKeys (training, predicting, or eval)
-	params):
-	
-	#Define FLAGS
-	learningRate = FLAGS.learning_rate
-	regularizationRate = FLAGS.regularization_rate
-	
-	#Define the structure of the model:
-	#converts the feature dictionary and feature_columns into an input for the model
-	net = tf.feature_column.input_layer(features, params['feature_columns'])
-	#build hidden layers of the network
-	for units in params['hidden_units']:
-		#can change regularization and activation networks here
-		net = tf.layers.dense(net, units = units, activation=tf.nn.relu)
-	#compute logits (for the output) -- one per class
-	logits = tf.layers.dense(net, params['n_classes'], activation=None)
-	
-	#PREDICT
-	predicted_classes = tf.argmax(logits,1)
-	if mode == tf.estimator.ModeKeys.PREDICT:
-		predictions = {
-			'class_ids': predicted_classes[:,tf.newaxis], # the number code for the chosen answer
-			'probabilites': tf.nn.softmax(logits), #holds the probability for each
-			'logits': logits, #raw logit values
-		}
-		return tf.estimator.EstimatorSpec(mode, predictions=predictions)
-	
-	#compute loss
-	loss = tf.losses.sparse_softmax_cross_entropy(labels=labels, logits=logits)
-	
-	#compute evaluation metrics
-	accuracy = tf.metrics.accuracy(labels=labels, predictions=predicted_classes, name='acc-op')
-	metrics = {'accuracy':accuracy}
-	tf.summary.scalar('accuracy', accuracy[1])
-	
-	#EVALUATION
-	if mode == tf.estimator.ModeKeys.EVAL:
-		return tf.estimator.EstimatorSpec(
-			mode, loss=loss, eval_metric_ops=metrics)
-	
-	#TRAINING
-	assert mode == tf.estimator.ModeKeys.TRAIN
-		
-	optimizer = tf.train.AdagradOptimizer(learningRate)
-	train_op = optimizer.minimize(loss, global_step=tf.train.get_global_step())
-	return tf.estimator.EstimatorSpec(mode, loss=loss, train_op=train_op)
-		
-
-def train(hiddenUnits, steps, trainFeatures, trainLabels, vFeatures, vLabels):
-	#define flags as variables
-	numEpochs = FLAGS.epochs 
-	batchSize = FLAGS.batch_size
-	
-	periods = 10
-	stepsPerPeriod = steps/periods
-	
-	#Create the input and predict functions
-	predictTrainFunction = createPredictFunction(trainFeatures, trainLabels, batchSize)
-	predictValidationFunction = createPredictFunction(vFeatures, vLabels, batchSize)
-	trainingFunction = createTrainingFunction(trainFeatures, trainLabels, batchSize, numEpochs)
-	print("Prediction and Training Input Functions Created")
-	featureColumns = constructFeatures()
-	
-	#Define the model
-	classifier = tf.estimator.Estimator(
-		model_fn = my_model_fn,
-		params={
-			'feature_columns': featureColumns,
-			'hidden_units': hiddenUnits,
-			'n_classes':11,
-		})
-	
-	print ("Training model...")
-	print ("LogLoss error (on validation data):")
-	
-	#create lists to store the error over time
-	training_errors = []
-	validation_errors = []
-	
-	#convert from encoding to one hot array 
-	trainLabels = oneHotArray(trainLabels)
-	vLabels2 = oneHotArray(vLabels)
-	
-	#Perform the training in steps so we can visualize progression of error
-	for period in range (0, periods):
-		classifier.train(
-			input_fn = trainingFunction, steps = stepsPerPeriod)
-		
-		#Store Metrics about training data and predictions
-		training_predictions = list(classifier.predict(input_fn = predictTrainFunction))
-		training_probabilities = np.array([item['probabilities'] for item in training_predictions])
-		training_pred_class_id = np.array([item['class_ids'][0] for item in training_predictions])
-		training_pred_one_hot = tf.keras.utils.to_categorical(training_pred_class_id, 11)
-
-		#Store metrics about validation data and predictions
-		validation_predictions = list(classifier.predict(input_fn = predictValidationFunction))
-		validation_probabilities = np.array([item['probabilities'] for item in validation_predictions])
-		validation_pred_class_id = np.array([item['class_ids'][0] for item in validation_predictions])
-		validation_pred_one_hot = tf.keras.utils.to_categorical(validation_pred_class_id, 11)
-
-		#Calculate overall log loss
-		training_log_loss = metrics.log_loss(trainLabels, training_pred_one_hot)
-		validation_log_loss = metrics.log_loss(vLabels2, validation_pred_one_hot)
-
-		print(" period %02d: %0.2f" % (period, validation_log_loss))
-		
-		#store the training error and validation error
-		training_errors.append(training_log_loss)
-		validation_errors.append(validation_log_loss)
-	print("Model training finished")
-	
-	#tbh not sure what this is doing but seems important
-	_ = map(os.remove, glob.glob(os.path.join(classifier.model_dir,'events.out.tfevents*')))
-
-	#store metrics about validation data and predictions
-	final_predictions = classifier.predict(input_fn = predictValidationFunction)
-	final_predictions = np.array([item['class_ids'][0] for item in final_predictions])
-
-	#Determine overall validation accuracy
-	accuracy = metrics.accuracy_score(vLabels, final_predictions)
-	print("Final accuracy (on validation data): %0.2f" % accuracy)
-	print("Training Errors: ", training_errors)
-
-	#display loss over time curve to aid optimization
-	plt.ylabel("LogLoss")
-	plt.xlabel("Periods")
-	plt.title("Logloss vs Periods")
-	plt.plot(training_errors, label="training")
-	plt.plot(validation_errors, label="validation")
-	plt.legend()
-	plt.show()
-
-	#display confusion matrix to aid in debugging
-	cm = metrics.confusion_matrix(vLabels, final_predictions)
-	cm_normalized = cm.astype("float") / cm.sum(axis=1) [:, np.newaxis]
-	ax = sns.heatmap(cm_normalized, cmap = "bone_r")
-	ax.set_aspect(1)
-	plt.title("Confusion matrix")
-	plt.ylabel("True label")
-	plt.xlabel ("Predicted label")
-	plt.show()
-	#confusing because not sure what each label means (0,1,2 etc)
-
-	return classifier
-
+def nextBatch(batchSize, trainNumber):
+	global batchIndex
+	start = batchIndex
+	batchIndex += batchSize
+	if batchIndex > trainNumber:
+		batchIndex = trainNumber
+	end = batchIndex
+	return start, end
 
 def main(argv = None):
 	#Call all methods defined above and determine the shape of the network
-	features, labels = extract_data()
-	labels= one_hot(labels)
-	trainLabels, trainFeatures, vLabels, vFeatures, testLabels, testFeatures = partition_data(features, labels)
-	classifier = train(hiddenUnits, 100, trainFeatures, trainLabels, vFeatures, vLabels)
-	print("--Training Complete--")
-	predict_test_input_fn = createPredictFunction(testFeatures, testLabels, 100)
+	learningRate = FLAGS.learning_rate
+	epochsTrained = FLAGS.epochs
+	batchSize = FLAGS.batch_size
+	#display step
 
-	#store and log data on test predictions
-	test_predictions = classifier.predict(input_fn=predict_test_input_fn)
-	test_predictions = np.array([item['class_ids'][0] for item in test_predictions])
+	data, labels = extractData()
+	labels = oneHot(labels)
+	labels = oneHotArray(labels)
+	trainLabels, trainData, trainNumber, validationLabels, validationData, validationNumber, testLabels, testData, testNumber = partitionData(data, labels)
 
-	#Determine test accuracy
-	accuracy = metrics.accuracy_score(testLabels, test_predictions)
-	print("Final accuracy (on test data): %0.2f" % accuracy)
+	inputLayer = 26*maxEntries*3
+
+	#tf Graph input
+	X = tf.placeholder(data.dtype, [None, inputLayer])
+	Y = tf.placeholder(labels.dtype, [None, numberClasses])
+
+	#store layers weight & bias
+	weights = {
+		'h1' : tf.Variable(tf.random_normal([inputLayer, hiddenLayer1], dtype=data.dtype)),
+		'h2' : tf.Variable(tf.random_normal([hiddenLayer1, hiddenLayer2], dtype=data.dtype)),
+		'h3' : tf.Variable(tf.random_normal([hiddenLayer2, hiddenLayer3], dtype=data.dtype)),
+		'out' : tf.Variable(tf.random_normal([hiddenLayer3, numberClasses], dtype=data.dtype))
+	}
+
+	biases = {
+		'b1' : tf.Variable(tf.random_normal([hiddenLayer1], dtype=data.dtype)),
+		'b2' : tf.Variable(tf.random_normal([hiddenLayer2], dtype=data.dtype)),
+		'b3' : tf.Variable(tf.random_normal([hiddenLayer3], dtype=data.dtype)),
+		'out' : tf.Variable(tf.random_normal([numberClasses], dtype=data.dtype))
+	}
+
+	#construct model
+	logits = multilayer_perception(X, weights, biases)
+
+	#define loss and optimizer
+	regularization = FLAGS.regularization
+	lossOp = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=logits, labels=Y))
+
+	if (regularization == "l1"):
+		print('Regularization: l1 \n')
+		l1_regularizer = tf.contrib.layers.l1_regularizer(scale=0.005, scope=None)
+		trainedWeights = tf.trainable_variables() # all vars of your graph
+		regularization_penalty = tf.contrib.layers.apply_regularization(l1_regularizer, trainedWeights)
+		lossOp = lossOp + regularization_penalty
+
+	elif (regularization == "l2"):
+		print('Regularization: l2 \n')
+		l1_regularizer = tf.contrib.layers.l2_regularizer(scale=0.005, scope=None)
+		trainedWeights = tf.trainable_variables() # all vars of your graph
+		regularization_penalty = tf.contrib.layers.apply_regularization(l1_regularizer, trainedWeights)
+		lossOp = lossOp + regularization_penalty
+	else:
+		print('Regularization: none \n')
+		lossOp = lossOp
+
+	optimizer = tf.train.AdamOptimizer(learning_rate=learningRate)
+	trainOp = optimizer.minimize(lossOp)
+
+	#initialize global variables
+	init = tf.global_variables_initializer()
+
+	#initialize arrays for losses
+	trainingLoss = []
+
+	#creating and running session
+	with tf.Session() as sess:
+		sess.run(init)
+
+		#training cycle
+		for epoch in range(epochsTrained):
+			global batchIndex 
+			batchIndex = 0
+			avgCost = 0
+			totalBatch = int(trainNumber/batchSize)
+
+			for i in range(totalBatch):
+				batchStart, batchEnd = nextBatch(batchSize, trainNumber)
+				batchData = trainData[batchStart:batchEnd]
+				batchLabels = trainLabels[batchStart:batchEnd]
+
+				_, c = sess.run([trainOp, lossOp], feed_dict={X: batchData, Y: batchLabels})
+				avgCost += c/totalBatch
+
+			if (epoch % 10 == 0):
+				print("Epoch:", '%04d' % (epoch+1), "cost={:.9f}".format(avgCost))
+				resultsFile.write("Epoch:", '%04d' % (epoch+1))
+				resultsFile.write(" \n Cost={:.9f}".format(avgCost))
+				trainingLoss.append(avgCost)
+
+		print ("Optimization Finished")
+		resultsFile.write("Optimization Finished \n")	
+
+		#display loss over time curve to aid optimization
+		plt.ylabel("LogLoss")
+		plt.xlabel("Periods")
+		plt.title("Logloss vs Periods")
+		plt.plot(trainingLoss, label="training")
+		plt.legend()
+		plt.savefig(newDir +'\\logLoss.png')
+		plt.show()
+
+	    #test model 
+		pred = tf.nn.softmax(logits)
+		correctPrediction = tf.equal(tf.argmax(pred,1), tf.argmax(Y,1))
+
+	    #calculate accuracy
+		accuracy = tf.reduce_mean(tf.cast(correctPrediction, "float"))
+
+		print("Training Accuracy:", accuracy.eval({X: trainData, Y: trainLabels}))
+		resultsFile.write("Training Accuracy:" + str(accuracy.eval({X: trainData, Y: trainLabels})) + '\n')	
+		print("Validation Accuracy:", accuracy.eval({X: validationData, Y: validationLabels}))
+		resultsFile.write("Validation Accuracy:" + str(accuracy.eval({X: validationData, Y: validationLabels})) + '\n')	
+
 
 #needed in order to call main
 if __name__ == '__main__':
