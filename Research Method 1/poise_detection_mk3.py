@@ -33,9 +33,9 @@ tf.app.flags.DEFINE_integer('batch_size',10,'number of randomly sampled images f
 tf.app.flags.DEFINE_float('learning_rate',0.001,'how quickly the model progresses along the loss curve during optimization')
 tf.app.flags.DEFINE_integer('epochs',10,'number of passes over the training data')
 tf.app.flags.DEFINE_float('regularization_rate',0.01,'Strength of regularization')
-tf.app.flags.DEFINE_string('regularization', 'default', 'This is the regularization function used in cost calcuations')
-tf.app.flags.DEFINE_string('activation', 'default', 'This is the activation function to use in the layers')
-tf.app.flags.DEFINE_string('label', ' ', 'This is the label name where the files are saved')
+tf.app.flags.DEFINE_string('regularization', 'Default', 'This is the regularization function used in cost calcuations')
+tf.app.flags.DEFINE_string('activation', 'Default', 'This is the activation function to use in the layers')
+tf.app.flags.DEFINE_string('label', 'test', 'This is the label name where the files are saved')
 
 FLAGS = tf.app.flags.FLAGS
 
@@ -109,7 +109,7 @@ dirname = os.path.realpath('.')
 filename = dirname + '\\Data\\TestNumber.txt'
 
 #Creating a folder to save the results
-folderName = FLAGS.label
+folderName = FLAGS.label + "E" + str(FLAGS.epochs) + "LR" + str(FLAGS.learning_rate) + FLAGS.activation + FLAGS.regularization + "RR" + str(FLAGS.regularization_rate)
 newDir = dirname + '\\ModelsAndResults_mk3\\' + folderName
 if not (os.path.exists(newDir)):
 	os.makedirs(newDir)
@@ -273,7 +273,7 @@ def oneHotArray(labels):
 #creates the model
 def multilayer_perception(x, weights, biases):
 	activation = FLAGS.activation
-	if (activation == "sigmoid"):
+	if (activation == "Sigmoid"):
 		print('Activation Layer: sigmoid \n')
 		#Layers
 		layer1 = tf.nn.sigmoid(tf.add(tf.matmul(x, weights['h1']), biases['b1']))
@@ -281,7 +281,7 @@ def multilayer_perception(x, weights, biases):
 		layer3 = tf.nn.sigmoid(tf.add(tf.matmul(layer1, weights['h3']), biases['b3']))
 		outLayer = tf.add(tf.matmul(layer2, weights['out']), biases['out'])
 		return outLayer
-	elif (activation == "tanh"):
+	elif (activation == "Tanh"):
 		print('Activation Layer: tanh \n')
 		#Layers
 		layer1 = tf.nn.tanh(tf.add(tf.matmul(x, weights['h1']), biases['b1']))
@@ -289,7 +289,7 @@ def multilayer_perception(x, weights, biases):
 		layer3 = tf.nn.tanh(tf.add(tf.matmul(layer1, weights['h3']), biases['b3']))
 		outLayer = tf.add(tf.matmul(layer2, weights['out']), biases['out'])
 		return outLayer
-	elif (activation == "relu"):
+	elif (activation == "Relu"):
 		print('Activation Layer: relu \n')
 		#Layers
 		layer1 = tf.nn.relu(tf.add(tf.matmul(x, weights['h1']), biases['b1']))
@@ -353,18 +353,19 @@ def main(argv = None):
 
 	#define loss and optimizer
 	regularization = FLAGS.regularization
-	lossOp = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=logits, labels=Y))
+	regularizationRate = FLAGS.regularization_rate
+	lossOp = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits_v2(logits=logits, labels=Y))
 
 	if (regularization == "l1"):
-		print('Regularization: l1 \n')
-		l1_regularizer = tf.contrib.layers.l1_regularizer(scale=0.005, scope=None)
+		print('Regularization: L1 \n')
+		l1_regularizer = tf.contrib.layers.l1_regularizer(scale=regularizationRate, scope=None)
 		trainedWeights = tf.trainable_variables() # all vars of your graph
 		regularization_penalty = tf.contrib.layers.apply_regularization(l1_regularizer, trainedWeights)
 		lossOp = lossOp + regularization_penalty
 
-	elif (regularization == "l2"):
+	elif (regularization == "L2"):
 		print('Regularization: l2 \n')
-		l1_regularizer = tf.contrib.layers.l2_regularizer(scale=0.005, scope=None)
+		l1_regularizer = tf.contrib.layers.l2_regularizer(scale=regularizationRate, scope=None)
 		trainedWeights = tf.trainable_variables() # all vars of your graph
 		regularization_penalty = tf.contrib.layers.apply_regularization(l1_regularizer, trainedWeights)
 		lossOp = lossOp + regularization_penalty
@@ -402,7 +403,7 @@ def main(argv = None):
 
 			if (epoch % 10 == 0):
 				print("Epoch:", '%04d' % (epoch+1), "cost={:.9f}".format(avgCost))
-				resultsFile.write("Epoch:", '%04d' % (epoch+1))
+				resultsFile.write("Epoch: %04d" % (epoch+1))
 				resultsFile.write(" \n Cost={:.9f}".format(avgCost))
 				trainingLoss.append(avgCost)
 
