@@ -382,6 +382,9 @@ def main(argv = None):
 	#initialize arrays for losses
 	trainingLoss = []
 
+	# 'Saver' op to save and restore all the variables
+	saver = tf.train.Saver()
+
 	#creating and running session
 	with tf.Session() as sess:
 		sess.run(init)
@@ -406,6 +409,8 @@ def main(argv = None):
 				resultsFile.write("Epoch: %04d" % (epoch+1))
 				resultsFile.write(" \n Cost={:.9f}".format(avgCost))
 				trainingLoss.append(avgCost)
+				modelPath =  newDir + "\\Epoch" + str(epoch) + ".ckpt"
+				saver.save(sess, modelPath)
 
 		print ("Optimization Finished")
 		resultsFile.write("Optimization Finished \n")	
@@ -431,6 +436,20 @@ def main(argv = None):
 		print("Validation Accuracy:", accuracy.eval({X: validationData, Y: validationLabels}))
 		resultsFile.write("Validation Accuracy:" + str(accuracy.eval({X: validationData, Y: validationLabels})) + '\n')	
 
+	testing = 0
+	while (testing == 0)
+		modelToLoad = input ("Please enter a model to load and test")
+		print ("Waiting to test model")
+		with tf.Session as sess: 
+			sess.run(init)
+			modelLoadPath = newDir + "\\Epoch" + str(modelToLoad) + ".ckpt"
+			print ("Model restored from: ", modelLoadPath)
+			saver.restore(sess, modelLoadPath)
+			
+			correct_prediction = tf.equal(tf.argmax(pred, 1), tf.argmax(y, 1))
+    		# Calculate accuracy
+			accuracy = tf.reduce_mean(tf.cast(correct_prediction, "float"))
+			print("Accuracy:", accuracy.eval({x: testData, y: testLabels}))
 
 #needed in order to call main
 if __name__ == '__main__':
