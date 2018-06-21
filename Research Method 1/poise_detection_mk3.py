@@ -35,7 +35,7 @@ tf.app.flags.DEFINE_integer('epochs',10,'number of passes over the training data
 tf.app.flags.DEFINE_float('regularization_rate',0.01,'Strength of regularization')
 tf.app.flags.DEFINE_string('regularization', 'Default', 'This is the regularization function used in cost calcuations')
 tf.app.flags.DEFINE_string('activation', 'Default', 'This is the activation function to use in the layers')
-tf.app.flags.DEFINE_string('label', 'test', 'This is the label name where the files are saved')
+tf.app.flags.DEFINE_string('label', 'test1', 'This is the label name where the files are saved')
 
 FLAGS = tf.app.flags.FLAGS
 
@@ -125,9 +125,10 @@ resultsFile.write("Number of Filed Detected: " + str(numberTests) + '\n')
 
 #GLOBAL
 #network parameters:
-hiddenLayer1 = 16
-hiddenLayer2 = 16
-hiddenLayer3 = 16
+hiddenLayer1 = 30
+hiddenLayer2 = 30
+hiddenLayer3 = 30
+hiddenLayer4 = 30
 numberClasses = 11
 
 #batch Index variable
@@ -278,32 +279,33 @@ def multilayer_perception(x, weights, biases):
 		#Layers
 		layer1 = tf.nn.sigmoid(tf.add(tf.matmul(x, weights['h1']), biases['b1']))
 		layer2 = tf.nn.sigmoid(tf.add(tf.matmul(layer1, weights['h2']), biases['b2']))
-		layer3 = tf.nn.sigmoid(tf.add(tf.matmul(layer1, weights['h3']), biases['b3']))
-		outLayer = tf.add(tf.matmul(layer2, weights['out']), biases['out'])
+		layer3 = tf.nn.sigmoid(tf.add(tf.matmul(layer2, weights['h3']), biases['b3']))
+		outLayer = tf.add(tf.matmul(layer3, weights['out']), biases['out'])
 		return outLayer
 	elif (activation == "Tanh"):
 		print('Activation Layer: tanh \n')
 		#Layers
 		layer1 = tf.nn.tanh(tf.add(tf.matmul(x, weights['h1']), biases['b1']))
 		layer2 = tf.nn.tanh(tf.add(tf.matmul(layer1, weights['h2']), biases['b2']))
-		layer3 = tf.nn.tanh(tf.add(tf.matmul(layer1, weights['h3']), biases['b3']))
-		outLayer = tf.add(tf.matmul(layer2, weights['out']), biases['out'])
+		layer3 = tf.nn.tanh(tf.add(tf.matmul(layer2, weights['h3']), biases['b3']))
+		layer4 = tf.nn.tanh(tf.add(tf.matmul(layer3, weights['h4']), biases['b4']))		
+		outLayer = tf.add(tf.matmul(layer4, weights['out']), biases['out'])
 		return outLayer
 	elif (activation == "Relu"):
 		print('Activation Layer: relu \n')
 		#Layers
 		layer1 = tf.nn.relu(tf.add(tf.matmul(x, weights['h1']), biases['b1']))
 		layer2 = tf.nn.relu(tf.add(tf.matmul(layer1, weights['h2']), biases['b2']))
-		layer3 = tf.nn.relu(tf.add(tf.matmul(layer1, weights['h3']), biases['b3']))
-		outLayer = tf.add(tf.matmul(layer2, weights['out']), biases['out'])
+		layer3 = tf.nn.relu(tf.add(tf.matmul(layer2, weights['h3']), biases['b3']))
+		outLayer = tf.add(tf.matmul(layer3, weights['out']), biases['out'])
 		return outLayer
 	else:
 		print('Activation Layer: none \n')
 		#Layers
 		layer1 = tf.add(tf.matmul(x, weights['h1']), biases['b1'])
 		layer2 = tf.add(tf.matmul(layer1, weights['h2']), biases['b2'])
-		layer3 = tf.add(tf.matmul(layer1, weights['h3']), biases['b3'])
-		outLayer = tf.add(tf.matmul(layer2, weights['out']), biases['out'])
+		layer3 = tf.add(tf.matmul(layer2, weights['h3']), biases['b3'])
+		outLayer = tf.add(tf.matmul(layer3, weights['out']), biases['out'])
 		return outLayer
 
 def nextBatch(batchSize, trainNumber):
@@ -338,13 +340,15 @@ def main(argv = None):
 		'h1' : tf.Variable(tf.random_normal([inputLayer, hiddenLayer1], dtype=data.dtype)),
 		'h2' : tf.Variable(tf.random_normal([hiddenLayer1, hiddenLayer2], dtype=data.dtype)),
 		'h3' : tf.Variable(tf.random_normal([hiddenLayer2, hiddenLayer3], dtype=data.dtype)),
-		'out' : tf.Variable(tf.random_normal([hiddenLayer3, numberClasses], dtype=data.dtype))
+		'h4' : tf.Variable(tf.random_normal([hiddenLayer3, hiddenLayer4], dtype=data.dtype)),
+		'out' : tf.Variable(tf.random_normal([hiddenLayer4, numberClasses], dtype=data.dtype))
 	}
 
 	biases = {
 		'b1' : tf.Variable(tf.random_normal([hiddenLayer1], dtype=data.dtype)),
 		'b2' : tf.Variable(tf.random_normal([hiddenLayer2], dtype=data.dtype)),
 		'b3' : tf.Variable(tf.random_normal([hiddenLayer3], dtype=data.dtype)),
+		'b4' : tf.Variable(tf.random_normal([hiddenLayer4], dtype=data.dtype)),		
 		'out' : tf.Variable(tf.random_normal([numberClasses], dtype=data.dtype))
 	}
 
@@ -409,8 +413,8 @@ def main(argv = None):
 				resultsFile.write("Epoch: %04d" % (epoch+1))
 				resultsFile.write(" \n Cost={:.9f}".format(avgCost))
 				trainingLoss.append(avgCost)
-				modelPath =  newDir + "\\Epoch" + str(epoch) + ".ckpt"
-				saver.save(sess, modelPath)
+		modelPath =  newDir + "\\model.ckpt"
+		saver.save(sess, modelPath)
 
 		print ("Optimization Finished")
 		resultsFile.write("Optimization Finished \n")	
@@ -422,7 +426,6 @@ def main(argv = None):
 		plt.plot(trainingLoss, label="training")
 		plt.legend()
 		plt.savefig(newDir +'\\logLoss.png')
-		plt.show()
 
 	    #test model 
 		pred = tf.nn.softmax(logits)
@@ -437,29 +440,22 @@ def main(argv = None):
 		resultsFile.write("Validation Accuracy:" + str(accuracy.eval({X: validationData, Y: validationLabels})) + '\n')	
 
 	testing = 0
-	while (testing == 0)
-		modelToLoad = input ("Please enter a model to load and test")
+	while (testing == 0):
+		#modelToLoad = input ("Please enter a model to load and test")
 		print ("Waiting to test model")
-		with tf.Session as sess: 
+		with tf.Session() as sess: 
 			sess.run(init)
-			modelLoadPath = newDir + "\\Epoch" + str(modelToLoad) + ".ckpt"
-			print ("Model restored from: ", modelLoadPath)
-			saver.restore(sess, modelLoadPath)
+			#modelLoadPath = newDir + "\\Epoch" + str(modelToLoad) + ".ckpt"
+			print ("Model restored from: ", modelPath)
+			saver.restore(sess, modelPath)
 			
-			correct_prediction = tf.equal(tf.argmax(pred, 1), tf.argmax(y, 1))
+			correct_prediction = tf.equal(tf.argmax(pred, 1), tf.argmax(Y, 1))
     		# Calculate accuracy
 			accuracy = tf.reduce_mean(tf.cast(correct_prediction, "float"))
-			print("Accuracy:", accuracy.eval({x: testData, y: testLabels}))
+			print("Accuracy:", accuracy.eval({X: validationData, Y: validationLabels}))
+			print("Accuracy:", accuracy.eval({X: testData, Y: testLabels}))
+			testing = 1
 
 #needed in order to call main
 if __name__ == '__main__':
 	main()
-	
-	
-	
-	
-	
-	
-	
-
-	
