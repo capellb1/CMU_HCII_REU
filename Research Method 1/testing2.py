@@ -435,22 +435,22 @@ def main(argv = None):
 		'b2' : tf.Variable(tf.random_normal([hiddenLayer2], dtype=data.dtype)),
 		'out' : tf.Variable(tf.random_normal([numberClasses], dtype=data.dtype))
 		}
-	 
-	weights = {
-	'h1' : tf.Variable(tf.random_normal([inputLayer, hiddenLayer1], dtype=data.dtype)),
-	'h2' : tf.Variable(tf.random_normal([hiddenLayer1, hiddenLayer2], dtype=data.dtype)),
-	'h3' : tf.Variable(tf.random_normal([hiddenLayer2, hiddenLayer3], dtype=data.dtype)),
-	'h4' : tf.Variable(tf.random_normal([hiddenLayer3, hiddenLayer4], dtype=data.dtype)),
-	'out' : tf.Variable(tf.random_normal([hiddenLayer4, numberClasses], dtype=data.dtype))
-	}
+	else:
+		weights = {
+		'h1' : tf.Variable(tf.random_normal([inputLayer, hiddenLayer1], dtype=data.dtype)),
+		'h2' : tf.Variable(tf.random_normal([hiddenLayer1, hiddenLayer2], dtype=data.dtype)),
+		'h3' : tf.Variable(tf.random_normal([hiddenLayer2, hiddenLayer3], dtype=data.dtype)),
+		'h4' : tf.Variable(tf.random_normal([hiddenLayer3, hiddenLayer4], dtype=data.dtype)),
+		'out' : tf.Variable(tf.random_normal([hiddenLayer4, numberClasses], dtype=data.dtype))
+		}
 
-	biases = {
-	'b1' : tf.Variable(tf.random_normal([hiddenLayer1], dtype=data.dtype)),
-	'b2' : tf.Variable(tf.random_normal([hiddenLayer2], dtype=data.dtype)),
-	'b3' : tf.Variable(tf.random_normal([hiddenLayer3], dtype=data.dtype)),
-	'b4' : tf.Variable(tf.random_normal([hiddenLayer4], dtype=data.dtype)),		
-	'out' : tf.Variable(tf.random_normal([numberClasses], dtype=data.dtype))
-	}
+		biases = {
+		'b1' : tf.Variable(tf.random_normal([hiddenLayer1], dtype=data.dtype)),
+		'b2' : tf.Variable(tf.random_normal([hiddenLayer2], dtype=data.dtype)),
+		'b3' : tf.Variable(tf.random_normal([hiddenLayer3], dtype=data.dtype)),
+		'b4' : tf.Variable(tf.random_normal([hiddenLayer4], dtype=data.dtype)),		
+		'out' : tf.Variable(tf.random_normal([numberClasses], dtype=data.dtype))
+		}
 
 	#construct model
 	logits = multilayer_perception(X, weights, biases)
