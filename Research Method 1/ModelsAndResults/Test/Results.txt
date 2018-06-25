@@ -1,5 +1,0 @@
-Number of Filed Detected: 6
-Maximum Number of Entries in a Single Exercise: 12987
-Number of Training Cases: 4
-Number of Validation Cases: 1
-Number of Test Cases: 1

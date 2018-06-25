@@ -1,0 +1,13 @@
+Epoch: 0001Validation Accuracy:0.2
+Epoch: 0011Validation Accuracy:0.5
+Epoch: 0021Validation Accuracy:0.5
+Epoch: 0031Validation Accuracy:0.5
+Epoch: 0041Validation Accuracy:0.6
+Epoch: 0051Validation Accuracy:0.6
+Epoch: 0061Validation Accuracy:0.6
+Epoch: 0071Validation Accuracy:0.6
+Epoch: 0081Validation Accuracy:0.6
+Epoch: 0091Validation Accuracy:0.6
+Training Accuracy:0.5714286
+Final Validation Accuracy:0.6
+Testing Accuracy:0.6666667
