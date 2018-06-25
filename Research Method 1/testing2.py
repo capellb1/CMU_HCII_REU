@@ -460,8 +460,8 @@ def main(argv = None):
 	regularizationRate = FLAGS.regularization_rate
 	lossOp = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits_v2(logits=logits, labels=Y))
 
-	if (regularization == "l1"):
-		print('Regularization: L1 \n')
+	if (regularization == "L1"):
+		print('Regularization: l1 \n')
 		l1_regularizer = tf.contrib.layers.l1_regularizer(scale=regularizationRate, scope=None)
 		trainedWeights = tf.trainable_variables() # all vars of your graph
 		regularization_penalty = tf.contrib.layers.apply_regularization(l1_regularizer, trainedWeights)
