@@ -1,9 +1,13 @@
 # CMU_HCII_REU
-## Carnegie Mellon University- Human Computer Interaction Insitute -Research Experience for Undergraduates
+## Carnegie Mellon University- Human Computer Interaction Insitute
+
+## Research Experience for Undergraduates (REU) Summer 2018
 
 ### Students: Blake Capella & Deepak Subramanian
 
-### PI: Dr. Daniel Siewiorek, Assisting Professors: Dr. Asim Smailagic & Dr. Roberta Klatzky
+### PI: Dr. Daniel Siewiorek
+
+### Assisting Professors: Dr. Asim Smailagic & Dr. Roberta Klatzky
 
 Includes code related to the creation of a cognitive assistant using the Microsoft Kinect 2 through real time data processing and machine learning.
 
@@ -23,17 +27,17 @@ Assumes that you are reading from a data library constructed by the task_sequenc
 If not, organize your data as follows:
 
 	-Data
-	 -test0
-	  -Position_Head.csv (organized by x,y,z,ts)
-	   -Position_Neck.csv
-		-...
-	   -Velocity_Head.csv
-		-...	
+		test0
+	 		Position_Head.csv (organized by x,y,z,ts)
+			Position_Neck.csv
+			...
+			Velocity_Head.csv
+			...	
 			Task_Head.csv
-	 -test1
-	 -test2
-	 -...
-	 -TestNumber.txt (stores total number of examples/identified actions)
+		test1
+		test2
+	 	...
+		TestNumber.txt (stores total number of examples/identified actions)
 	-TRAINING FILE
 
 Otherwise, organize code as you see fit
