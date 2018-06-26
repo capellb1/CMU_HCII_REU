@@ -1,10 +1,9 @@
 # CMU_HCII_REU
-##Carnegie Mellon University- Human Computer Interaction Insitute -Research Experience for Undergraduates
+## Carnegie Mellon University- Human Computer Interaction Insitute -Research Experience for Undergraduates
 
-###Students: Blake Capella & Deepak Subramanian
+### Students: Blake Capella & Deepak Subramanian
 
-###PI: Dr. Daniel Siewiorek
-###Assisting Professors: Dr. Asim Smailagic & Dr. Roberta Klatzky
+### PI: Dr. Daniel Siewiorek, Assisting Professors: Dr. Asim Smailagic & Dr. Roberta Klatzky
 
 Includes code related to the creation of a cognitive assistant using the Microsoft Kinect 2 through real time data processing and machine learning.
 
@@ -41,9 +40,10 @@ Otherwise, organize code as you see fit
 
 Unless stated, the input for flags can be any keyboard input
 Flags:
+
 	-batch_size 
 	 -number of randomly sampled images from the training set
-			DEFAULT: 1000(poise) or 10(exercise)
+	 -DEFAULT: 1000(poise) or 10(exercise)
 	-learning_rate
 	 -how quickly the model progresses along the loss curve during optimization
 	  -DEFAULT: 0.001
