@@ -14,9 +14,9 @@ The source of the data being used to train the fully connected neural net can be
 
 Many flags might not be used in everu file, they were included for consistency between the multiple training files:
 
-	>poise_detector_mk*.py
-	>poise_detector_batch_mk*.py
-	>exercise_detection_mk*.py
+	poise_detector_mk*.py
+	poise_detector_batch_mk*.py
+	exercise_detection_mk*.py
 
 Unless otherwise stated, assume highest number to be the most current/advanced file
 

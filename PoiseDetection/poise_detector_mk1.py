@@ -181,7 +181,7 @@ maxEntries = 0
 timeScores = []
 for i in range(0,int(numberTests)):
 	numEntries = 0
-	for line in open(dirname + "\\Data\\test" + str(i) + "\\Position_" + file_names[0]):
+	for line in open(dirname + "\\Data\\test" + str(i) + "\\" + FLAGS.source + "_" + file_names[0]):
 		numEntries = numEntries + 1
 	if numEntries > maxEntries:
 		maxEntries = numEntries	
@@ -205,7 +205,7 @@ def extractData():
 			k=0
 			w=0
 			for j in range(0, 27):
-				fp = open(dirname + "\\Data\\test" + str(i)+ "\\Position_" + file_names[j])
+				fp = open(dirname + "\\Data\\test" + str(i)+ "\\" + FLAGS.source + "_" + file_names[j])
 				for n, line in enumerate(fp):
 					if n == w:
 						row = line.split(',')
