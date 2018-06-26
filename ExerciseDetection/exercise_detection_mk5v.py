@@ -31,7 +31,7 @@ import glob
 #Define Flags to change the Hyperperameters
 tf.app.flags.DEFINE_integer('batch_size',10,'number of randomly sampled images from the training set')
 tf.app.flags.DEFINE_float('learning_rate',0.001,'how quickly the model progresses along the loss curve during optimization')
-tf.app.flags.DEFINE_integer('epochs',10,'number of passes over the training data')
+tf.app.flags.DEFINE_integer('epochs',100,'number of passes over the training data')
 tf.app.flags.DEFINE_float('regularization_rate',0.01,'Strength of regularization')
 tf.app.flags.DEFINE_string('regularization', 'Default', 'This is the regularization function used in cost calcuations')
 tf.app.flags.DEFINE_string('activation', 'Default', 'This is the activation function to use in the layers')
