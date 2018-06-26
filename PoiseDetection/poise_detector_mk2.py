@@ -153,15 +153,16 @@ resultsFile.write("Maximum Number of Entries in Single Exercise: " + str(maxEntr
 #[Arm2xyz, Head2xyz, Foot2xyz, ...] EVENT 2
 
 def extractData():
-	data =  np.empty((sum(timeScores), int(27*3)))
+	data =  np.empty((int((sum(timeScores))/5), int(5*27*3)))
 	numTimeStamps = 0
 	
 	for i in range(0, int(numberTests)):
-		#Determine the number of time stamps in this event
-		for l in range(numTimeStamps,timeScores[i]):
+		#Determine the number of time stamps in this event 
+		for l in range(numTimeStamps,numTimeStamps + timeScores[i]):
 			for j in range(0, 27):
 				fp = open(dirname + "\\Data\\test" + str(i)+ "\\Position_" + file_names[j])
-				k=0
+				if (l%5 == 0):
+					k=0
 				for n, line in enumerate(fp):
 					if n == l:
 						row = line.split(',')
@@ -177,7 +178,7 @@ def extractData():
 		for line in open(dirname + "\\Data\\test" + str(i)+ "\\label.csv"):
 			temporaryLabel = line.split()
 			
-			for j in range(0,timeScores[i]):
+			for j in range(0,int(timeScores[i]/5)):
 				labels.append(str(temporaryLabel[0]))
 	
 	#shuffle the data
@@ -340,7 +341,7 @@ def main(argv = None):
 	labels = oneHotArray(labels)
 	trainLabels, trainData, trainNumber, validationLabels, validationData, validationNumber, testLabels, testData, testNumber = partitionData(data, labels)
 
-	inputLayer = 26*3
+	inputLayer = 27*3
 
 	#tf Graph input
 	X = tf.placeholder(data.dtype, [None, inputLayer])
