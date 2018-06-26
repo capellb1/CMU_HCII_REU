@@ -1,8 +1,48 @@
-#CMU HCII REU Summer 2018
-#PI: Dr. Sieworek
-#Students:  Blake Capella & Deepak Subramanian
-#
-#MUST HAVE AT LEAST 5 files
+'''
+CMU HCII REU Summer 2018
+PI: Dr. Sieworek
+Students:  Blake Capella & Deepak Subramanian
+Date: 06/26/18
+
+The following code trains a neural net by grouping a set number of frames together as a single feature.
+This number of frames is variable, and is controlled by the frames flag.
+The source of the data being used to train the net can be toggled between the natural data (Position) and synthetic/calculated
+features (Position, Task). This is controlled by the --source flag.
+
+Many flags might not be used in this file, they were included for consistency between the multiple training files.
+	poise_detector_mk*.py
+	poise_detector_batch_mk*.py
+	exercise_detection_mk*.py
+
+	Unless otherwise stated, assume highest number to be the most current/advanced file
+
+MUST HAVE AT LEAST 5 files in order to be used
+
+Assumes that you are reading from a data library constructed by the task_sequencer_v2.pde file
+If not, organize your data as follows:
+	Data
+		test0
+			Position_Head.csv (organized by x,y,z,ts)
+			Position_Neck.csv
+			.
+			.
+			.
+			Velocity_Head.csv
+			.
+			.
+			.
+			Task_Head.csv
+		test1
+		test2
+		.
+		.
+		.
+		TestNumber.txt (stores total number of examples/identified actions)
+	THIS FILE
+
+Otherwise, organize code as you see fit
+
+'''
 
 #Import Libraries
 import math
@@ -36,6 +76,10 @@ tf.app.flags.DEFINE_float('regularization_rate',0.01,'Strength of regularization
 tf.app.flags.DEFINE_string('regularization', 'Default', 'This is the regularization function used in cost calcuations')
 tf.app.flags.DEFINE_string('activation', 'Default', 'This is the activation function to use in the layers')
 tf.app.flags.DEFINE_string('label', 'test1', 'This is the label name where the files are saved')
+tf.app.flags.DEFINE_integer('frames', 5, 'Number of frames to be analyzed at a time')
+tf.app.flags.DEFINE_string('source', 'Position', 'What files to draw data from (Task, Velocity, Position)')
+tf.app.flags.DEFINE_string('arch', 'method1', 'This specifies the architecture used')
+
 
 FLAGS = tf.app.flags.FLAGS
 
@@ -153,23 +197,24 @@ resultsFile.write("Maximum Number of Entries in Single Exercise: " + str(maxEntr
 #[Arm2xyz, Head2xyz, Foot2xyz, ...] EVENT 2
 
 def extractData():
-	data =  np.empty((int((sum(timeScores))/5), int(5*27*3)))
+	data =  np.empty((int((sum(timeScores))/FLAGS.frames), int(FLAGS.frames*27*3)))
 	numTimeStamps = 0
 	
 	for i in range(0, int(numberTests)):
-		#Determine the number of time stamps in this event 
-		for l in range(numTimeStamps,numTimeStamps + timeScores[i]):
+		#Determine the number of time stamps in this event
+		for l in range(numTimeStamps,numTimeStamps+timeScores[i]):
+			if l%FLAGS.frames == 0:
+				k=0
+			w=0
 			for j in range(0, 27):
 				fp = open(dirname + "\\Data\\test" + str(i)+ "\\Position_" + file_names[j])
-				if (l%5 == 0):
-					k=0
 				for n, line in enumerate(fp):
-					if n == l:
+					if n == w:
 						row = line.split(',')
 						for m in range(0,3):
 							data[l][k]= row[m]
-							k = k +1
-		numTimeStamps = timeScores[i] + numTimeStamps
+							k = k + 1
+			w = w+1
 
 	fp.close()
 	labels = []
@@ -178,7 +223,7 @@ def extractData():
 		for line in open(dirname + "\\Data\\test" + str(i)+ "\\label.csv"):
 			temporaryLabel = line.split()
 			
-			for j in range(0,int(timeScores[i]/5)):
+			for j in range(0,int(timeScores[i]/FLAGS.frames)):
 				labels.append(str(temporaryLabel[0]))
 	
 	#shuffle the data
@@ -195,9 +240,9 @@ def extractData():
 def partitionData(features, labels):
 	#Divides the total data up into training, validation, and test sets
 	#division based off of percentages stored at the top of the code
-	train = math.floor(float(sum(timeScores)) * TRAIN_PERCENT)
-	validation = math.floor(float(sum(timeScores)) * VALIDATION_PERCENT)
-	test = math.ceil(float(sum(timeScores)) * TEST_PERCENT)
+	train = math.floor(float(sum(timeScores)/FLAGS.frames) * TRAIN_PERCENT)
+	validation = math.floor(float(sum(timeScores)/FLAGS.frames) * VALIDATION_PERCENT)
+	test = math.ceil(float(sum(timeScores)/FLAGS.frames) * TEST_PERCENT)
 
 	trainLabels = labels[:train]
 	trainFeatures = features[:train]
@@ -237,7 +282,7 @@ def oneHot(labels):
 		elif labels[i].lower() == "sumo":
 			one_hot_labels.append([4])
 		elif labels[i].lower() == "mermaid":
-			one_hot_labels.append([5])
+			one_hot_labels.append([FLAGS.frames])
 		elif labels[i].lower() == "towel":
 			one_hot_labels.append([6])
 		elif labels[i].lower() == "trunk":
@@ -341,7 +386,7 @@ def main(argv = None):
 	labels = oneHotArray(labels)
 	trainLabels, trainData, trainNumber, validationLabels, validationData, validationNumber, testLabels, testData, testNumber = partitionData(data, labels)
 
-	inputLayer = 27*3
+	inputLayer = FLAGS.frames*27*3
 
 	#tf Graph input
 	X = tf.placeholder(data.dtype, [None, inputLayer])
