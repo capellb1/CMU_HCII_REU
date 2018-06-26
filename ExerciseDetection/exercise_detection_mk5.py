@@ -571,12 +571,12 @@ def main(argv = None):
 	    #calculate accuracy
 		accuracy2 = tf.reduce_mean(tf.cast(correctPrediction2, "float"))
 
-		print("Training Accuracy:", accuracy.eval({X: trainData, Y: trainLabels}))
-		resultsFile.write("Training Accuracy:" + str(accuracy.eval({X: trainData, Y: trainLabels})) + '\n')	
-		print("Final Validation Accuracy:", accuracy.eval({X: validationData, Y: validationLabels}))
-		resultsFile.write("Final Validation Accuracy:" + str(accuracy.eval({X: validationData, Y: validationLabels})) + '\n')	
-		print("Testing Accuracy:", accuracy.eval({X: testData, Y: testLabels}))
-		resultsFile.write("Testing Accuracy:" + str(accuracy.eval({X: testData, Y: testLabels})) + '\n')	
+		print("Training Accuracy:", accuracy2.eval({X: trainData, Y: trainLabels}))
+		resultsFile.write("Training Accuracy:" + str(accuracy2.eval({X: trainData, Y: trainLabels})) + '\n')	
+		print("Final Validation Accuracy:", accuracy2.eval({X: validationData, Y: validationLabels}))
+		resultsFile.write("Final Validation Accuracy:" + str(accuracy2.eval({X: validationData, Y: validationLabels})) + '\n')	
+		print("Testing Accuracy:", accuracy2.eval({X: testData, Y: testLabels}))
+		resultsFile.write("Testing Accuracy:" + str(accuracy2.eval({X: testData, Y: testLabels})) + '\n')	
 
 #needed in order to call main
 if __name__ == '__main__':
