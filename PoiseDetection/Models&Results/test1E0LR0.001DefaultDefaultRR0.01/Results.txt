@@ -1,0 +1,8 @@
+Number of Filed Detected: 51
+Maximum Number of Entries in Single Exercise: 849
+Number of Training Cases: 13944
+Number of Validation Cases: 3984
+Number of Test Cases: 1992
+Optimization Finished 
+Training Accuracy:0.22948939
+Validation Accuracy:0.23368473

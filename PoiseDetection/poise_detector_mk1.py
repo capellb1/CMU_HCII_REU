@@ -31,7 +31,7 @@ import glob
 #Define Flags to change the Hyperperameters
 tf.app.flags.DEFINE_integer('batch_size',1000,'number of randomly sampled images from the training set')
 tf.app.flags.DEFINE_float('learning_rate',0.001,'how quickly the model progresses along the loss curve during optimization')
-tf.app.flags.DEFINE_integer('epochs',100,'number of passes over the training data')
+tf.app.flags.DEFINE_integer('epochs',10,'number of passes over the training data')
 tf.app.flags.DEFINE_float('regularization_rate',0.01,'Strength of regularization')
 tf.app.flags.DEFINE_string('regularization', 'Default', 'This is the regularization function used in cost calcuations')
 tf.app.flags.DEFINE_string('activation', 'Default', 'This is the activation function to use in the layers')
@@ -154,22 +154,25 @@ resultsFile.write("Maximum Number of Entries in Single Exercise: " + str(maxEntr
 
 def extractData():
 	data =  np.empty((sum(timeScores), int(27*3)))
-	numTimeStamps = 0
 	
+	numTimeStamps = 0
+	c=0
 	for i in range(0, int(numberTests)):
 		#Determine the number of time stamps in this event
-		for l in range(numTimeStamps,timeScores[i]):
+		for l in range(numTimeStamps,numTimeStamps+timeScores[i]):
+			k=0
+			w=0
 			for j in range(0, 27):
 				fp = open(dirname + "\\Data\\test" + str(i)+ "\\Position_" + file_names[j])
-				k=0
 				for n, line in enumerate(fp):
-					if n == l:
+					if n == w:
 						row = line.split(',')
 						for m in range(0,3):
 							data[l][k]= row[m]
-							k = k +1
+							k = k + 1
+			w = w+1
 		numTimeStamps = timeScores[i] + numTimeStamps
-
+	print("Sum:" , sum(timeScores))
 	fp.close()
 	labels = []
 	#seperate the label from the name and event number stored within the label.csv file(s)
@@ -179,7 +182,7 @@ def extractData():
 			
 			for j in range(0,timeScores[i]):
 				labels.append(str(temporaryLabel[0]))
-	
+
 	#shuffle the data
 	shuffledData = np.empty(data.shape, dtype=data.dtype)
 	shuffledLabels = labels
@@ -189,6 +192,7 @@ def extractData():
 		shuffledLabels[new_index] = labels[old_index]
 
 	shuffledLabels = np.asarray(shuffledLabels)
+	print(data)
 	return shuffledData, shuffledLabels
 
 def partitionData(features, labels):
@@ -340,7 +344,7 @@ def main(argv = None):
 	labels = oneHotArray(labels)
 	trainLabels, trainData, trainNumber, validationLabels, validationData, validationNumber, testLabels, testData, testNumber = partitionData(data, labels)
 
-	inputLayer = 26*3
+	inputLayer = 27*3
 
 	#tf Graph input
 	X = tf.placeholder(data.dtype, [None, inputLayer])
@@ -398,7 +402,7 @@ def main(argv = None):
 	trainingLoss = []
 
 	# 'Saver' op to save and restore all the variables
-	saver = tf.train.Saver()
+	#saver = tf.train.Saver()
 
 	#creating and running session
 	with tf.Session() as sess:
@@ -425,7 +429,7 @@ def main(argv = None):
 				resultsFile.write(" \n Cost={:.9f}".format(avgCost))
 				trainingLoss.append(avgCost)
 		modelPath =  newDir + "\\model.ckpt"
-		saver.save(sess, modelPath)
+		#saver.save(sess, modelPath)
 
 		print ("Optimization Finished")
 		resultsFile.write("Optimization Finished \n")	
@@ -449,6 +453,7 @@ def main(argv = None):
 		resultsFile.write("Training Accuracy:" + str(accuracy.eval({X: trainData, Y: trainLabels})) + '\n')	
 		print("Validation Accuracy:", accuracy.eval({X: validationData, Y: validationLabels}))
 		resultsFile.write("Validation Accuracy:" + str(accuracy.eval({X: validationData, Y: validationLabels})) + '\n')	
+		print("Test Accuracy:", accuracy.eval({X: testData, Y: testLabels}))
 
 	testing = 0
 	while (testing == 0):
@@ -458,7 +463,7 @@ def main(argv = None):
 			sess.run(init)
 			#modelLoadPath = newDir + "\\Epoch" + str(modelToLoad) + ".ckpt"
 			print ("Model restored from: ", modelPath)
-			saver.restore(sess, modelPath)
+			#saver.restore(sess, modelPath)
 			
 			correct_prediction = tf.equal(tf.argmax(pred, 1), tf.argmax(Y, 1))
     		# Calculate accuracy
