@@ -148,18 +148,11 @@ batchIndex = 0
 maxEntries = 0
 for i in range(0,int(numberTests)):
 	numEntries = 0
-	for line in open(dirname + "\\Data\\test" + str(i) + "\\Position_" + file_names[1]):
+	for line in open(dirname + "\\Data\\test" + str(i) + "\\Velocity_" + file_names[1]):
 		numEntries = numEntries + 1
 	if numEntries > maxEntries:
 		maxEntries = numEntries	
 
-	'''
-	for j in range(0,27):
-		for line in open(dirname + "\\Data\\test" + str(i) + "\\Position_" + file_names[j]):
-			numEntries = numEntries + 1
-		if numEntries > maxEntries:
-			maxEntries = numEntries	
-	'''
 print("Maximum Number of Entries in a Single Exercise: ", maxEntries)
 #resultsFile.write("Maximum Number of Entries in Single Exercise: " + str(maxEntries) + '\n')
 
@@ -172,7 +165,7 @@ def extractData():
 
 	for i in range(0, int(numberTests)):
 		k = 0
-		for line in open(dirname + "\\Data\\test" + str(i)+ "\\Position_" + file_names[0]):
+		for line in open(dirname + "\\Data\\test" + str(i)+ "\\Velocity_" + file_names[0]):
 			row = line.split(',')
 			for l in range(0,3):
 				data[i][k] = row[l]
