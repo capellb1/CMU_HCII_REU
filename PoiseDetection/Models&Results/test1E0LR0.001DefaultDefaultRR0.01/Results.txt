@@ -4,5 +4,5 @@ Number of Training Cases: 13944
 Number of Validation Cases: 3984
 Number of Test Cases: 1992
 Optimization Finished 
-Training Accuracy:0.22948939
-Validation Accuracy:0.23368473
+Training Accuracy:0.12005164
+Validation Accuracy:0.11947791

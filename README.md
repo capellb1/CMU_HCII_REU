@@ -42,6 +42,7 @@ If not, organize your data as follows:
 Otherwise, organize code as you see fit
 
 Unless stated, the input for flags can be any keyboard input
+
 Flags:
 
 	batch_size 
@@ -76,8 +77,8 @@ Flags:
 			Options: Position, Task, Velocity
 	arch
 		specifies the architecture to use
-		method1 = 30x30
-		method2 = 10x10x10
-		method3 = 15x15
+		method1 = 10x10x10
+		method2 = 15x15
+		method3 = 30x30x30x30
 			DEFAULT: method1
 			Options: method1, method2, method3
