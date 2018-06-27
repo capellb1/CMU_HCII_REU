@@ -1,8 +1,47 @@
-#CMU HCII REU Summer 2018
-#PI: Dr. Sieworek
-#Students:  Blake Capella & Deepak Subramanian
-#
-#MUST HAVE AT LEAST 5 files
+'''
+CMU HCII REU Summer 2018
+PI: Dr. Sieworek
+Students:  Blake Capella & Deepak Subramanian
+Date: 06/26/18
+
+The following code trains a neural net by using single frames as features
+The source of the data being used to train the net can be toggled between the natural data (Position) and synthetic/calculated
+features (Position, Task). This is controlled by the --source flag.
+
+Many flags might not be used in this file, they were included for consistency between the multiple training files.
+	poise_detector_mk*.py
+	poise_detector_batch_mk*.py
+	exercise_detection_mk*.py
+
+	Unless otherwise stated, assume highest number to be the most current/advanced file
+
+MUST HAVE AT LEAST 5 files in order to be used
+
+Assumes that you are reading from a data library constructed by the task_sequencer_v2.pde file
+If not, organize your data as follows:
+	Data
+		test0
+			Position_Head.csv (organized by x,y,z,ts)
+			Position_Neck.csv
+			.
+			.
+			.
+			Velocity_Head.csv
+			.
+			.
+			.
+			Task_Head.csv
+		test1
+		test2
+		.
+		.
+		.
+		TestNumber.txt (stores total number of examples/identified actions)
+	THIS FILE
+
+Otherwise, organize code as you see fit
+
+'''
 
 #Import Libraries
 import math
@@ -36,6 +75,9 @@ tf.app.flags.DEFINE_float('regularization_rate',0.01,'Strength of regularization
 tf.app.flags.DEFINE_string('regularization', 'Default', 'This is the regularization function used in cost calcuations')
 tf.app.flags.DEFINE_string('activation', 'Default', 'This is the activation function to use in the layers')
 tf.app.flags.DEFINE_string('label', 'test1', 'This is the label name where the files are saved')
+tf.app.flags.DEFINE_string('source', 'Position', 'What files to draw data frome (Task, Velocity, Position)')
+tf.app.flags.DEFINE_string('arch', 'method1', 'This specifies the architecture used')
+tf.app.flags.DEFINE_integer('frames', 5, 'Number of frames to be analyzed at a time')
 
 FLAGS = tf.app.flags.FLAGS
 
@@ -139,7 +181,7 @@ maxEntries = 0
 timeScores = []
 for i in range(0,int(numberTests)):
 	numEntries = 0
-	for line in open(dirname + "\\Data\\test" + str(i) + "\\Position_" + file_names[0]):
+	for line in open(dirname + "\\Data\\test" + str(i) + "\\" + FLAGS.source + "_" + file_names[0]):
 		numEntries = numEntries + 1
 	if numEntries > maxEntries:
 		maxEntries = numEntries	
@@ -163,7 +205,7 @@ def extractData():
 			k=0
 			w=0
 			for j in range(0, 27):
-				fp = open(dirname + "\\Data\\test" + str(i)+ "\\Position_" + file_names[j])
+				fp = open(dirname + "\\Data\\test" + str(i)+ "\\" + FLAGS.source + "_" + file_names[j])
 				for n, line in enumerate(fp):
 					if n == w:
 						row = line.split(',')
@@ -172,7 +214,6 @@ def extractData():
 							k = k + 1
 			w = w+1
 		numTimeStamps = timeScores[i] + numTimeStamps
-	print("Sum:" , sum(timeScores))
 	fp.close()
 	labels = []
 	#seperate the label from the name and event number stored within the label.csv file(s)
