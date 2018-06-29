@@ -172,6 +172,7 @@ if (arch == 'method1'):
 	hiddenLayer1 = 10
 	hiddenLayer2 = 10
 	hiddenLayer3 = 10
+'''
 elif (arch == 'method2'):
 	hiddenLayer1 = 15
 	hiddenLayer2 = 15
@@ -180,7 +181,7 @@ else:
 	hiddenLayer2 = 30
 	hiddenLayer3 = 30
 	hiddenLayer4 = 30
-
+'''
 #batch Index variable
 batchIndex = 0
 
@@ -323,6 +324,7 @@ def oneHotArray(labels):
 #creates the model
 def multilayer_perception(x, weights, biases):
 	activation = FLAGS.activation
+	'''
 	if (arch == "method1" and activation == "Sigmoid"):
 		print('Activation Layer: sigmoid \n Architecture Used: method1 \n')
 		#Layers
@@ -347,7 +349,8 @@ def multilayer_perception(x, weights, biases):
 		layer3 = tf.nn.relu(tf.add(tf.matmul(layer2, weights['h3']), biases['b3']))
 		outLayer = tf.add(tf.matmul(layer3, weights['out']), biases['out'])
 		return outLayer
-	elif (arch == "method1" and activation == "Default"):
+	'''
+	if (arch == "method1" and activation == "Default"):
 		print('Activation Layer: none \n Architecture Used: method1 \n ')
 		#Layers
 		layer1 = tf.add(tf.matmul(x, weights['h1']), biases['b1'])
@@ -355,6 +358,7 @@ def multilayer_perception(x, weights, biases):
 		layer3 = tf.add(tf.matmul(layer2, weights['h3']), biases['b3'])
 		outLayer = tf.add(tf.matmul(layer3, weights['out']), biases['out'])
 		return outLayer
+	'''
 	elif (arch == "method2" and activation == "Sigmoid"):
 		print('Activation Layer: sigmoid \n Architecture Used: method2 \n')
 		#Layers
@@ -419,7 +423,7 @@ def multilayer_perception(x, weights, biases):
 		layer4 = tf.nn.sigmoid(tf.add(tf.matmul(layer3, weights['h4']), biases['b4']))
 		outLayer = tf.add(tf.matmul(layer4, weights['out']), biases['out'])
 		return outLayer
-
+		'''
 def nextBatch(batchSize, trainNumber):
 	global batchIndex
 	start = batchIndex
@@ -451,47 +455,48 @@ def main(argv = None):
 
 	if (arch == 'method1'):
 		weights = {
-		'h1' : tf.Variable(tf.random_normal([inputLayer, hiddenLayer1], dtype=data.dtype)),
-		'h2' : tf.Variable(tf.random_normal([hiddenLayer1, hiddenLayer2], dtype=data.dtype)),
-		'h3' : tf.Variable(tf.random_normal([hiddenLayer2, hiddenLayer3], dtype=data.dtype)),
-		'out' : tf.Variable(tf.random_normal([hiddenLayer3, numberClasses], dtype=data.dtype))
+		'h1' : tf.Variable(tf.random_normal([inputLayer, hiddenLayer1], dtype=data.dtype), name="h1"),
+		'h2' : tf.Variable(tf.random_normal([hiddenLayer1, hiddenLayer2], dtype=data.dtype), name="h2"),
+		'h3' : tf.Variable(tf.random_normal([hiddenLayer2, hiddenLayer3], dtype=data.dtype), name="h3"),
+		'out' : tf.Variable(tf.random_normal([hiddenLayer3, numberClasses], dtype=data.dtype), name="out1")
 		}
 
 		biases = {
-		'b1' : tf.Variable(tf.random_normal([hiddenLayer1], dtype=data.dtype)),
-		'b2' : tf.Variable(tf.random_normal([hiddenLayer2], dtype=data.dtype)),
-		'b3' : tf.Variable(tf.random_normal([hiddenLayer3], dtype=data.dtype)),
-		'out' : tf.Variable(tf.random_normal([numberClasses], dtype=data.dtype))
+		'b1' : tf.Variable(tf.random_normal([hiddenLayer1], dtype=data.dtype), name="b1"),
+		'b2' : tf.Variable(tf.random_normal([hiddenLayer2], dtype=data.dtype), name="b2"),
+		'b3' : tf.Variable(tf.random_normal([hiddenLayer3], dtype=data.dtype), name="b3"),
+		'out' : tf.Variable(tf.random_normal([numberClasses], dtype=data.dtype), name="out2")
 		}
+	'''
 	elif (arch == "method2"):
 		weights = {
-		'h1' : tf.Variable(tf.random_normal([inputLayer, hiddenLayer1], dtype=data.dtype)),
-		'h2' : tf.Variable(tf.random_normal([hiddenLayer1, hiddenLayer2], dtype=data.dtype)),
-		'out' : tf.Variable(tf.random_normal([hiddenLayer2, numberClasses], dtype=data.dtype))
+		'h1' : tf.Variable(tf.random_normal([inputLayer, hiddenLayer1], dtype=data.dtype), name="h1"),
+		'h2' : tf.Variable(tf.random_normal([hiddenLayer1, hiddenLayer2], dtype=data.dtype), name="h2"),
+		'out' : tf.Variable(tf.random_normal([hiddenLayer2, numberClasses], dtype=data.dtype), name="out1")
 		}
 
 		biases = {
-		'b1' : tf.Variable(tf.random_normal([hiddenLayer1], dtype=data.dtype)),
-		'b2' : tf.Variable(tf.random_normal([hiddenLayer2], dtype=data.dtype)),
-		'out' : tf.Variable(tf.random_normal([numberClasses], dtype=data.dtype))
+		'b1' : tf.Variable(tf.random_normal([hiddenLayer1], dtype=data.dtype), name="b1"),
+		'b2' : tf.Variable(tf.random_normal([hiddenLayer2], dtype=data.dtype), name="b2"),
+		'out' : tf.Variable(tf.random_normal([numberClasses], dtype=data.dtype), name="out2")
 		}
 	else:
 		weights = {
-		'h1' : tf.Variable(tf.random_normal([inputLayer, hiddenLayer1], dtype=data.dtype)),
-		'h2' : tf.Variable(tf.random_normal([hiddenLayer1, hiddenLayer2], dtype=data.dtype)),
-		'h3' : tf.Variable(tf.random_normal([hiddenLayer2, hiddenLayer3], dtype=data.dtype)),
-		'h4' : tf.Variable(tf.random_normal([hiddenLayer3, hiddenLayer4], dtype=data.dtype)),
-		'out' : tf.Variable(tf.random_normal([hiddenLayer4, numberClasses], dtype=data.dtype))
+		'h1' : tf.Variable(tf.random_normal([inputLayer, hiddenLayer1], dtype=data.dtype), name="h1"),
+		'h2' : tf.Variable(tf.random_normal([hiddenLayer1, hiddenLayer2], dtype=data.dtype), name="h2"),
+		'h3' : tf.Variable(tf.random_normal([hiddenLayer2, hiddenLayer3], dtype=data.dtype), name="h3"),
+		'h4' : tf.Variable(tf.random_normal([hiddenLayer3, hiddenLayer4], dtype=data.dtype), name="h4"),
+		'out' : tf.Variable(tf.random_normal([hiddenLayer4, numberClasses], dtype=data.dtype), name="out1")
 		}
 
 		biases = {
-		'b1' : tf.Variable(tf.random_normal([hiddenLayer1], dtype=data.dtype)),
-		'b2' : tf.Variable(tf.random_normal([hiddenLayer2], dtype=data.dtype)),
-		'b3' : tf.Variable(tf.random_normal([hiddenLayer3], dtype=data.dtype)),
-		'b4' : tf.Variable(tf.random_normal([hiddenLayer4], dtype=data.dtype)),		
-		'out' : tf.Variable(tf.random_normal([numberClasses], dtype=data.dtype))
+		'b1' : tf.Variable(tf.random_normal([hiddenLayer1], dtype=data.dtype), name="b1"),
+		'b2' : tf.Variable(tf.random_normal([hiddenLayer2], dtype=data.dtype), name="b2"),
+		'b3' : tf.Variable(tf.random_normal([hiddenLayer3], dtype=data.dtype), name="b3"),
+		'b4' : tf.Variable(tf.random_normal([hiddenLayer4], dtype=data.dtype), name="b4"),		
+		'out' : tf.Variable(tf.random_normal([numberClasses], dtype=data.dtype), name="out2")
 		}
-
+	'''
 	#construct model
 	logits = multilayer_perception(X, weights, biases)
 
@@ -525,7 +530,8 @@ def main(argv = None):
 
 	#initialize arrays for losses
 	trainingLoss = []
-
+	# 'Saver' op to save and restore all the variables
+	saver = tf.train.Saver()
 	#creating and running session
 	with tf.Session() as sess:
 		sess.run(init)
@@ -558,8 +564,10 @@ def main(argv = None):
 				resultsFile.write("Validation Accuracy:" + str(accuracy.eval({X: validationData, Y: validationLabels})) + '\n')	
 
 		modelPath =  newDir + "\\model.ckpt"
+		saver.save(sess, modelPath)
 
 		print ("Optimization Finished")
+		print("Model Saved")
 		#resultsFile.write("Optimization Finished \n")	
 
 		#display loss over time curve to aid optimization
