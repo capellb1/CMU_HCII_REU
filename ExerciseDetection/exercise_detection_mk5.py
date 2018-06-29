@@ -151,7 +151,7 @@ dirname = os.path.realpath('.')
 filename = dirname + '\\Data\\TestNumber.txt'
 
 #Creating a folder to save the results
-folderName = FLAGS.label + "E" + str(FLAGS.epochs) + "LR" + str(FLAGS.learning_rate) + FLAGS.activation + FLAGS.regularization + "RR" + str(FLAGS.regularization_rate)
+folderName = FLAGS.label + "E" + str(FLAGS.epochs) + "LR" + str(FLAGS.learning_rate) + FLAGS.activation + FLAGS.regularization + "RR" + str(FLAGS.regularization_rate) + FLAGS.arch
 newDir = dirname + '\\Models&Results\\' + folderName
 if not (os.path.exists(newDir)):
 	os.makedirs(newDir)
@@ -264,60 +264,29 @@ def oneHot(labels):
 	one_hot_labels = []
 	for i in range(0,len(labels)):
 		if labels[i].lower() == "y":
-			one_hot_labels.append([0])
-		elif labels[i].lower() == "cat":
-			one_hot_labels.append([1])
-		elif labels[i].lower() == "supine":
-			one_hot_labels.append([2])
-		elif labels[i].lower() == "seated":
-			one_hot_labels.append([3])
-		elif labels[i].lower() == "sumo":
-			one_hot_labels.append([4])
-		elif labels[i].lower() == "mermaid":
-			one_hot_labels.append([5])
-		elif labels[i].lower() == "towel":
-			one_hot_labels.append([6])
-		elif labels[i].lower() == "trunk":
-			one_hot_labels.append([7])
-		elif labels[i].lower() == "wall":
-			one_hot_labels.append([8])
-		elif labels[i].lower() == "pretzel":
-			one_hot_labels.append([9])
-		else: #OOV
-			one_hot_labels.append([10])
-	one_hot_labels = np.asarray(one_hot_labels)
-	print("Lable Encoding Complete")
-	return one_hot_labels
-
-def oneHotArray(labels):
-	#convert the integer one hot encoding into a binary array
-	#necessary for actual training of the net
-	one_hot_labels = []
-	for i in range(0,len(labels)):
-		if labels[i] == 0:
 			one_hot_labels.append([1,0,0,0,0,0,0,0,0,0,0])
-		elif labels[i] == 1:
+		elif labels[i].lower() == "cat":
 			one_hot_labels.append([0,1,0,0,0,0,0,0,0,0,0])
-		elif labels[i] == 2:
+		elif labels[i].lower() == "supine":
 			one_hot_labels.append([0,0,1,0,0,0,0,0,0,0,0])
-		elif labels[i] == 3:
+		elif labels[i].lower() == "seated":
 			one_hot_labels.append([0,0,0,1,0,0,0,0,0,0,0])
-		elif labels[i] == 4:
+		elif labels[i].lower() == "sumo":
 			one_hot_labels.append([0,0,0,0,1,0,0,0,0,0,0])
-		elif labels[i] == 5:
+		elif labels[i].lower() == "mermaid":
 			one_hot_labels.append([0,0,0,0,0,1,0,0,0,0,0])
-		elif labels[i] == 6:
+		elif labels[i].lower() == "towel":
 			one_hot_labels.append([0,0,0,0,0,0,1,0,0,0,0])
-		elif labels[i] == 7:
+		elif labels[i].lower() == "trunk":
 			one_hot_labels.append([0,0,0,0,0,0,0,1,0,0,0])
-		elif labels[i] == 8:
+		elif labels[i].lower() == "wall":
 			one_hot_labels.append([0,0,0,0,0,0,0,0,1,0,0])
-		elif labels[i] == 9:
+		elif labels[i].lower() == "pretzel":
 			one_hot_labels.append([0,0,0,0,0,0,0,0,0,1,0])
 		else: #OOV
 			one_hot_labels.append([0,0,0,0,0,0,0,0,0,0,1])
 	one_hot_labels = np.asarray(one_hot_labels)
-	print("One Hot Encoding Complete")
+	print("Lable Encoding Complete")
 	return one_hot_labels
 
 #creates the model
@@ -438,7 +407,6 @@ def main(argv = None):
 
 	data, labels = extractData()
 	labels = oneHot(labels)
-	labels = oneHotArray(labels)
 	trainLabels, trainData, trainNumber, validationLabels, validationData, validationNumber, testLabels, testData, testNumber = partitionData(data, labels)
 
 	inputLayer = 27*maxEntries*3
@@ -451,45 +419,45 @@ def main(argv = None):
 
 	if (arch == 'method1'):
 		weights = {
-		'h1' : tf.Variable(tf.random_normal([inputLayer, hiddenLayer1], dtype=data.dtype)),
-		'h2' : tf.Variable(tf.random_normal([hiddenLayer1, hiddenLayer2], dtype=data.dtype)),
-		'h3' : tf.Variable(tf.random_normal([hiddenLayer2, hiddenLayer3], dtype=data.dtype)),
-		'out' : tf.Variable(tf.random_normal([hiddenLayer3, numberClasses], dtype=data.dtype))
+		'h1' : tf.Variable(tf.random_normal([inputLayer, hiddenLayer1], dtype=data.dtype, name='h1')),
+		'h2' : tf.Variable(tf.random_normal([hiddenLayer1, hiddenLayer2], dtype=data.dtype, name ='h2')),
+		'h3' : tf.Variable(tf.random_normal([hiddenLayer2, hiddenLayer3], dtype=data.dtype, name ='h3')),
+		'out' : tf.Variable(tf.random_normal([hiddenLayer3, numberClasses], dtype=data.dtype, name = 'out'))
 		}
 
 		biases = {
-		'b1' : tf.Variable(tf.random_normal([hiddenLayer1], dtype=data.dtype)),
-		'b2' : tf.Variable(tf.random_normal([hiddenLayer2], dtype=data.dtype)),
-		'b3' : tf.Variable(tf.random_normal([hiddenLayer3], dtype=data.dtype)),
-		'out' : tf.Variable(tf.random_normal([numberClasses], dtype=data.dtype))
+		'b1' : tf.Variable(tf.random_normal([hiddenLayer1], dtype=data.dtype, name = 'b1')),
+		'b2' : tf.Variable(tf.random_normal([hiddenLayer2], dtype=data.dtype, name = 'b2')),
+		'b3' : tf.Variable(tf.random_normal([hiddenLayer3], dtype=data.dtype, name = 'b3')),
+		'out' : tf.Variable(tf.random_normal([numberClasses], dtype=data.dtype, name = 'outb'))
 		}
 	elif (arch == "method2"):
 		weights = {
-		'h1' : tf.Variable(tf.random_normal([inputLayer, hiddenLayer1], dtype=data.dtype)),
-		'h2' : tf.Variable(tf.random_normal([hiddenLayer1, hiddenLayer2], dtype=data.dtype)),
-		'out' : tf.Variable(tf.random_normal([hiddenLayer2, numberClasses], dtype=data.dtype))
+		'h1' : tf.Variable(tf.random_normal([inputLayer, hiddenLayer1], dtype=data.dtype, name='h1')),
+		'h2' : tf.Variable(tf.random_normal([hiddenLayer1, hiddenLayer2], dtype=data.dtype, name='h2')),
+		'out' : tf.Variable(tf.random_normal([hiddenLayer2, numberClasses], dtype=data.dtype, name='out'))
 		}
 
 		biases = {
-		'b1' : tf.Variable(tf.random_normal([hiddenLayer1], dtype=data.dtype)),
-		'b2' : tf.Variable(tf.random_normal([hiddenLayer2], dtype=data.dtype)),
-		'out' : tf.Variable(tf.random_normal([numberClasses], dtype=data.dtype))
+		'b1' : tf.Variable(tf.random_normal([hiddenLayer1], dtype=data.dtype, name = 'b1')),
+		'b2' : tf.Variable(tf.random_normal([hiddenLayer2], dtype=data.dtype, name = 'b2')),
+		'out' : tf.Variable(tf.random_normal([numberClasses], dtype=data.dtype, name = 'outb'))
 		}
 	else:
 		weights = {
-		'h1' : tf.Variable(tf.random_normal([inputLayer, hiddenLayer1], dtype=data.dtype)),
-		'h2' : tf.Variable(tf.random_normal([hiddenLayer1, hiddenLayer2], dtype=data.dtype)),
-		'h3' : tf.Variable(tf.random_normal([hiddenLayer2, hiddenLayer3], dtype=data.dtype)),
-		'h4' : tf.Variable(tf.random_normal([hiddenLayer3, hiddenLayer4], dtype=data.dtype)),
-		'out' : tf.Variable(tf.random_normal([hiddenLayer4, numberClasses], dtype=data.dtype))
+		'h1' : tf.Variable(tf.random_normal([inputLayer, hiddenLayer1], dtype=data.dtype, name='h1')),
+		'h2' : tf.Variable(tf.random_normal([hiddenLayer1, hiddenLayer2], dtype=data.dtype, name='h2')),
+		'h3' : tf.Variable(tf.random_normal([hiddenLayer2, hiddenLayer3], dtype=data.dtype, name='h3')),
+		'h4' : tf.Variable(tf.random_normal([hiddenLayer3, hiddenLayer4], dtype=data.dtype, name='h4')),
+		'out' : tf.Variable(tf.random_normal([hiddenLayer4, numberClasses], dtype=data.dtype, name='out'))
 		}
 
 		biases = {
-		'b1' : tf.Variable(tf.random_normal([hiddenLayer1], dtype=data.dtype)),
-		'b2' : tf.Variable(tf.random_normal([hiddenLayer2], dtype=data.dtype)),
-		'b3' : tf.Variable(tf.random_normal([hiddenLayer3], dtype=data.dtype)),
-		'b4' : tf.Variable(tf.random_normal([hiddenLayer4], dtype=data.dtype)),		
-		'out' : tf.Variable(tf.random_normal([numberClasses], dtype=data.dtype))
+		'b1' : tf.Variable(tf.random_normal([hiddenLayer1], dtype=data.dtype, name = 'b1')),
+		'b2' : tf.Variable(tf.random_normal([hiddenLayer2], dtype=data.dtype, name = 'b2')),
+		'b3' : tf.Variable(tf.random_normal([hiddenLayer3], dtype=data.dtype, name = 'b3')),
+		'b4' : tf.Variable(tf.random_normal([hiddenLayer4], dtype=data.dtype, name = 'b4')),		
+		'out' : tf.Variable(tf.random_normal([numberClasses], dtype=data.dtype, name = 'bout'))
 		}
 
 	#construct model
@@ -526,6 +494,9 @@ def main(argv = None):
 	#initialize arrays for losses
 	trainingLoss = []
 
+	# 'Saver' op to save and restore all the variables
+	saver = tf.train.Saver()
+
 	#creating and running session
 	with tf.Session() as sess:
 		sess.run(init)
@@ -557,12 +528,10 @@ def main(argv = None):
 				print("Validation Accuracy:", accuracy.eval({X: validationData, Y: validationLabels}))
 				resultsFile.write("Validation Accuracy:" + str(accuracy.eval({X: validationData, Y: validationLabels})) + '\n')	
 
-		modelPath =  newDir + "\\model.ckpt"
+		modelPath =  newDir + "\\ExercisePredicter"
+		saver.save(sess, modelPath)
 
 		print ("Optimization Finished")
-		#resultsFile.write("Optimization Finished \n")	
-
-		#display loss over time curve to aid optimization
 
 	    #test model 
 		pred2 = tf.nn.softmax(logits)
@@ -571,12 +540,10 @@ def main(argv = None):
 	    #calculate accuracy
 		accuracy2 = tf.reduce_mean(tf.cast(correctPrediction2, "float"))
 
-		print("Training Accuracy:", accuracy2.eval({X: trainData, Y: trainLabels}))
+		print("Final Training Accuracy:", "{0:.2%}".format(accuracy2.eval({X: trainData, Y: trainLabels})))
 		resultsFile.write("Training Accuracy:" + str(accuracy2.eval({X: trainData, Y: trainLabels})) + '\n')	
-		print("Final Validation Accuracy:", accuracy2.eval({X: validationData, Y: validationLabels}))
+		print("Final Validation Accuracy:",  "{0:.2%}".format(accuracy2.eval({X: validationData, Y: validationLabels})))
 		resultsFile.write("Final Validation Accuracy:" + str(accuracy2.eval({X: validationData, Y: validationLabels})) + '\n')	
-		print("Testing Accuracy:", accuracy2.eval({X: testData, Y: testLabels}))
-		resultsFile.write("Testing Accuracy:" + str(accuracy2.eval({X: testData, Y: testLabels})) + '\n')	
 
 #needed in order to call main
 if __name__ == '__main__':
