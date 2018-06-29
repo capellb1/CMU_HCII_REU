@@ -82,8 +82,7 @@ tf.app.flags.DEFINE_integer('frames', 5, 'Number of frames to be analyzed at a t
 FLAGS = tf.app.flags.FLAGS
 
 TRAIN_PERCENT = 0.7
-VALIDATION_PERCENT = 0.2
-TEST_PERCENT = 0.1
+TEST_PERCENT = 0.3
 hiddenUnits = [16, 16]
 
 #store file names
@@ -233,30 +232,23 @@ def partitionData(features, labels):
 	#Divides the total data up into training, validation, and test sets
 	#division based off of percentages stored at the top of the code
 	train = math.floor(float(numberTests) * TRAIN_PERCENT)
-	validation = math.floor(float(numberTests) * VALIDATION_PERCENT)
 	test = math.ceil(float(numberTests) * TEST_PERCENT)
 
 	trainLabels = labels[:train]
 	trainFeatures = features[:train]
-	validationLabels = labels[train:train+validation]
-	validationFeatures = features[train:train+validation]
-	testLabels = labels[validation:validation+test]
-	testFeatures = features[validation:validation+test]
+	testLabels = labels[train:train+test]
+	testFeatures = features[train:train+test]
 	
 	#Output details on the data we are using
 	print("Number of Training Cases: ", train)
 	#resultsFile.write("Number of Training Cases: " + str(train) + '\n')
 	print("Training Labels (Randomized): ", trainLabels)
 	
-	print("Number of Validation Cases: ", validation)
-	#resultsFile.write("Number of Validation Cases: " + str(validation) + '\n')
-	print("Validation Labels (Randomized): ", validationLabels)
-	
 	print("Number of Test Cases: ", test)
 	#resultsFile.write("Number of Test Cases: " + str(test) + '\n')
 	print("Test Lables (Randomized): ", testLabels)
 	
-	return trainLabels, trainFeatures, train, validationLabels, validationFeatures, validation, testLabels, testFeatures, test
+	return trainLabels, trainFeatures, train, testLabels, testFeatures, test
 
 def oneHot(labels):
 	#give each exercise a single numeric representation
@@ -407,7 +399,7 @@ def main(argv = None):
 
 	data, labels = extractData()
 	labels = oneHot(labels)
-	trainLabels, trainData, trainNumber, validationLabels, validationData, validationNumber, testLabels, testData, testNumber = partitionData(data, labels)
+	trainLabels, trainData, trainNumber, testLabels, testData, testNumber = partitionData(data, labels)
 
 	inputLayer = 27*maxEntries*3
 
@@ -525,8 +517,7 @@ def main(argv = None):
 				pred = tf.nn.softmax(logits)
 				correctPrediction = tf.equal(tf.argmax(pred,1), tf.argmax(Y,1))
 				accuracy = tf.reduce_mean(tf.cast(correctPrediction, "float"))
-				print("Validation Accuracy:", accuracy.eval({X: validationData, Y: validationLabels}))
-				resultsFile.write("Validation Accuracy:" + str(accuracy.eval({X: validationData, Y: validationLabels})) + '\n')	
+				
 
 		modelPath =  newDir + "\\ExercisePredicter"
 		saver.save(sess, modelPath)
@@ -542,8 +533,7 @@ def main(argv = None):
 
 		print("Final Training Accuracy:", "{0:.2%}".format(accuracy2.eval({X: trainData, Y: trainLabels})))
 		resultsFile.write("Training Accuracy:" + str(accuracy2.eval({X: trainData, Y: trainLabels})) + '\n')	
-		print("Final Validation Accuracy:",  "{0:.2%}".format(accuracy2.eval({X: validationData, Y: validationLabels})))
-		resultsFile.write("Final Validation Accuracy:" + str(accuracy2.eval({X: validationData, Y: validationLabels})) + '\n')	
+		
 
 #needed in order to call main
 if __name__ == '__main__':
