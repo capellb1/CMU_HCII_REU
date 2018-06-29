@@ -6,11 +6,10 @@ Date: 06/26/18
 
 The following code trains a neural net by grouping entire motions as a single feature.
 The source of the data being used to train the net can be toggled between the natural data (Position) and synthetic/calculated
-features (Position, Task). This is controlled by the --source flag.
+features (Position, Velocity). This is controlled by the --source flag.
 
-Many flags might not be used in this file, they were included for consistency between the multiple training files.
+Flags might not be used in this file, they were included for consistency between the multiple training files.
 	poise_detector_mk*.py
-	poise_detector_batch_mk*.py
 	exercise_detection_mk*.py
 
 	Unless otherwise stated, assume highest number to be the most current/advanced file
@@ -76,8 +75,8 @@ tf.app.flags.DEFINE_string('regularization', 'Default', 'This is the regularizat
 tf.app.flags.DEFINE_string('activation', 'Default', 'This is the activation function to use in the layers')
 tf.app.flags.DEFINE_string('label', 'test1', 'This is the label name where the files are saved')
 tf.app.flags.DEFINE_string('arch', 'method1', 'This specifies the architecture used')
-tf.app.flags.DEFINE_string('source', 'Position', 'What files to draw data frome (Task, Velocity, Position)')
-tf.app.flags.DEFINE_integer('frames', 5, 'Number of frames to be analyzed at a time')
+tf.app.flags.DEFINE_boolean('position', False, 'Determines if the position data is included when training')
+tf.app.flags.DEFINE_boolean('velocity', False, 'Determines if the velocity data is included when training')
 
 FLAGS = tf.app.flags.FLAGS
 
@@ -116,42 +115,18 @@ file_names =[
 'AnkleLeft.csv',     
 'FootLeft.csv']
 
-#store bodypart names without the file extensions
-bodyParts =[
-'Head',   
-'Neck',    
-'SpineShoulder', 
-'SpineMid',
-'SpineBase',    
-'ShoulderRight', 
-'ShoulderLeft',  
-'HipRight',
-'HipLeft', 
-'ElbowRight',    
-'WristRight',    
-'HandRight',     
-'HandTipRight',  
-'ThumbRight',   
-'ElbowLeft',     
-'WristLeft',     
-'HandLeft',     
-'HandTipLeft',  
-'ThumbLeft',    
-'HipRight',
-'KneeRight',    
-'AnkleRight',   
-'FootRight',     
-'HipLeft', 
-'KneeLeft',
-'AnkleLeft',     
-'FootLeft']
-
 #Set the read path to the data folder of the current working directory (allows github upload of data)
 dirname = os.path.realpath('.')
 filename = dirname + '\\Data\\TestNumber.txt'
 
 #Creating a folder to save the results
-folderName = FLAGS.label + "E" + str(FLAGS.epochs) + "LR" + str(FLAGS.learning_rate) + FLAGS.activation + FLAGS.regularization + "RR" + str(FLAGS.regularization_rate)
+epochsLable = str(FLAGS.epochs)
+learning_rateLable = str(FLAGS.learning_rate)
+regularization_rateLable = str(FLAGS.regularization_rate)
+positionLable = str(FLAGS.position)
+velocityLable = str(FLAGS.velocity)
+
+folderName = FLAGS.label + "E" + epochsLable + "LR" + learning_rateLable + FLAGS.activation + FLAGS.regularization + "RR" + regularization_rateLable  + "Pos" + positionLable + "Vel" + velocityLable 
 newDir = dirname + '\\Models&Results\\' + folderName
 if not (os.path.exists(newDir)):
 	os.makedirs(newDir)
@@ -163,7 +138,12 @@ numberTestFiles = open(filename,"r")
 numberTests = numberTestFiles.read()
 print("Number of Filed Detected: ", numberTests)
 #resultsFile.write("Number of Filed Detected: " + str(numberTests) + '\n')
-		
+#determine the number of datasets included for data matrix size allocation
+numSections = 0
+if FLAGS.position:
+	numSections = numSections + 1
+if FLAGS.velocity:
+	numSections = numSections + 1		
 #GLOBAL
 #network parameters:
 arch = FLAGS.arch
@@ -172,7 +152,6 @@ if (arch == 'method1'):
 	hiddenLayer1 = 10
 	hiddenLayer2 = 10
 	hiddenLayer3 = 10
-
 elif (arch == 'method2'):
 	hiddenLayer1 = 15
 	hiddenLayer2 = 15
@@ -190,7 +169,7 @@ batchIndex = 0
 maxEntries = 0
 for i in range(0,int(numberTests)):
 	numEntries = 0
-	for line in open(dirname + "\\Data\\test" + str(i) + "\\" + FLAGS.source + "_" + file_names[1]):
+	for line in open(dirname + "\\Data\\test" + str(i) + "\\Position_" + file_names[1]):
 		numEntries = numEntries + 1
 	if numEntries > maxEntries:
 		maxEntries = numEntries	
@@ -203,21 +182,34 @@ print("Maximum Number of Entries in a Single Exercise: ", maxEntries)
 #i.e [towel][head][0][x] retrieves the X position of the head during the towel event
 
 def extractData():
-	data =  np.empty((int(numberTests), int(27*maxEntries*3)))
-
+	data =  np.empty((int(numberTests), int(27*maxEntries*3*numSections)))
+	
 	for i in range(0, int(numberTests)):
 		k = 0
-		for line in open(dirname + "\\Data\\test" + str(i)+ "\\"+ FLAGS.source +"_" + file_names[0]):
-			row = line.split(',')
-			for l in range(0,3):
-				data[i][k] = row[l]
-				k = k +1
+		for j in range(0,27):
+			if FLAGS.position:
+				for line in open(dirname + "\\Data\\test" + str(i)+ "\\Position_" + file_names[j]):
+					row = line.split(',')
+					for l in range(0,3):
+						data[i][k] = row[l]
+						k = k +1
+			if FLAGS.velocity:
+				for line in open(dirname + "\\Data\\test" + str(i)+ "\\Velocity_" + file_names[j]):
+					row = line.split(',')
+					for l in range(0,3):
+						data[i][k] = row[l]
+						k = k +1
+	
+	print("Number of Sections: ", numSections)
+	print("Length of Data: ", data[0][:])
+	print("data shape: [", int(numberTests), ", ", int(27*maxEntries*3*numSections), "]")
 	labels = []
 	#seperate the label from the name and event number stored within the label.csv file(s)
 	for i in range (0, int(numberTests)):
 		for line in open(dirname + "\\Data\\test" + str(i)+ "\\label.csv"):
 			temporaryLabel = line.split()
 			labels.append(str(temporaryLabel[0]))
+		
 	
 	#shuffle the data
 	shuffledData = np.empty(data.shape, dtype=data.dtype)
@@ -244,6 +236,7 @@ def partitionData(features, labels):
 	testLabels = labels[validation:validation+test]
 	testFeatures = features[validation:validation+test]
 	
+	'''
 	#Output details on the data we are using
 	print("Number of Training Cases: ", train)
 	#resultsFile.write("Number of Training Cases: " + str(train) + '\n')
@@ -256,7 +249,7 @@ def partitionData(features, labels):
 	print("Number of Test Cases: ", test)
 	#resultsFile.write("Number of Test Cases: " + str(test) + '\n')
 	print("Test Lables (Randomized): ", testLabels)
-	
+	'''
 	return trainLabels, trainFeatures, train, validationLabels, validationFeatures, validation, testLabels, testFeatures, test
 
 def oneHot(labels):
@@ -287,7 +280,6 @@ def oneHot(labels):
 		else: #OOV
 			one_hot_labels.append([10])
 	one_hot_labels = np.asarray(one_hot_labels)
-	print("Lable Encoding Complete")
 	return one_hot_labels
 
 def oneHotArray(labels):
@@ -318,7 +310,6 @@ def oneHotArray(labels):
 		else: #OOV
 			one_hot_labels.append([0,0,0,0,0,0,0,0,0,0,1])
 	one_hot_labels = np.asarray(one_hot_labels)
-	print("One Hot Encoding Complete")
 	return one_hot_labels
 
 #creates the model
@@ -444,7 +435,7 @@ def main(argv = None):
 	labels = oneHotArray(labels)
 	trainLabels, trainData, trainNumber, validationLabels, validationData, validationNumber, testLabels, testData, testNumber = partitionData(data, labels)
 
-	inputLayer = 27*maxEntries*3
+	inputLayer = 27*maxEntries*3*numSections
 
 	#tf Graph input
 	X = tf.placeholder(data.dtype, [None, inputLayer])

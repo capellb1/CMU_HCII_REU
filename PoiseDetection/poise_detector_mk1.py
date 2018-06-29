@@ -6,7 +6,7 @@ Date: 06/26/18
 
 The following code trains a neural net by using single frames as features
 The source of the data being used to train the net can be toggled between the natural data (Position) and synthetic/calculated
-features (Position, Task). This is controlled by the --source flag.
+features (Position, Velocity). This is controlled by the --source flag.
 
 Many flags might not be used in this file, they were included for consistency between the multiple training files.
 	poise_detector_mk*.py
@@ -75,9 +75,9 @@ tf.app.flags.DEFINE_float('regularization_rate',0.01,'Strength of regularization
 tf.app.flags.DEFINE_string('regularization', 'Default', 'This is the regularization function used in cost calcuations')
 tf.app.flags.DEFINE_string('activation', 'Default', 'This is the activation function to use in the layers')
 tf.app.flags.DEFINE_string('label', 'test1', 'This is the label name where the files are saved')
-tf.app.flags.DEFINE_string('source', 'Position', 'What files to draw data frome (Task, Velocity, Position)')
 tf.app.flags.DEFINE_string('arch', 'method1', 'This specifies the architecture used')
-tf.app.flags.DEFINE_integer('frames', 5, 'Number of frames to be analyzed at a time')
+tf.app.flags.DEFINE_boolean('position', False, 'Determines if the position data is included when training')
+tf.app.flags.DEFINE_boolean('velocity', False, 'Determines if the velocity data is included when training')
 
 FLAGS = tf.app.flags.FLAGS
 
@@ -115,42 +115,19 @@ file_names =[
 'AnkleLeft.csv',     
 'FootLeft.csv']
 
-#store bodypart names without the file extensions
-bodyParts =[
-'Head',   
-'Neck',    
-'SpineShoulder', 
-'SpineMid',
-'SpineBase',    
-'ShoulderRight', 
-'ShoulderLeft',  
-'HipRight',
-'HipLeft', 
-'ElbowRight',    
-'WristRight',    
-'HandRight',     
-'HandTipRight',  
-'ThumbRight',   
-'ElbowLeft',     
-'WristLeft',     
-'HandLeft',     
-'HandTipLeft',  
-'ThumbLeft',    
-'HipRight',
-'KneeRight',    
-'AnkleRight',   
-'FootRight',     
-'HipLeft', 
-'KneeLeft',
-'AnkleLeft',     
-'FootLeft']
-
 #Set the read path to the data folder of the current working directory (allows github upload of data)
 dirname = os.path.realpath('.')
 filename = dirname + '\\Data\\TestNumber.txt'
 
 #Creating a folder to save the results
-folderName = FLAGS.label + "E" + str(FLAGS.epochs) + "LR" + str(FLAGS.learning_rate) + FLAGS.activation + FLAGS.regularization + "RR" + str(FLAGS.regularization_rate)
+epochsLable = str(FLAGS.epochs)
+learning_rateLable = str(FLAGS.learning_rate)
+regularization_rateLable = str(FLAGS.regularization_rate)
+positionLable = str(FLAGS.position)
+velocityLable = str(FLAGS.velocity)
+
+
+folderName = FLAGS.label + "E" + epochsLable + "LR" + learning_rateLable + FLAGS.activation + FLAGS.regularization + "RR" + regularization_rateLable  + "Pos" + positionLable + "Vel" + velocityLable 
 newDir = dirname + '\\Models&Results\\' + folderName
 if not (os.path.exists(newDir)):
 	os.makedirs(newDir)
@@ -163,7 +140,11 @@ numberTests = numberTestFiles.read()
 print("Number of Filed Detected: ", numberTests)
 resultsFile.write("Number of Filed Detected: " + str(numberTests) + '\n')
 
-
+numSections = 0
+if FLAGS.position:
+	numSections = numSections + 1
+if FLAGS.velocity:
+	numSections = numSections + 1		
 #GLOBAL
 #network parameters:
 hiddenLayer1 = 30
@@ -181,13 +162,13 @@ maxEntries = 0
 timeScores = []
 for i in range(0,int(numberTests)):
 	numEntries = 0
-	for line in open(dirname + "\\Data\\test" + str(i) + "\\" + FLAGS.source + "_" + file_names[0]):
+	for line in open(dirname + "\\Data\\test" + str(i) + "\\Position_" + file_names[0]):
 		numEntries = numEntries + 1
 	if numEntries > maxEntries:
 		maxEntries = numEntries	
 	timeScores.append(numEntries)
-print("Maximum Number of Entries in a Single Exercise: ", maxEntries)
-resultsFile.write("Maximum Number of Entries in Single Exercise: " + str(maxEntries) + '\n')
+#print("Maximum Number of Entries in a Single Exercise: ", maxEntries)
+#resultsFile.write("Maximum Number of Entries in Single Exercise: " + str(maxEntries) + '\n')
 
 #read data from files into a flattened array
 #each time stamp is a single row and has a corresponding event label... the row containse the xyz for each bodypart
@@ -195,7 +176,7 @@ resultsFile.write("Maximum Number of Entries in Single Exercise: " + str(maxEntr
 #[Arm2xyz, Head2xyz, Foot2xyz, ...] EVENT 2
 
 def extractData():
-	data =  np.empty((sum(timeScores), int(27*3)))
+	data =  np.empty((sum(timeScores), int(27*3*numSections)))
 	
 	numTimeStamps = 0
 	c=0
@@ -205,22 +186,33 @@ def extractData():
 			k=0
 			w=0
 			for j in range(0, 27):
-				fp = open(dirname + "\\Data\\test" + str(i)+ "\\" + FLAGS.source + "_" + file_names[j])
-				for n, line in enumerate(fp):
-					if n == w:
-						row = line.split(',')
-						for m in range(0,3):
-							data[l][k]= row[m]
-							k = k + 1
+				if FLAGS.position:
+					fp = open(dirname + "\\Data\\test" + str(i)+ "\\Position_" + file_names[j])
+					for n, line in enumerate(fp):
+						if n == w:
+							row = line.split(',')
+							for m in range(0,3):
+								data[l][k]= row[m]
+								k = k + 1
+				if FLAGS.velocity:
+					fp = open(dirname + "\\Data\\test" + str(i)+ "\\Velocity_" + file_names[j])
+					for n, line in enumerate(fp):
+						if n == w:
+							row = line.split(',')
+							for m in range(0,3):
+								data[l][k]= row[m]
+								k = k + 1
 			w = w+1
 		numTimeStamps = timeScores[i] + numTimeStamps
 	fp.close()
+
+	print("Number of Sections: ", numSections)
+	print("Data: ", data[0][:])
 	labels = []
 	#seperate the label from the name and event number stored within the label.csv file(s)
 	for i in range (0, int(numberTests)):
 		for line in open(dirname + "\\Data\\test" + str(i)+ "\\label.csv"):
 			temporaryLabel = line.split()
-			
 			for j in range(0,timeScores[i]):
 				labels.append(str(temporaryLabel[0]))
 
@@ -233,7 +225,6 @@ def extractData():
 		shuffledLabels[new_index] = labels[old_index]
 
 	shuffledLabels = np.asarray(shuffledLabels)
-	print(data)
 	return shuffledData, shuffledLabels
 
 def partitionData(features, labels):
@@ -249,7 +240,7 @@ def partitionData(features, labels):
 	validationFeatures = features[train:train+validation]
 	testLabels = labels[validation:validation+test]
 	testFeatures = features[validation:validation+test]
-	
+	'''
 	#Output details on the data we are using
 	print("Number of Training Cases: ", train)
 	resultsFile.write("Number of Training Cases: " + str(train) + '\n')
@@ -262,7 +253,7 @@ def partitionData(features, labels):
 	print("Number of Test Cases: ", test)
 	resultsFile.write("Number of Test Cases: " + str(test) + '\n')
 	print("Test Lables (Randomized): ", testLabels)
-	
+	'''
 	return trainLabels, trainFeatures, train, validationLabels, validationFeatures, validation, testLabels, testFeatures, test
 
 def oneHot(labels):
@@ -293,7 +284,6 @@ def oneHot(labels):
 		else: #OOV
 			one_hot_labels.append([10])
 	one_hot_labels = np.asarray(one_hot_labels)
-	print("Lable Encoding Complete")
 	return one_hot_labels
 
 def oneHotArray(labels):
@@ -324,7 +314,6 @@ def oneHotArray(labels):
 		else: #OOV
 			one_hot_labels.append([0,0,0,0,0,0,0,0,0,0,1])
 	one_hot_labels = np.asarray(one_hot_labels)
-	print("One Hot Encoding Complete")
 	return one_hot_labels
 
 #creates the model
@@ -385,7 +374,7 @@ def main(argv = None):
 	labels = oneHotArray(labels)
 	trainLabels, trainData, trainNumber, validationLabels, validationData, validationNumber, testLabels, testData, testNumber = partitionData(data, labels)
 
-	inputLayer = 27*3
+	inputLayer = 27*3*numSections
 
 	#tf Graph input
 	X = tf.placeholder(data.dtype, [None, inputLayer])
@@ -443,7 +432,7 @@ def main(argv = None):
 	trainingLoss = []
 
 	# 'Saver' op to save and restore all the variables
-	#saver = tf.train.Saver()
+	saver = tf.train.Saver()
 
 	#creating and running session
 	with tf.Session() as sess:
@@ -470,7 +459,7 @@ def main(argv = None):
 				resultsFile.write(" \n Cost={:.9f}".format(avgCost))
 				trainingLoss.append(avgCost)
 		modelPath =  newDir + "\\model.ckpt"
-		#saver.save(sess, modelPath)
+		saver.save(sess, modelPath)
 
 		print ("Optimization Finished")
 		resultsFile.write("Optimization Finished \n")	
@@ -496,22 +485,6 @@ def main(argv = None):
 		resultsFile.write("Validation Accuracy:" + str(accuracy.eval({X: validationData, Y: validationLabels})) + '\n')	
 		print("Test Accuracy:", accuracy.eval({X: testData, Y: testLabels}))
 
-	testing = 0
-	while (testing == 0):
-		#modelToLoad = input ("Please enter a model to load and test")
-		print ("Waiting to test model")
-		with tf.Session() as sess: 
-			sess.run(init)
-			#modelLoadPath = newDir + "\\Epoch" + str(modelToLoad) + ".ckpt"
-			print ("Model restored from: ", modelPath)
-			#saver.restore(sess, modelPath)
-			
-			correct_prediction = tf.equal(tf.argmax(pred, 1), tf.argmax(Y, 1))
-    		# Calculate accuracy
-			accuracy = tf.reduce_mean(tf.cast(correct_prediction, "float"))
-			print("Validation Accuracy:", accuracy.eval({X: validationData, Y: validationLabels}))
-			print("Test Accuracy:", accuracy.eval({X: testData, Y: testLabels}))
-			testing = 1
 
 #needed in order to call main
 if __name__ == '__main__':

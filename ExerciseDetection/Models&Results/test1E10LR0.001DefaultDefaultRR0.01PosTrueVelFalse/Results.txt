@@ -1,0 +1,4 @@
+Epoch: 0001Validation Accuracy:0.3
+Training Accuracy:0.54285717
+Final Validation Accuracy:0.0
+Testing Accuracy:0.0

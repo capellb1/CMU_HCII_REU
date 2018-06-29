@@ -9,7 +9,9 @@ Thomas Sanchez Lengeling.
  Skeleton (x,y) positions are mapped to match the color Frame
  X,Y,Z position recorded in Meters with the SpineShoulder Joint as 0,0
  Time recorded in ms - Data captured every 16-18ms
- 
+
+ *****NOTE: TASK DATA IS INCORRECT*****
+
  Action Detection Algorithm:
  CMU HCII REU Summer 2018
  PI: Dr. Sieworek

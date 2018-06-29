@@ -68,13 +68,14 @@ Flags:
 	label
 		the label name for where data files are saved for the model being trained
 			DEFAULT: Test1
-	frames
-		Number of frames to be analyzed at a time. Only used for poise_detector_batch.mk*.py
-			DEFAULT: 5
-	source
-		What files to draw data from
-			DEFAULT: Position
-			Options: Position, Task, Velocity
+	position
+		Whether or not to include the position data in the training of the model. 
+		"--position" asserts a true
+			DEFAULT: False
+	velocity
+		Whether or not to include the velocity data in the training of the model. 
+		"--velocity" asserts a true
+			DEFAULT: False
 	arch
 		specifies the architecture to use
 		method1 = 10x10x10

@@ -1,0 +1,5 @@
+Number of Filed Detected: 51
+Epoch: 0000 
+ Cost=2670.982603366Optimization Finished 
+Training Accuracy:0.5042312
+Validation Accuracy:0.4929719
