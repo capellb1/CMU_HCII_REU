@@ -1,2 +1,0 @@
-model_checkpoint_path: "D:\\cmu\\CMU_HCII_REU\\PoiseDetection\\Models&Results\\test1E1000LR0.01SigmoidL1RR0.01\\model.ckpt"
-all_model_checkpoint_paths: "D:\\cmu\\CMU_HCII_REU\\PoiseDetection\\Models&Results\\test1E1000LR0.01SigmoidL1RR0.01\\model.ckpt"

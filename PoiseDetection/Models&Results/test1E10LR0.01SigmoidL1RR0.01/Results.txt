@@ -1,9 +1,0 @@
-Number of Filed Detected: 51
-Maximum Number of Entries in Single Exercise: 849
-Number of Training Cases: 13944
-Number of Validation Cases: 3984
-Number of Test Cases: 1992
-Epoch: 0000 
- Cost=3.784612347Optimization Finished 
-Training Accuracy:0.6365462
-Validation Accuracy:0.6458333
