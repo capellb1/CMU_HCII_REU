@@ -172,7 +172,7 @@ if (arch == 'method1'):
 	hiddenLayer1 = 10
 	hiddenLayer2 = 10
 	hiddenLayer3 = 10
-'''
+
 elif (arch == 'method2'):
 	hiddenLayer1 = 15
 	hiddenLayer2 = 15
@@ -181,7 +181,7 @@ else:
 	hiddenLayer2 = 30
 	hiddenLayer3 = 30
 	hiddenLayer4 = 30
-'''
+
 #batch Index variable
 batchIndex = 0
 
