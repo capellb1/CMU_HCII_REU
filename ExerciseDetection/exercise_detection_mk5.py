@@ -324,7 +324,6 @@ def oneHotArray(labels):
 #creates the model
 def multilayer_perception(x, weights, biases):
 	activation = FLAGS.activation
-	'''
 	if (arch == "method1" and activation == "Sigmoid"):
 		print('Activation Layer: sigmoid \n Architecture Used: method1 \n')
 		#Layers
@@ -349,7 +348,7 @@ def multilayer_perception(x, weights, biases):
 		layer3 = tf.nn.relu(tf.add(tf.matmul(layer2, weights['h3']), biases['b3']))
 		outLayer = tf.add(tf.matmul(layer3, weights['out']), biases['out'])
 		return outLayer
-	'''
+
 	if (arch == "method1" and activation == "Default"):
 		print('Activation Layer: none \n Architecture Used: method1 \n ')
 		#Layers
@@ -358,7 +357,7 @@ def multilayer_perception(x, weights, biases):
 		layer3 = tf.add(tf.matmul(layer2, weights['h3']), biases['b3'])
 		outLayer = tf.add(tf.matmul(layer3, weights['out']), biases['out'])
 		return outLayer
-	'''
+	
 	elif (arch == "method2" and activation == "Sigmoid"):
 		print('Activation Layer: sigmoid \n Architecture Used: method2 \n')
 		#Layers
@@ -423,7 +422,7 @@ def multilayer_perception(x, weights, biases):
 		layer4 = tf.nn.sigmoid(tf.add(tf.matmul(layer3, weights['h4']), biases['b4']))
 		outLayer = tf.add(tf.matmul(layer4, weights['out']), biases['out'])
 		return outLayer
-		'''
+	
 def nextBatch(batchSize, trainNumber):
 	global batchIndex
 	start = batchIndex
@@ -467,7 +466,7 @@ def main(argv = None):
 		'b3' : tf.Variable(tf.random_normal([hiddenLayer3], dtype=data.dtype), name="b3"),
 		'out' : tf.Variable(tf.random_normal([numberClasses], dtype=data.dtype), name="out2")
 		}
-	'''
+	
 	elif (arch == "method2"):
 		weights = {
 		'h1' : tf.Variable(tf.random_normal([inputLayer, hiddenLayer1], dtype=data.dtype), name="h1"),
@@ -496,7 +495,7 @@ def main(argv = None):
 		'b4' : tf.Variable(tf.random_normal([hiddenLayer4], dtype=data.dtype), name="b4"),		
 		'out' : tf.Variable(tf.random_normal([numberClasses], dtype=data.dtype), name="out2")
 		}
-	'''
+	
 	#construct model
 	logits = multilayer_perception(X, weights, biases)
 
