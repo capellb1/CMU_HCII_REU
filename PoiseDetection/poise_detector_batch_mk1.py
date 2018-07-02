@@ -152,7 +152,7 @@ dirname = os.path.realpath('.')
 filename = dirname + '\\Data\\TestNumber.txt'
 
 #Creating a folder to save the results
-folderName = FLAGS.label + "E" + str(FLAGS.epochs) + "LR" + str(FLAGS.learning_rate) + FLAGS.activation + FLAGS.regularization + "RR" + str(FLAGS.regularization_rate)
+folderName = FLAGS.label + "E" + str(FLAGS.epochs) + "LR" + str(FLAGS.learning_rate) + FLAGS.activation + FLAGS.regularization + "RR" + str(FLAGS.regularization_rate) + FLAGS.arch
 newDir = dirname + '\\Models&Results\\' + folderName
 if not (os.path.exists(newDir)):
 	os.makedirs(newDir)
@@ -165,6 +165,7 @@ numberTests = numberTestFiles.read()
 print("Number of Filed Detected: ", numberTests)
 resultsFile.write("Number of Filed Detected: " + str(numberTests) + '\n')
 
+arch = FLAGS.arch
 
 #GLOBAL
 #network parameters:
@@ -272,97 +273,130 @@ def oneHot(labels):
 	one_hot_labels = []
 	for i in range(0,len(labels)):
 		if labels[i].lower() == "y":
-			one_hot_labels.append([0])
-		elif labels[i].lower() == "cat":
-			one_hot_labels.append([1])
-		elif labels[i].lower() == "supine":
-			one_hot_labels.append([2])
-		elif labels[i].lower() == "seated":
-			one_hot_labels.append([3])
-		elif labels[i].lower() == "sumo":
-			one_hot_labels.append([4])
-		elif labels[i].lower() == "mermaid":
-			one_hot_labels.append([FLAGS.frames])
-		elif labels[i].lower() == "towel":
-			one_hot_labels.append([6])
-		elif labels[i].lower() == "trunk":
-			one_hot_labels.append([7])
-		elif labels[i].lower() == "wall":
-			one_hot_labels.append([8])
-		elif labels[i].lower() == "pretzel":
-			one_hot_labels.append([9])
-		else: #OOV
-			one_hot_labels.append([10])
-	one_hot_labels = np.asarray(one_hot_labels)
-	print("Lable Encoding Complete")
-	return one_hot_labels
-
-def oneHotArray(labels):
-	#convert the integer one hot encoding into a binary array
-	#necessary for actual training of the net
-	one_hot_labels = []
-	for i in range(0,len(labels)):
-		if labels[i] == 0:
 			one_hot_labels.append([1,0,0,0,0,0,0,0,0,0,0])
-		elif labels[i] == 1:
+		elif labels[i].lower() == "cat":
 			one_hot_labels.append([0,1,0,0,0,0,0,0,0,0,0])
-		elif labels[i] == 2:
+		elif labels[i].lower() == "supine":
 			one_hot_labels.append([0,0,1,0,0,0,0,0,0,0,0])
-		elif labels[i] == 3:
+		elif labels[i].lower() == "seated":
 			one_hot_labels.append([0,0,0,1,0,0,0,0,0,0,0])
-		elif labels[i] == 4:
+		elif labels[i].lower() == "sumo":
 			one_hot_labels.append([0,0,0,0,1,0,0,0,0,0,0])
-		elif labels[i] == 5:
+		elif labels[i].lower() == "mermaid":
 			one_hot_labels.append([0,0,0,0,0,1,0,0,0,0,0])
-		elif labels[i] == 6:
+		elif labels[i].lower() == "towel":
 			one_hot_labels.append([0,0,0,0,0,0,1,0,0,0,0])
-		elif labels[i] == 7:
+		elif labels[i].lower() == "trunk":
 			one_hot_labels.append([0,0,0,0,0,0,0,1,0,0,0])
-		elif labels[i] == 8:
+		elif labels[i].lower() == "wall":
 			one_hot_labels.append([0,0,0,0,0,0,0,0,1,0,0])
-		elif labels[i] == 9:
+		elif labels[i].lower() == "pretzel":
 			one_hot_labels.append([0,0,0,0,0,0,0,0,0,1,0])
 		else: #OOV
 			one_hot_labels.append([0,0,0,0,0,0,0,0,0,0,1])
 	one_hot_labels = np.asarray(one_hot_labels)
-	print("One Hot Encoding Complete")
+	print("Lable Encoding Complete")
 	return one_hot_labels
+
 
 #creates the model
 def multilayer_perception(x, weights, biases):
 	activation = FLAGS.activation
-	if (activation == "Sigmoid"):
-		print('Activation Layer: sigmoid \n')
+	if (arch == "method1" and activation == "Sigmoid"):
+		print('Activation Layer: sigmoid \n Architecture Used: method1 \n')
 		#Layers
 		layer1 = tf.nn.sigmoid(tf.add(tf.matmul(x, weights['h1']), biases['b1']))
 		layer2 = tf.nn.sigmoid(tf.add(tf.matmul(layer1, weights['h2']), biases['b2']))
 		layer3 = tf.nn.sigmoid(tf.add(tf.matmul(layer2, weights['h3']), biases['b3']))
 		outLayer = tf.add(tf.matmul(layer3, weights['out']), biases['out'])
 		return outLayer
-	elif (activation == "Tanh"):
-		print('Activation Layer: tanh \n')
+	elif (arch == "method1" and activation == "Tanh"):
+		print('Activation Layer: tanh \n Architecture Used: method1 \n ')
 		#Layers
 		layer1 = tf.nn.tanh(tf.add(tf.matmul(x, weights['h1']), biases['b1']))
 		layer2 = tf.nn.tanh(tf.add(tf.matmul(layer1, weights['h2']), biases['b2']))
 		layer3 = tf.nn.tanh(tf.add(tf.matmul(layer2, weights['h3']), biases['b3']))
-		layer4 = tf.nn.tanh(tf.add(tf.matmul(layer3, weights['h4']), biases['b4']))		
-		outLayer = tf.add(tf.matmul(layer4, weights['out']), biases['out'])
+		outLayer = tf.add(tf.matmul(layer3, weights['out']), biases['out'])
 		return outLayer
-	elif (activation == "Relu"):
-		print('Activation Layer: relu \n')
+	elif (arch == "method1" and activation == "Relu"):
+		print('Activation Layer: relu \n Architecture Used: method1 \n ')
 		#Layers
 		layer1 = tf.nn.relu(tf.add(tf.matmul(x, weights['h1']), biases['b1']))
 		layer2 = tf.nn.relu(tf.add(tf.matmul(layer1, weights['h2']), biases['b2']))
 		layer3 = tf.nn.relu(tf.add(tf.matmul(layer2, weights['h3']), biases['b3']))
 		outLayer = tf.add(tf.matmul(layer3, weights['out']), biases['out'])
 		return outLayer
-	else:
-		print('Activation Layer: none \n')
+	elif (arch == "method1" and activation == "Default"):
+		print('Activation Layer: none \n Architecture Used: method1 \n ')
 		#Layers
 		layer1 = tf.add(tf.matmul(x, weights['h1']), biases['b1'])
 		layer2 = tf.add(tf.matmul(layer1, weights['h2']), biases['b2'])
 		layer3 = tf.add(tf.matmul(layer2, weights['h3']), biases['b3'])
 		outLayer = tf.add(tf.matmul(layer3, weights['out']), biases['out'])
+		return outLayer
+	elif (arch == "method2" and activation == "Sigmoid"):
+		print('Activation Layer: sigmoid \n Architecture Used: method2 \n')
+		#Layers
+		layer1 = tf.nn.sigmoid(tf.add(tf.matmul(x, weights['h1']), biases['b1']))
+		layer2 = tf.nn.sigmoid(tf.add(tf.matmul(layer1, weights['h2']), biases['b2']))
+		outLayer = tf.add(tf.matmul(layer2, weights['out']), biases['out'])
+		return outLayer
+	elif (arch == "method2" and activation == "Tanh"):
+		print('Activation Layer: tanh \n Architecture Used: method2 \n')
+		#Layers
+		layer1 = tf.nn.tanh(tf.add(tf.matmul(x, weights['h1']), biases['b1']))
+		layer2 = tf.nn.tanh(tf.add(tf.matmul(layer1, weights['h2']), biases['b2']))
+		outLayer = tf.add(tf.matmul(layer2, weights['out']), biases['out'])
+		return outLayer
+	elif (arch == "method2" and activation == "Relu"):
+		print('Activation Layer: relu \n Architecture Used: method2 \n')
+		#Layers
+		layer1 = tf.nn.relu(tf.add(tf.matmul(x, weights['h1']), biases['b1']))
+		layer2 = tf.nn.relu(tf.add(tf.matmul(layer1, weights['h2']), biases['b2']))
+		outLayer = tf.add(tf.matmul(layer2, weights['out']), biases['out'])
+		return outLayer
+	elif (arch == "method2" and activation == "Default"):
+		print('Activation Layer: none \n Architecture Used: method2 \n')
+		#Layers
+		layer1 = tf.add(tf.matmul(x, weights['h1']), biases['b1'])
+		layer2 = tf.add(tf.matmul(layer1, weights['h2']), biases['b2'])
+		outLayer = tf.add(tf.matmul(layer2, weights['out']), biases['out'])
+		return outLayer
+	elif (arch == "method3" and activation == "Sigmoid"):
+		print('Activation Layer: sigmoid \n Architecture Used: method3 \n')
+		#Layers
+		layer1 = tf.nn.sigmoid(tf.add(tf.matmul(x, weights['h1']), biases['b1']))
+		layer2 = tf.nn.sigmoid(tf.add(tf.matmul(layer1, weights['h2']), biases['b2']))
+		layer3 = tf.nn.sigmoid(tf.add(tf.matmul(layer2, weights['h3']), biases['b3']))
+		layer4 = tf.nn.sigmoid(tf.add(tf.matmul(layer3, weights['h4']), biases['b4']))
+		outLayer = tf.add(tf.matmul(layer4, weights['out']), biases['out'])
+		return outLayer
+	elif (arch == "method3" and activation == "Tanh"):
+		print('Activation Layer: tanh \n Architecture Used: method3 \n')
+		#Layers
+		layer1 = tf.nn.sigmoid(tf.add(tf.matmul(x, weights['h1']), biases['b1']))
+		layer2 = tf.nn.sigmoid(tf.add(tf.matmul(layer1, weights['h2']), biases['b2']))
+		layer3 = tf.nn.sigmoid(tf.add(tf.matmul(layer2, weights['h3']), biases['b3']))
+		layer4 = tf.nn.sigmoid(tf.add(tf.matmul(layer3, weights['h4']), biases['b4']))
+		outLayer = tf.add(tf.matmul(layer4, weights['out']), biases['out'])
+		return outLayer
+	elif (arch == "method3" and activation == "Relu"):
+		print('Activation Layer: relu \n Architecture Used: method3 \n')
+		#Layers
+		layer1 = tf.nn.sigmoid(tf.add(tf.matmul(x, weights['h1']), biases['b1']))
+		layer2 = tf.nn.sigmoid(tf.add(tf.matmul(layer1, weights['h2']), biases['b2']))
+		layer3 = tf.nn.sigmoid(tf.add(tf.matmul(layer2, weights['h3']), biases['b3']))
+		layer4 = tf.nn.sigmoid(tf.add(tf.matmul(layer3, weights['h4']), biases['b4']))
+		outLayer = tf.add(tf.matmul(layer4, weights['out']), biases['out'])
+		return outLayer
+	elif (arch == "method3" and activation == "Default"):
+		print('Activation Layer: none \n Architecture Used: method3 \n')
+		#Layers
+		layer1 = tf.nn.sigmoid(tf.add(tf.matmul(x, weights['h1']), biases['b1']))
+		layer2 = tf.nn.sigmoid(tf.add(tf.matmul(layer1, weights['h2']), biases['b2']))
+		layer3 = tf.nn.sigmoid(tf.add(tf.matmul(layer2, weights['h3']), biases['b3']))
+		layer4 = tf.nn.sigmoid(tf.add(tf.matmul(layer3, weights['h4']), biases['b4']))
+		outLayer = tf.add(tf.matmul(layer4, weights['out']), biases['out'])
 		return outLayer
 
 def nextBatch(batchSize, trainNumber):
@@ -382,137 +416,88 @@ def main(argv = None):
 	#display step
 
 	data, labels = extractData()
+	labelText = labels
 	labels = oneHot(labels)
-	labels = oneHotArray(labels)
-	trainLabels, trainData, trainNumber, validationLabels, validationData, validationNumber, testLabels, testData, testNumber = partitionData(data, labels)
 
 	inputLayer = FLAGS.frames*27*3
+
+	init = tf.global_variables_initializer()
 
 	#tf Graph input
 	X = tf.placeholder(data.dtype, [None, inputLayer])
 	Y = tf.placeholder(labels.dtype, [None, numberClasses])
 
-	#store layers weight & bias
-	weights = {
-		'h1' : tf.Variable(tf.random_normal([inputLayer, hiddenLayer1], dtype=data.dtype)),
-		'h2' : tf.Variable(tf.random_normal([hiddenLayer1, hiddenLayer2], dtype=data.dtype)),
-		'h3' : tf.Variable(tf.random_normal([hiddenLayer2, hiddenLayer3], dtype=data.dtype)),
-		'h4' : tf.Variable(tf.random_normal([hiddenLayer3, hiddenLayer4], dtype=data.dtype)),
-		'out' : tf.Variable(tf.random_normal([hiddenLayer4, numberClasses], dtype=data.dtype))
-	}
+	if (arch == 'method1'):
+		weights = {
+		'h1' : tf.Variable(tf.zeros([inputLayer, hiddenLayer1], dtype=data.dtype, name='h1')),
+		'h2' : tf.Variable(tf.zeros([hiddenLayer1, hiddenLayer2], dtype=data.dtype, name ='h2')),
+		'h3' : tf.Variable(tf.zeros([hiddenLayer2, hiddenLayer3], dtype=data.dtype, name ='h3')),
+		'out' : tf.Variable(tf.zeros([hiddenLayer3, numberClasses], dtype=data.dtype, name = 'out'))
+		}
 
-	biases = {
-		'b1' : tf.Variable(tf.random_normal([hiddenLayer1], dtype=data.dtype)),
-		'b2' : tf.Variable(tf.random_normal([hiddenLayer2], dtype=data.dtype)),
-		'b3' : tf.Variable(tf.random_normal([hiddenLayer3], dtype=data.dtype)),
-		'b4' : tf.Variable(tf.random_normal([hiddenLayer4], dtype=data.dtype)),		
-		'out' : tf.Variable(tf.random_normal([numberClasses], dtype=data.dtype))
-	}
+		biases = {
+		'b1' : tf.Variable(tf.zeros([hiddenLayer1], dtype=data.dtype, name = 'b1')),
+		'b2' : tf.Variable(tf.zeros([hiddenLayer2], dtype=data.dtype, name = 'b2')),
+		'b3' : tf.Variable(tf.zeros([hiddenLayer3], dtype=data.dtype, name = 'b3')),
+		'out' : tf.Variable(tf.zeros([numberClasses], dtype=data.dtype, name = 'outb'))
+		}
+	elif (arch == "method2"):
+		weights = {
+		'h1' : tf.Variable(tf.zeros([inputLayer, hiddenLayer1], dtype=data.dtype, name='h1')),
+		'h2' : tf.Variable(tf.zeros([hiddenLayer1, hiddenLayer2], dtype=data.dtype, name='h2')),
+		'out' : tf.Variable(tf.zeros([hiddenLayer2, numberClasses], dtype=data.dtype, name='out'))
+		}
 
-	#construct model
-	logits = multilayer_perception(X, weights, biases)
-
-	#define loss and optimizer
-	regularization = FLAGS.regularization
-	regularizationRate = FLAGS.regularization_rate
-	lossOp = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits_v2(logits=logits, labels=Y)) 
-
-	if (regularization == "l1"):
-		print('Regularization: L1 \n')
-		l1_regularizer = tf.contrib.layers.l1_regularizer(scale=regularizationRate, scope=None)
-		trainedWeights = tf.trainable_variables() # all vars of your graph
-		regularization_penalty = tf.contrib.layers.apply_regularization(l1_regularizer, trainedWeights)
-		lossOp = lossOp + regularization_penalty
-
-	elif (regularization == "L2"):
-		print('Regularization: l2 \n')
-		l2_regularizer = tf.contrib.layers.l2_regularizer(scale=regularizationRate, scope=None)
-		trainedWeights = tf.trainable_variables() # all vars of your graph
-		regularization_penalty = tf.contrib.layers.apply_regularization(l2_regularizer, trainedWeights)
-		lossOp = lossOp + regularization_penalty
+		biases = {
+		'b1' : tf.Variable(tf.zeros([hiddenLayer1], dtype=data.dtype, name = 'b1')),
+		'b2' : tf.Variable(tf.zeros([hiddenLayer2], dtype=data.dtype, name = 'b2')),
+		'out' : tf.Variable(tf.zeros([numberClasses], dtype=data.dtype, name = 'outb'))
+		}
 	else:
-		print('Regularization: none \n')
-		lossOp = lossOp
+		weights = {
+		'h1' : tf.Variable(tf.zeros([inputLayer, hiddenLayer1], dtype=data.dtype, name='h1')),
+		'h2' : tf.Variable(tf.zeros([hiddenLayer1, hiddenLayer2], dtype=data.dtype, name='h2')),
+		'h3' : tf.Variable(tf.zeros([hiddenLayer2, hiddenLayer3], dtype=data.dtype, name='h3')),
+		'h4' : tf.Variable(tf.zeros([hiddenLayer3, hiddenLayer4], dtype=data.dtype, name='h4')),
+		'out' : tf.Variable(tf.zeros([hiddenLayer4, numberClasses], dtype=data.dtype, name='out'))
+		}
 
-	optimizer = tf.train.AdamOptimizer(learning_rate=learningRate)
-	trainOp = optimizer.minimize(lossOp)
+		biases = {
+		'b1' : tf.Variable(tf.zeros([hiddenLayer1], dtype=data.dtype, name = 'b1')),
+		'b2' : tf.Variable(tf.zeros([hiddenLayer2], dtype=data.dtype, name = 'b2')),
+		'b3' : tf.Variable(tf.zeros([hiddenLayer3], dtype=data.dtype, name = 'b3')),
+		'b4' : tf.Variable(tf.zeros([hiddenLayer4], dtype=data.dtype, name = 'b4')),		
+		'out' : tf.Variable(tf.zeros([numberClasses], dtype=data.dtype, name = 'bout'))
+		}
 
-	#initialize global variables
-	init = tf.global_variables_initializer()
-
-	#initialize arrays for losses
-	trainingLoss = []
-
-	# 'Saver' op to save and restore all the variables
 	saver = tf.train.Saver()
 
-	#creating and running session
+
+	modelPath =  newDir + "\\ExercisePredicter"
 	with tf.Session() as sess:
-		sess.run(init)
 
-		#training cycle
-		for epoch in range(epochsTrained):
-			global batchIndex 
-			batchIndex = 0
-			avgCost = 0
-			totalBatch = int(trainNumber/batchSize)
+		saver.restore(sess, modelPath )
 
-			for i in range(totalBatch):
-				batchStart, batchEnd = nextBatch(batchSize, trainNumber)
-				batchData = trainData[batchStart:batchEnd]
-				batchLabels = trainLabels[batchStart:batchEnd]
-
-				_, c = sess.run([trainOp, lossOp], feed_dict={X: batchData, Y: batchLabels})
-				avgCost += c/totalBatch
-
-			if (epoch % 10 == 0):
-				print("Epoch:", '%04d' % (epoch), "cost={:.9f}".format(avgCost))
-				resultsFile.write("Epoch: %04d" % (epoch))
-				resultsFile.write(" \n Cost={:.9f}".format(avgCost))
-				trainingLoss.append(avgCost)
-		modelPath =  newDir + "\\model.ckpt"
-		saver.save(sess, modelPath)
-
-		print ("Optimization Finished")
-		resultsFile.write("Optimization Finished \n")	
-
-		#display loss over time curve to aid optimization
-		plt.ylabel("LogLoss")
-		plt.xlabel("Periods")
-		plt.title("Logloss vs Periods")
-		plt.plot(trainingLoss, label="training")
-		plt.legend()
-		plt.savefig(newDir +'\\logLoss.png')
-
-	    #test model 
+		sess.run(weights)
+		sess.run(biases)
+		
+		logits = multilayer_perception(data, sess.run(weights), sess.run(biases))
 		pred = tf.nn.softmax(logits)
-		correctPrediction = tf.equal(tf.argmax(pred,1), tf.argmax(Y,1))
 
-	    #calculate accuracy
-		accuracy = tf.reduce_mean(tf.cast(correctPrediction, "float"))
-
-		print("Training Accuracy:", accuracy.eval({X: trainData, Y: trainLabels}))
-		resultsFile.write("Training Accuracy:" + str(accuracy.eval({X: trainData, Y: trainLabels})) + '\n')	
-		print("Validation Accuracy:", accuracy.eval({X: validationData, Y: validationLabels}))
-		resultsFile.write("Validation Accuracy:" + str(accuracy.eval({X: validationData, Y: validationLabels})) + '\n')	
-
-	testing = 0
-	while (testing == 0):
-		#modelToLoad = input ("Please enter a model to load and test")
-		print ("Waiting to test model")
-		with tf.Session() as sess: 
-			sess.run(init)
-			#modelLoadPath = newDir + "\\Epoch" + str(modelToLoad) + ".ckpt"
-			print ("Model restored from: ", modelPath)
-			saver.restore(sess, modelPath)
-			
-			correct_prediction = tf.equal(tf.argmax(pred, 1), tf.argmax(Y, 1))
-    		# Calculate accuracy
+		if (FLAGS.mode == "test"):
+			correct_prediction = tf.equal(tf.argmax(pred, 1), tf.argmax(labels, 1))
 			accuracy = tf.reduce_mean(tf.cast(correct_prediction, "float"))
-			print("Validation Accuracy:", accuracy.eval({X: validationData, Y: validationLabels}))
-			print("Test Accuracy:", accuracy.eval({X: testData, Y: testLabels}))
-			testing = 1
-
+			print("Final Accuracy on new Data is: ", "{0:.2%}".format(sess.run(accuracy)), '\n')
+			predictions = tf.argmax(pred,1).eval()
+			predictions = findExercise(predictions) 
+			print("My predictions", predictions, '\n')
+			print("Original predictions", labelText)
+		else: 		
+			predictions = tf.argmax(pred,1).eval()
+			predictions = findExercise(predictions) 
+			print("My preditions", predictions)
+		
+	
 #needed in order to call main
 if __name__ == '__main__':
 	main()

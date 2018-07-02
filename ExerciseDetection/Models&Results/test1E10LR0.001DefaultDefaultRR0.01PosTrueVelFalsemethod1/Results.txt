@@ -1,0 +1,1 @@
+Epoch: 0001Training Accuracy:0.54285717
