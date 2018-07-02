@@ -78,14 +78,15 @@ tf.app.flags.DEFINE_boolean('position', False, 'Determines if the position data 
 tf.app.flags.DEFINE_boolean('velocity', False, 'Determines if the velocity data is included when training')
 tf.app.flags.DEFINE_boolean('test', False, 'What mode are we running this model on. True runs the testing function')
 tf.app.flags.DEFINE_float('regularization_rate',0.01,'Strength of regularization')
+tf.app.flags.DEFINE_boolean('verbose', False, 'Determines how much information is printed into the results file')
 
 FLAGS = tf.app.flags.FLAGS
 
+#Global Variables
 TRAIN_PERCENT = 0.7
 TEST_PERCENT = 0.3
-hiddenUnits = [16, 16]
 
-#store file names
+#Predetermined selection of Bodyparts (CHANGE FOR REFINEMENT)
 file_names =[
 'Head.csv',   
 'Neck.csv',    
@@ -119,34 +120,42 @@ file_names =[
 dirname = os.path.realpath('.')
 filename = dirname + '\\Data\\TestNumber.txt'
 
-#Creating a folder to save the results
+#Creating a unuiqe folder name to save the results
 epochsLable = str(FLAGS.epochs)
 learning_rateLable = str(FLAGS.learning_rate)
 regularization_rateLable = str(FLAGS.regularization_rate)
 positionLable = str(FLAGS.position)
 velocityLable = str(FLAGS.velocity)
-
 folderName = FLAGS.label + "E" + epochsLable + "LR" + learning_rateLable + FLAGS.activation + FLAGS.regularization + "RR" + regularization_rateLable  + "Pos" + positionLable + "Vel" + velocityLable + FLAGS.arch
 
+#establish the directory used to store the saved model and results
 newDir = dirname + '\\Models&Results\\' + folderName
 if not (os.path.exists(newDir)):
 	os.makedirs(newDir)
 
+#Open file used to store accuracy scores and any other printed data
 resultsFile = open(newDir + '\\Results.txt',"w+")
 
 #Read the number of files(events) that the data contains from the TestNumber.txt file
 numberTestFiles = open(filename,"r")
 numberTests = numberTestFiles.read()
-print("Number of Filed Detected: ", numberTests)
-#resultsFile.write("Number of Filed Detected: " + str(numberTests) + '\n')
-#determine the number of datasets included for data matrix size allocation
+
+if FLAGS.verbose:
+	resultsFile.write("Number of Filed Detected: " + str(numberTests) + '\n')
+	print("Number of Filed Detected: ", numberTests)
+
+#Determine the number of datasets included (velocity, position) in order to size the data array
 numSections = 0
 if FLAGS.position:
 	numSections = numSections + 1
 if FLAGS.velocity:
-	numSections = numSections + 1		
+	numSections = numSections + 1	
+if FLAGS.verbose:
+	print("Number of datasets: ", numSections)
+	resultsFile.write("Number of datasets: " + str(numSections) + '\n')
+
 #GLOBAL
-#network parameters:
+#Determine structure of network based on flags
 arch = FLAGS.arch
 numberClasses = 11
 if (arch == 'method1'):
@@ -166,7 +175,7 @@ else:
 batchIndex = 0
 
 #Determine the maximum/longest running event in the group of seperate tests
-#used to define size of the arrays
+#used to define size of the data arrays
 maxEntries = 0
 for i in range(0,int(numberTests)):
 	numEntries = 0
@@ -175,14 +184,20 @@ for i in range(0,int(numberTests)):
 	if numEntries > maxEntries:
 		maxEntries = numEntries	
 
-print("Maximum Number of Entries in a Single Exercise: ", maxEntries)
-#resultsFile.write("Maximum Number of Entries in Single Exercise: " + str(maxEntries) + '\n')
-
-#read data from files
-#features [event] [body part] [time stamp] [axis]
-#i.e [towel][head][0][x] retrieves the X position of the head during the towel event
+if FLAGS.verbose:
+	print("Maximum Number of Entries in a Single Exercise: ", maxEntries)
+	resultsFile.write("Maximum Number of Entries in Single Exercise: " + str(maxEntries) + '\n')
 
 def extractData():
+	'''
+		Moves data from the text files into flattened arrays:
+			[event] [HeadX1, HeadY1, HeadZ1, HeadX2....ArmX1, ArmY1, ArmZ1, ArmX2 etc]
+
+		Parameters: None
+		Returns:
+			nparray shuffledlabels
+			nparray shuffledData
+	'''
 	data =  np.empty((int(numberTests), int(27*maxEntries*3*numSections)))
 	
 	for i in range(0, int(numberTests)):
@@ -221,8 +236,18 @@ def extractData():
 	return shuffledData, shuffledLabels
 
 def partitionData(features, labels):
-	#Divides the total data up into training, validation, and test sets
-	#division based off of percentages stored at the top of the code
+	'''
+		Divides the total data up into training, validation, and test sets.
+		Division based off of percentages stored at the top of the code. Accepts arrays
+		and returns separated data along with indicator of how many files are in each division
+
+		Accepts:
+			nparray features, lables
+
+		Returns:
+			nparray trainLabels, trainFeatures, testLabels, testFeatures
+			int train, test
+	'''
 	train = math.floor(float(numberTests) * TRAIN_PERCENT)
 	test = math.ceil(float(numberTests) * TEST_PERCENT)
 
@@ -231,22 +256,29 @@ def partitionData(features, labels):
 	testLabels = labels[train:train+test]
 	testFeatures = features[train:train+test]
 	
-	'''
-	#Output details on the data we are using
-	print("Number of Training Cases: ", train)
-	#resultsFile.write("Number of Training Cases: " + str(train) + '\n')
-	print("Training Labels (Randomized): ", trainLabels)
-	
-	print("Number of Test Cases: ", test)
-	#resultsFile.write("Number of Test Cases: " + str(test) + '\n')
-	print("Test Lables (Randomized): ", testLabels)
-	'''
+	if FLAGS.verbose:
+		#Output details on the data we are using
+		print("Number of Training Cases: ", train)
+		resultsFile.write("Number of Training Cases: " + str(train) + '\n')
+		print("Training Labels (Randomized): ", trainLabels)
+		
+		print("Number of Test Cases: ", test)
+		resultsFile.write("Number of Test Cases: " + str(test) + '\n')
+		print("Test Lables (Randomized): ", testLabels)
 
 	return trainLabels, trainFeatures, train, testLabels, testFeatures, test
 
 def oneHot(labels):
-	#give each exercise a single numeric representation
-	#necessary for converting to tf.DataFrame
+	'''
+		Accepts a list of labels and encodes each text label as a one hot encoding in an array with length = numClasses.
+		Returns the list of encoded labels
+
+		Accepts:
+			list Labels
+
+		Returns:
+			list one_hot_labels
+	'''
 	one_hot_labels = []
 	for i in range(0,len(labels)):
 		if labels[i].lower() == "y":
@@ -275,8 +307,20 @@ def oneHot(labels):
 
 	return one_hot_labels
 
-#creates the model
 def multilayer_perception(x, weights, biases):
+	'''
+		Define the activation layer and mathematical operations to occur at each level.
+		Creates the model
+
+		Accepts:
+			dict('string':tf.varable) Weights, Biases
+			x (input data of same size as Weights and Biases)
+
+		Returns:
+			outlayer (Structure of the model)
+
+	'''
+
 	activation = FLAGS.activation
 	if (arch == "method1" and activation == "Sigmoid"):
 		print('Activation Layer: sigmoid \n Architecture Used: method1 \n')
@@ -302,8 +346,7 @@ def multilayer_perception(x, weights, biases):
 		layer3 = tf.nn.relu(tf.add(tf.matmul(layer2, weights['h3']), biases['b3']))
 		outLayer = tf.add(tf.matmul(layer3, weights['out']), biases['out'])
 		return outLayer
-
-	if (arch == "method1" and activation == "Default"):
+	elif (arch == "method1" and activation == "Default"):
 		print('Activation Layer: none \n Architecture Used: method1 \n ')
 		#Layers
 		layer1 = tf.add(tf.matmul(x, weights['h1']), biases['b1'])
@@ -378,20 +421,35 @@ def multilayer_perception(x, weights, biases):
 		return outLayer
 	
 def nextBatch(batchSize, trainNumber):
+	'''
+		Determines which portion of the data to feed into the net
+
+		Accepts:
+			int batchSize
+			int trainNumber (number of files in the dataset)
+
+		returns:
+			int startIndex
+			int endIndex
+	'''
 	global batchIndex
 	start = batchIndex
 	batchIndex += batchSize
 	if batchIndex > trainNumber:
 		batchIndex = trainNumber
 	end = batchIndex
+	
 	return start, end
 
 def main(argv = None):
-	#Call all methods defined above and determine the shape of the network
+	'''
+		Call all methods defined above and determine the shape of the network. This
+		portion also defines and stores all of the weights and biases. Defines optimizer and trains
+		the network
+	'''
 	learningRate = FLAGS.learning_rate
 	epochsTrained = FLAGS.epochs
 	batchSize = FLAGS.batch_size
-	#display step
 
 	data, labels = extractData()
 	labels = oneHot(labels)
@@ -403,8 +461,7 @@ def main(argv = None):
 	X = tf.placeholder(data.dtype, [None, inputLayer])
 	Y = tf.placeholder(labels.dtype, [None, numberClasses])
 
-	#store layers weight & bias
-
+	#store/define layers weight & bias
 	if (arch == 'method1'):
 		weights = {
 		'h1' : tf.Variable(tf.random_normal([inputLayer, hiddenLayer1], dtype=data.dtype, name='h1')),
@@ -484,10 +541,10 @@ def main(argv = None):
 	trainingLoss = []
 	# 'Saver' op to save and restore all the variables
 	saver = tf.train.Saver()
+	
 	#creating and running session
 	with tf.Session() as sess:
 		sess.run(init)
-
 		#training cycle
 		for epoch in range(epochsTrained):
 			global batchIndex 
@@ -505,8 +562,11 @@ def main(argv = None):
 
 			if (epoch % 10 == 0):
 				print("Epoch:", '%04d' % (epoch+1), "cost={:.9f}".format(avgCost))
-				resultsFile.write("Epoch: %04d" % (epoch+1))
-				#resultsFile.write(" \n Cost={:.9f}".format(avgCost))
+				
+				if FLAGS.verbose:
+					resultsFile.write("Epoch: %04d" % (epoch+1))
+					resultsFile.write(" \n Cost={:.9f}".format(avgCost))
+
 				trainingLoss.append(avgCost)
 				#test model 
 				pred = tf.nn.softmax(logits)

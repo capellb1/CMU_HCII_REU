@@ -79,6 +79,9 @@ Flags:
 	mode
 		Used for reloadModel.py. Determines how the statistics are determined
 			OPTIONS: Test, Predict
+	verbose
+		Increases the amount of data written to the results file
+			DEFAULT: False
 	arch
 		specifies the architecture to use
 		method1 = 10x10x10

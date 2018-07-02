@@ -80,6 +80,7 @@ tf.app.flags.DEFINE_string('source', 'Position', 'What files to draw data frome 
 tf.app.flags.DEFINE_boolean('position', False, 'Determines if the position data is included when training')
 tf.app.flags.DEFINE_boolean('velocity', False, 'Determines if the velocity data is included when training')
 tf.app.flags.DEFINE_boolean('test', False, 'What mode are we running this model on. True runs the testing function')
+tf.app.flags.DEFINE_boolean('verbose', False, 'Determines how much information is printed into the results file')
 
 
 FLAGS = tf.app.flags.FLAGS
