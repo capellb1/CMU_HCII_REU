@@ -429,6 +429,7 @@ public void Stop_Recording() {
         i = 0;
         for (DataPoint dataPoint : joint_dataV){
           pwderiv.println((dataPoint.x-start_position.x)+","+(dataPoint.y-start_position.y)+","+(dataPoint.z-start_position.z)+","+(dataPoint.ts-start_time));
+          System.out.println(dataPoint.x-start_position.x);
           xVelocity.get(storage_index)[i] = dataPoint.x;
           yVelocity.get(storage_index)[i] = dataPoint.y;
           zVelocity.get(storage_index)[i] = dataPoint.z;
