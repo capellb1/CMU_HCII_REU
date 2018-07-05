@@ -82,10 +82,21 @@ Flags:
 	verbose
 		Increases the amount of data written to the results file
 			DEFAULT: False
+	regularization
+		Determines the method of regularization
+			DEFAULT: None
+			OPTIONS: Uniform, Tailored, None
+	regularization rate:
+		Determines the number of joints to check
+		0 = 25 joints
+		25 = 19 joints (minus hands/feet)
+		50 = 13 joints (head, shoulder, elbow, wrist, hip, knee, ankle)
+		75 = 6 joints (shoulder, wrist, ankle)
 	arch
 		specifies the architecture to use
-		method1 = 10x10x10
-		method2 = 15x15
+		method1 = 60x60
+		method2 = 40x40x40
 		method3 = 30x30x30x30
+		method4 = 24x24x24x24x24
 			DEFAULT: method1
-			Options: method1, method2, method3
+			Options: method1, method2, method3, method4

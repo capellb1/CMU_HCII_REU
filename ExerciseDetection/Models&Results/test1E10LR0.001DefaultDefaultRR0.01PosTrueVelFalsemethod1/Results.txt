@@ -1,7 +1,2 @@
-Number of Filed Detected: 51
-Number of datasets: 1
-Maximum Number of Entries in Single Exercise: 849
-Number of Training Cases: 35
-Number of Test Cases: 16
-Epoch: 0001 
- Cost=5192.348316510Training Accuracy:0.51428574
+Training Accuracy:0.8857143
+Testing Accuracy:0.3125

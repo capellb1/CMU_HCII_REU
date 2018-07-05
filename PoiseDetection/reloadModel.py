@@ -81,6 +81,8 @@ tf.app.flags.DEFINE_boolean('position', False, 'Determines if the position data 
 tf.app.flags.DEFINE_boolean('velocity', False, 'Determines if the velocity data is included when training')
 tf.app.flags.DEFINE_boolean('test', False, 'What mode are we running this model on. True runs the testing function')
 tf.app.flags.DEFINE_boolean('verbose', False, 'Determines how much information is printed into the results file')
+tf.app.flags.DEFINE_string('refinement', "None", 'Determines which refinement process to use')
+tf.app.flags.DEFINE_integer('refinement_rate',0,'Determines the number of joints to include in the data')
 
 
 FLAGS = tf.app.flags.FLAGS
@@ -89,65 +91,96 @@ TRAIN_PERCENT = 0.7
 VALIDATION_PERCENT = 0.2
 TEST_PERCENT = 0.1
 
-#store file names
-file_names =[
-'Head.csv',   
-'Neck.csv',    
-'SpineShoulder.csv', 
-'SpineMid.csv',
-'SpineBase.csv',    
-'ShoulderRight.csv', 
-'ShoulderLeft.csv',  
-'HipRight.csv',
-'HipLeft.csv', 
-'ElbowRight.csv',    
-'WristRight.csv',    
-'HandRight.csv',     
-'HandTipRight.csv',  
-'ThumbRight.csv',   
-'ElbowLeft.csv',     
-'WristLeft.csv',     
-'HandLeft.csv',     
-'HandTipLeft.csv',  
-'ThumbLeft.csv',    
-'HipRight.csv',
-'KneeRight.csv',    
-'AnkleRight.csv',   
-'FootRight.csv',     
-'HipLeft.csv', 
-'KneeLeft.csv',
-'AnkleLeft.csv',     
-'FootLeft.csv']
+numSections = 0
+if FLAGS.position:
+	numSections = numSections + 1
+if FLAGS.velocity:
+	numSections = numSections + 1	
+if FLAGS.verbose:
+	print("Number of datasets: ", numSections)
+	resultsFile.write("Number of datasets: " + str(numSections) + '\n')
+	
+#Predetermined selection of Bodyparts (CHANGE FOR REFINEMENT)
+if (FLAGS.refinement == "None") or (FLAGS.refinement_rate == 0):
+	file_names =[
+	'Head.csv',   
+	'Neck.csv',    
+	'SpineShoulder.csv', 
+	'SpineMid.csv',
+	'SpineBase.csv',    
+	'ShoulderRight.csv', 
+	'ShoulderLeft.csv',  
+	'HipRight.csv',
+	'HipLeft.csv', 
+	'ElbowRight.csv',    
+	'WristRight.csv',    
+	'HandRight.csv',     
+	'HandTipRight.csv',  
+	'ThumbRight.csv',   
+	'ElbowLeft.csv',     
+	'WristLeft.csv',     
+	'HandLeft.csv',     
+	'HandTipLeft.csv',  
+	'ThumbLeft.csv',    
+	'KneeRight.csv',    
+	'AnkleRight.csv',   
+	'FootRight.csv',     
+	'KneeLeft.csv',
+	'AnkleLeft.csv',     
+	'FootLeft.csv']
+	bodySize = 25
 
-#store bodypart names without the file extensions
-bodyParts =[
-'Head',   
-'Neck',    
-'SpineShoulder', 
-'SpineMid',
-'SpineBase',    
-'ShoulderRight', 
-'ShoulderLeft',  
-'HipRight',
-'HipLeft', 
-'ElbowRight',    
-'WristRight',    
-'HandRight',     
-'HandTipRight',  
-'ThumbRight',   
-'ElbowLeft',     
-'WristLeft',     
-'HandLeft',     
-'HandTipLeft',  
-'ThumbLeft',    
-'HipRight',
-'KneeRight',    
-'AnkleRight',   
-'FootRight',     
-'HipLeft', 
-'KneeLeft',
-'AnkleLeft',     
-'FootLeft']
+elif (FLAGS.refinement == "Uniform") and (FLAGS.refinement_rate == 25):
+	file_names =[
+	'Head.csv',   
+	'Neck.csv',    
+	'SpineShoulder.csv', 
+	'SpineMid.csv',
+	'SpineBase.csv',    
+	'ShoulderRight.csv', 
+	'ShoulderLeft.csv',  
+	'HipRight.csv',
+	'HipLeft.csv', 
+	'ElbowRight.csv',    
+	'WristRight.csv',      
+	'ElbowLeft.csv',     
+	'WristLeft.csv',      
+	'KneeRight.csv',    
+	'AnkleRight.csv',   
+	'FootRight.csv',     
+	'KneeLeft.csv',
+	'AnkleLeft.csv',     
+	'FootLeft.csv']
+	bodySize = 19
+
+elif (FLAGS.refinement == "Uniform") and (FLAGS.refinement_rate == 50):
+	file_names =[
+	'Head.csv',          
+	'ShoulderRight.csv', 
+	'ShoulderLeft.csv',  
+	'HipRight.csv',
+	'HipLeft.csv', 
+	'ElbowRight.csv',    
+	'WristRight.csv',      
+	'ElbowLeft.csv',     
+	'WristLeft.csv',         
+	'KneeRight.csv',    
+	'AnkleRight.csv',       
+	'KneeLeft.csv',
+	'AnkleLeft.csv']
+	bodySize = 13
+
+elif (FLAGS.refinement == "Uniform") and (FLAGS.refinement_rate == 75):
+	file_names =[         
+	'ShoulderRight.csv', 
+	'ShoulderLeft.csv',      
+	'WristRight.csv',        
+	'WristLeft.csv',            
+	'AnkleRight.csv',       
+	'AnkleLeft.csv']
+	bodySize = 6
+
+
 
 #Set the read path to the data folder of the current working directory (allows github upload of data)
 dirname = os.path.realpath('.')
@@ -176,17 +209,27 @@ resultsFile.write("Number of Filed Detected: " + str(numberTests) + '\n')
 arch = FLAGS.arch
 numberClasses = 11
 if (arch == 'method1'):
-	hiddenLayer1 = 10
-	hiddenLayer2 = 10
-	hiddenLayer3 = 10
+	hiddenLayer1 = 60
+	hiddenLayer2 = 60
+
 elif (arch == 'method2'):
-	hiddenLayer1 = 15
-	hiddenLayer2 = 15
-else:
+	hiddenLayer1 = 40
+	hiddenLayer2 = 40
+	hiddenLayer3 = 40
+
+elif (arch == 'method3'):
 	hiddenLayer1 = 30
 	hiddenLayer2 = 30
 	hiddenLayer3 = 30
 	hiddenLayer4 = 30
+
+else:
+	hiddenLayer1 = 24
+	hiddenLayer2 = 24
+	hiddenLayer3 = 24
+	hiddenLayer4 = 24
+	hiddenLayer5 = 24
+
 
 #determine the number of datasets included for data matrix size allocation
 numSections = 0
@@ -218,16 +261,16 @@ resultsFile.write("Maximum Number of Entries in Single Exercise: " + str(maxEntr
 #[Arm2xyz, Head2xyz, Foot2xyz, ...] EVENT 2
 
 def extractData():
-	data =  np.empty((sum(timeScores), int(27*3*numSections)))
+	data =  np.empty((sum(timeScores), int(bodySize*3*numSections)))
 	
 	numTimeStamps = 0
 	c=0
 	for i in range(0, int(numberTests)):
 		#Determine the number of time stamps in this event
+		w=0
 		for l in range(numTimeStamps,numTimeStamps+timeScores[i]):
 			k=0
-			w=0
-			for j in range(0, 27):
+			for j in range(0, bodySize):
 				if FLAGS.position:
 					fp = open(dirname + "\\Data\\test" + str(i)+ "\\Position_" + file_names[j])
 					for n, line in enumerate(fp):
@@ -244,19 +287,33 @@ def extractData():
 							for m in range(0,3):
 								data[l][k]= row[m]
 								k = k + 1
-			w = w+1
+			if sample:				
+				w = w+1
+				sample = False
+			else:
+				w = w+2
+				sample = True
 		numTimeStamps = timeScores[i] + numTimeStamps
 	fp.close()
 
-	print("Number of Sections: ", numSections)
-	print("Data: ", data[0][:])
+	if FLAGS.verbose:
+		print("Number of Sections: ", numSections)
+		print("Length of Data: ", data[0][:])
+		print("data shape: [", int(numberTests), ", ", int(bodySize*maxEntries*3*numSections), "]")
+	
 	labels = []
+	sample = True
 	#seperate the label from the name and event number stored within the label.csv file(s)
 	for i in range (0, int(numberTests)):
 		for line in open(dirname + "\\Data\\test" + str(i)+ "\\label.csv"):
 			temporaryLabel = line.split()
 			for j in range(0,timeScores[i]):
-				labels.append(str(temporaryLabel[0]))
+				if sample:
+					labels.append(str(temporaryLabel[0]))
+					sample = False
+				else:
+					sample = True
+	
 	return data, labels
 
 def oneHot(labels):
@@ -323,67 +380,68 @@ def findExercise (predictions):
 def multilayer_perception(x, weights, biases):
 	activation = FLAGS.activation
 	if (arch == "method1" and activation == "Sigmoid"):
-		print('Activation Layer: sigmoid \n Architecture Used: method1 \n')
+		print('Activation Layer: sigmoid \nArchitecture Used: method2 \n')
+		#Layers
+		layer1 = tf.nn.sigmoid(tf.add(tf.matmul(x, weights['h1']), biases['b1']))
+		layer2 = tf.nn.sigmoid(tf.add(tf.matmul(layer1, weights['h2']), biases['b2']))
+		outLayer = tf.add(tf.matmul(layer2, weights['out']), biases['out'])
+		return outLayer
+	elif (arch == "method1" and activation == "Tanh"):
+		print('Activation Layer: tanh \nArchitecture Used: method2 \n')
+		#Layers
+		layer1 = tf.nn.tanh(tf.add(tf.matmul(x, weights['h1']), biases['b1']))
+		layer2 = tf.nn.tanh(tf.add(tf.matmul(layer1, weights['h2']), biases['b2']))
+		outLayer = tf.add(tf.matmul(layer2, weights['out']), biases['out'])
+		return outLayer
+	elif (arch == "method1" and activation == "Relu"):
+		print('Activation Layer: relu \nArchitecture Used: method2 \n')
+		#Layers
+		layer1 = tf.nn.relu(tf.add(tf.matmul(x, weights['h1']), biases['b1']))
+		layer2 = tf.nn.relu(tf.add(tf.matmul(layer1, weights['h2']), biases['b2']))
+		outLayer = tf.add(tf.matmul(layer2, weights['out']), biases['out'])
+		return outLayer
+	elif (arch == "method1" and activation == "Default"):
+		print('Activation Layer: none \nArchitecture Used: method2 \n')
+		#Layers
+		layer1 = tf.add(tf.matmul(x, weights['h1']), biases['b1'])
+		layer2 = tf.add(tf.matmul(layer1, weights['h2']), biases['b2'])
+		outLayer = tf.add(tf.matmul(layer2, weights['out']), biases['out'])
+		return outLayer
+	elif (arch == "method2" and activation == "Sigmoid"):
+		print('Activation Layer: sigmoid \nArchitecture Used: method1 \n')
 		#Layers
 		layer1 = tf.nn.sigmoid(tf.add(tf.matmul(x, weights['h1']), biases['b1']))
 		layer2 = tf.nn.sigmoid(tf.add(tf.matmul(layer1, weights['h2']), biases['b2']))
 		layer3 = tf.nn.sigmoid(tf.add(tf.matmul(layer2, weights['h3']), biases['b3']))
 		outLayer = tf.add(tf.matmul(layer3, weights['out']), biases['out'])
 		return outLayer
-	elif (arch == "method1" and activation == "Tanh"):
-		print('Activation Layer: tanh \n Architecture Used: method1 \n ')
+	elif (arch == "method2" and activation == "Tanh"):
+		print('Activation Layer: tanh \nArchitecture Used: method1 \n ')
 		#Layers
 		layer1 = tf.nn.tanh(tf.add(tf.matmul(x, weights['h1']), biases['b1']))
 		layer2 = tf.nn.tanh(tf.add(tf.matmul(layer1, weights['h2']), biases['b2']))
 		layer3 = tf.nn.tanh(tf.add(tf.matmul(layer2, weights['h3']), biases['b3']))
 		outLayer = tf.add(tf.matmul(layer3, weights['out']), biases['out'])
 		return outLayer
-	elif (arch == "method1" and activation == "Relu"):
-		print('Activation Layer: relu \n Architecture Used: method1 \n ')
+	elif (arch == "method2" and activation == "Relu"):
+		print('Activation Layer: relu \nArchitecture Used: method1 \n ')
 		#Layers
 		layer1 = tf.nn.relu(tf.add(tf.matmul(x, weights['h1']), biases['b1']))
 		layer2 = tf.nn.relu(tf.add(tf.matmul(layer1, weights['h2']), biases['b2']))
 		layer3 = tf.nn.relu(tf.add(tf.matmul(layer2, weights['h3']), biases['b3']))
 		outLayer = tf.add(tf.matmul(layer3, weights['out']), biases['out'])
 		return outLayer
-	elif (arch == "method1" and activation == "Default"):
-		print('Activation Layer: none \n Architecture Used: method1 \n ')
+	elif (arch == "method2" and activation == "Default"):
+		print('Activation Layer: none \nArchitecture Used: method1 \n ')
 		#Layers
 		layer1 = tf.add(tf.matmul(x, weights['h1']), biases['b1'])
 		layer2 = tf.add(tf.matmul(layer1, weights['h2']), biases['b2'])
 		layer3 = tf.add(tf.matmul(layer2, weights['h3']), biases['b3'])
 		outLayer = tf.add(tf.matmul(layer3, weights['out']), biases['out'])
 		return outLayer
-	elif (arch == "method2" and activation == "Sigmoid"):
-		print('Activation Layer: sigmoid \n Architecture Used: method2 \n')
-		#Layers
-		layer1 = tf.nn.sigmoid(tf.add(tf.matmul(x, weights['h1']), biases['b1']))
-		layer2 = tf.nn.sigmoid(tf.add(tf.matmul(layer1, weights['h2']), biases['b2']))
-		outLayer = tf.add(tf.matmul(layer2, weights['out']), biases['out'])
-		return outLayer
-	elif (arch == "method2" and activation == "Tanh"):
-		print('Activation Layer: tanh \n Architecture Used: method2 \n')
-		#Layers
-		layer1 = tf.nn.tanh(tf.add(tf.matmul(x, weights['h1']), biases['b1']))
-		layer2 = tf.nn.tanh(tf.add(tf.matmul(layer1, weights['h2']), biases['b2']))
-		outLayer = tf.add(tf.matmul(layer2, weights['out']), biases['out'])
-		return outLayer
-	elif (arch == "method2" and activation == "Relu"):
-		print('Activation Layer: relu \n Architecture Used: method2 \n')
-		#Layers
-		layer1 = tf.nn.relu(tf.add(tf.matmul(x, weights['h1']), biases['b1']))
-		layer2 = tf.nn.relu(tf.add(tf.matmul(layer1, weights['h2']), biases['b2']))
-		outLayer = tf.add(tf.matmul(layer2, weights['out']), biases['out'])
-		return outLayer
-	elif (arch == "method2" and activation == "Default"):
-		print('Activation Layer: none \n Architecture Used: method2 \n')
-		#Layers
-		layer1 = tf.add(tf.matmul(x, weights['h1']), biases['b1'])
-		layer2 = tf.add(tf.matmul(layer1, weights['h2']), biases['b2'])
-		outLayer = tf.add(tf.matmul(layer2, weights['out']), biases['out'])
-		return outLayer
+	
 	elif (arch == "method3" and activation == "Sigmoid"):
-		print('Activation Layer: sigmoid \n Architecture Used: method3 \n')
+		print('Activation Layer: sigmoid \nArchitecture Used: method3 \n')
 		#Layers
 		layer1 = tf.nn.sigmoid(tf.add(tf.matmul(x, weights['h1']), biases['b1']))
 		layer2 = tf.nn.sigmoid(tf.add(tf.matmul(layer1, weights['h2']), biases['b2']))
@@ -392,7 +450,7 @@ def multilayer_perception(x, weights, biases):
 		outLayer = tf.add(tf.matmul(layer4, weights['out']), biases['out'])
 		return outLayer
 	elif (arch == "method3" and activation == "Tanh"):
-		print('Activation Layer: tanh \n Architecture Used: method3 \n')
+		print('Activation Layer: tanh \nArchitecture Used: method3 \n')
 		#Layers
 		layer1 = tf.nn.sigmoid(tf.add(tf.matmul(x, weights['h1']), biases['b1']))
 		layer2 = tf.nn.sigmoid(tf.add(tf.matmul(layer1, weights['h2']), biases['b2']))
@@ -401,7 +459,7 @@ def multilayer_perception(x, weights, biases):
 		outLayer = tf.add(tf.matmul(layer4, weights['out']), biases['out'])
 		return outLayer
 	elif (arch == "method3" and activation == "Relu"):
-		print('Activation Layer: relu \n Architecture Used: method3 \n')
+		print('Activation Layer: relu \nArchitecture Used: method3 \n')
 		#Layers
 		layer1 = tf.nn.sigmoid(tf.add(tf.matmul(x, weights['h1']), biases['b1']))
 		layer2 = tf.nn.sigmoid(tf.add(tf.matmul(layer1, weights['h2']), biases['b2']))
@@ -410,13 +468,54 @@ def multilayer_perception(x, weights, biases):
 		outLayer = tf.add(tf.matmul(layer4, weights['out']), biases['out'])
 		return outLayer
 	elif (arch == "method3" and activation == "Default"):
-		print('Activation Layer: none \n Architecture Used: method3 \n')
+		print('Activation Layer: none \nArchitecture Used: method3 \n')
 		#Layers
 		layer1 = tf.nn.sigmoid(tf.add(tf.matmul(x, weights['h1']), biases['b1']))
 		layer2 = tf.nn.sigmoid(tf.add(tf.matmul(layer1, weights['h2']), biases['b2']))
 		layer3 = tf.nn.sigmoid(tf.add(tf.matmul(layer2, weights['h3']), biases['b3']))
 		layer4 = tf.nn.sigmoid(tf.add(tf.matmul(layer3, weights['h4']), biases['b4']))
 		outLayer = tf.add(tf.matmul(layer4, weights['out']), biases['out'])
+		return outLayer
+	
+	elif (arch == "method4" and activation == "Sigmoid"):
+		print('Activation Layer: sigmoid \nArchitecture Used: method3 \n')
+		#Layers
+		layer1 = tf.nn.sigmoid(tf.add(tf.matmul(x, weights['h1']), biases['b1']))
+		layer2 = tf.nn.sigmoid(tf.add(tf.matmul(layer1, weights['h2']), biases['b2']))
+		layer3 = tf.nn.sigmoid(tf.add(tf.matmul(layer2, weights['h3']), biases['b3']))
+		layer4 = tf.nn.sigmoid(tf.add(tf.matmul(layer3, weights['h4']), biases['b4']))
+		layer5 = tf.nn.sigmoid(tf.add(tf.matmul(layer4, weights['h5']), biases['b5']))
+		outLayer = tf.add(tf.matmul(layer5, weights['out']), biases['out'])
+		return outLayer
+	elif (arch == "method4" and activation == "Tanh"):
+		print('Activation Layer: tanh \nArchitecture Used: method3 \n')
+		#Layers
+		layer1 = tf.nn.sigmoid(tf.add(tf.matmul(x, weights['h1']), biases['b1']))
+		layer2 = tf.nn.sigmoid(tf.add(tf.matmul(layer1, weights['h2']), biases['b2']))
+		layer3 = tf.nn.sigmoid(tf.add(tf.matmul(layer2, weights['h3']), biases['b3']))
+		layer4 = tf.nn.sigmoid(tf.add(tf.matmul(layer3, weights['h4']), biases['b4']))
+		layer5 = tf.nn.sigmoid(tf.add(tf.matmul(layer4, weights['h5']), biases['b5']))
+		outLayer = tf.add(tf.matmul(layer5, weights['out']), biases['out'])
+		return outLayer
+	elif (arch == "method4" and activation == "Relu"):
+		print('Activation Layer: relu \nArchitecture Used: method3 \n')
+		#Layers
+		layer1 = tf.nn.sigmoid(tf.add(tf.matmul(x, weights['h1']), biases['b1']))
+		layer2 = tf.nn.sigmoid(tf.add(tf.matmul(layer1, weights['h2']), biases['b2']))
+		layer3 = tf.nn.sigmoid(tf.add(tf.matmul(layer2, weights['h3']), biases['b3']))
+		layer4 = tf.nn.sigmoid(tf.add(tf.matmul(layer3, weights['h4']), biases['b4']))
+		layer5 = tf.nn.sigmoid(tf.add(tf.matmul(layer4, weights['h5']), biases['b5']))
+		outLayer = tf.add(tf.matmul(layer5, weights['out']), biases['out'])
+		return outLayer
+	elif (arch == "method4" and activation == "Default"):
+		print('Activation Layer: none \nArchitecture Used: method3 \n')
+		#Layers
+		layer1 = tf.nn.sigmoid(tf.add(tf.matmul(x, weights['h1']), biases['b1']))
+		layer2 = tf.nn.sigmoid(tf.add(tf.matmul(layer1, weights['h2']), biases['b2']))
+		layer3 = tf.nn.sigmoid(tf.add(tf.matmul(layer2, weights['h3']), biases['b3']))
+		layer4 = tf.nn.sigmoid(tf.add(tf.matmul(layer3, weights['h4']), biases['b4']))
+		layer5 = tf.nn.sigmoid(tf.add(tf.matmul(layer4, weights['h5']), biases['b5']))
+		outLayer = tf.add(tf.matmul(layer5, weights['out']), biases['out'])
 		return outLayer
 
 def nextBatch(batchSize, trainNumber):
@@ -439,13 +538,27 @@ def main(argv = None):
 	labelText = labels
 	labels = oneHot(labels)
 
-	inputLayer = 27*3
+	inputLayer = bodySize*3
 
 	#tf Graph input
 	X = tf.placeholder(data.dtype, [None, inputLayer])
 	Y = tf.placeholder(labels.dtype, [None, numberClasses])
 
 	if (arch == 'method1'):
+		weights = {
+		'h1' : tf.Variable(tf.random_normal([inputLayer, hiddenLayer1], dtype=data.dtype, name='h1')),
+		'h2' : tf.Variable(tf.random_normal([hiddenLayer1, hiddenLayer2], dtype=data.dtype, name='h2')),
+		'out' : tf.Variable(tf.random_normal([hiddenLayer2, numberClasses], dtype=data.dtype, name='out'))
+		}
+
+		biases = {
+		'b1' : tf.Variable(tf.random_normal([hiddenLayer1], dtype=data.dtype, name = 'b1')),
+		'b2' : tf.Variable(tf.random_normal([hiddenLayer2], dtype=data.dtype, name = 'b2')),
+		'out' : tf.Variable(tf.random_normal([numberClasses], dtype=data.dtype, name = 'outb'))
+		}
+
+	
+	elif (arch == "method2"):
 		weights = {
 		'h1' : tf.Variable(tf.random_normal([inputLayer, hiddenLayer1], dtype=data.dtype, name='h1')),
 		'h2' : tf.Variable(tf.random_normal([hiddenLayer1, hiddenLayer2], dtype=data.dtype, name ='h2')),
@@ -459,19 +572,7 @@ def main(argv = None):
 		'b3' : tf.Variable(tf.random_normal([hiddenLayer3], dtype=data.dtype, name = 'b3')),
 		'out' : tf.Variable(tf.random_normal([numberClasses], dtype=data.dtype, name = 'outb'))
 		}
-	elif (arch == "method2"):
-		weights = {
-		'h1' : tf.Variable(tf.random_normal([inputLayer, hiddenLayer1], dtype=data.dtype, name='h1')),
-		'h2' : tf.Variable(tf.random_normal([hiddenLayer1, hiddenLayer2], dtype=data.dtype, name='h2')),
-		'out' : tf.Variable(tf.random_normal([hiddenLayer2, numberClasses], dtype=data.dtype, name='out'))
-		}
-
-		biases = {
-		'b1' : tf.Variable(tf.random_normal([hiddenLayer1], dtype=data.dtype, name = 'b1')),
-		'b2' : tf.Variable(tf.random_normal([hiddenLayer2], dtype=data.dtype, name = 'b2')),
-		'out' : tf.Variable(tf.random_normal([numberClasses], dtype=data.dtype, name = 'outb'))
-		}
-	else:
+	elif (arch == "method3"):
 		weights = {
 		'h1' : tf.Variable(tf.random_normal([inputLayer, hiddenLayer1], dtype=data.dtype, name='h1')),
 		'h2' : tf.Variable(tf.random_normal([hiddenLayer1, hiddenLayer2], dtype=data.dtype, name='h2')),
@@ -485,6 +586,24 @@ def main(argv = None):
 		'b2' : tf.Variable(tf.random_normal([hiddenLayer2], dtype=data.dtype, name = 'b2')),
 		'b3' : tf.Variable(tf.random_normal([hiddenLayer3], dtype=data.dtype, name = 'b3')),
 		'b4' : tf.Variable(tf.random_normal([hiddenLayer4], dtype=data.dtype, name = 'b4')),		
+		'out' : tf.Variable(tf.random_normal([numberClasses], dtype=data.dtype, name = 'bout'))
+		}
+	else:
+		weights = {
+		'h1' : tf.Variable(tf.random_normal([inputLayer, hiddenLayer1], dtype=data.dtype, name='h1')),
+		'h2' : tf.Variable(tf.random_normal([hiddenLayer1, hiddenLayer2], dtype=data.dtype, name='h2')),
+		'h3' : tf.Variable(tf.random_normal([hiddenLayer2, hiddenLayer3], dtype=data.dtype, name='h3')),
+		'h4' : tf.Variable(tf.random_normal([hiddenLayer3, hiddenLayer4], dtype=data.dtype, name='h4')),
+		'h5' : tf.Variable(tf.random_normal([hiddenLayer4, hiddenLayer5], dtype=data.dtype, name='h5')),
+		'out' : tf.Variable(tf.random_normal([hiddenLayer5, numberClasses], dtype=data.dtype, name='out'))
+		}
+
+		biases = {
+		'b1' : tf.Variable(tf.random_normal([hiddenLayer1], dtype=data.dtype, name = 'b1')),
+		'b2' : tf.Variable(tf.random_normal([hiddenLayer2], dtype=data.dtype, name = 'b2')),
+		'b3' : tf.Variable(tf.random_normal([hiddenLayer3], dtype=data.dtype, name = 'b3')),
+		'b4' : tf.Variable(tf.random_normal([hiddenLayer4], dtype=data.dtype, name = 'b4')),
+		'b5' : tf.Variable(tf.random_normal([hiddenLayer5], dtype=data.dtype, name = 'b5')),		
 		'out' : tf.Variable(tf.random_normal([numberClasses], dtype=data.dtype, name = 'bout'))
 		}
 
