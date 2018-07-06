@@ -1,0 +1,12 @@
+python3 poise_detector_mk1.py --epochs 1000 --learning_rate 0.001 --regularization L1 --position --activation Relu --arch method3 --refinement Uniform --refinement_rate 0 --label test1 --save
+python3 poise_detector_mk1.py --epochs 1000 --learning_rate 0.001 --regularization L1 --position --activation Relu --arch method3 --refinement Uniform --refinement_rate 25 --label test1 --save
+python3 poise_detector_mk1.py --epochs 1000 --learning_rate 0.001 --regularization L1 --position --activation Relu --arch method3 --refinement Uniform --refinement_rate 50 --label test1 --save
+python3 poise_detector_mk1.py --epochs 1000 --learning_rate 0.001 --regularization L1 --position --activation Relu --arch method3 --refinement Uniform --refinement_rate 75 --label test1 --save
+python3 poise_detector_mk1.py --epochs 1000 --learning_rate 0.001 --regularization L1 --position --activation Relu --arch method3 --refinement Uniform --refinement_rate 0 --label test2 --save
+python3 poise_detector_mk1.py --epochs 1000 --learning_rate 0.001 --regularization L1 --position --activation Relu --arch method3 --refinement Uniform --refinement_rate 25 --label test2 --save
+python3 poise_detector_mk1.py --epochs 1000 --learning_rate 0.001 --regularization L1 --position --activation Relu --arch method3 --refinement Uniform --refinement_rate 50 --label test2 --save
+python3 poise_detector_mk1.py --epochs 1000 --learning_rate 0.001 --regularization L1 --position --activation Relu --arch method3 --refinement Uniform --refinement_rate 75 --label test2 --save
+python3 poise_detector_mk1.py --epochs 1000 --learning_rate 0.001 --regularization L1 --position --activation Relu --arch method3 --refinement Uniform --refinement_rate 0 --label test3 --save
+python3 poise_detector_mk1.py --epochs 1000 --learning_rate 0.001 --regularization L1 --position --activation Relu --arch method3 --refinement Uniform --refinement_rate 25 --label test3 --save
+python3 poise_detector_mk1.py --epochs 1000 --learning_rate 0.001 --regularization L1 --position --activation Relu --arch method3 --refinement Uniform --refinement_rate 50 --label test3 --save
+python3 poise_detector_mk1.py --epochs 1000 --learning_rate 0.001 --regularization L1 --position --activation Relu --arch method3 --refinement Uniform --refinement_rate 75 --label test3 --save

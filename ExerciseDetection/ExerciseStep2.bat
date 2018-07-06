@@ -1,0 +1,69 @@
+echo on
+echo L2TestsOnArchitecture1
+echo PositionTests
+echo new config
+python3 exercise_detection_mk5.py --learning_rate 0.1 --epochs 1000 --activation Tanh --regularization L2 --label test1 --arch method1 --position
+python3 exercise_detection_mk5.py --learning_rate 0.01 --epochs 1000 --activation Tanh --regularization L2 --label test1 --arch method1 --position
+python3 exercise_detection_mk5.py --learning_rate 0.001 --epochs 1000 --activation Tanh --regularization L2 --label test1 --arch method1 --position
+python3 exercise_detection_mk5.py --learning_rate 0.1 --epochs 1000 --activation Tanh --regularization L2 --label test2 --arch method1 --position
+python3 exercise_detection_mk5.py --learning_rate 0.01 --epochs 1000 --activation Tanh --regularization L2 --label test2 --arch method1 --position
+python3 exercise_detection_mk5.py --learning_rate 0.001 --epochs 1000 --activation Tanh --regularization L2 --label test2 --arch method1 --position
+python3 exercise_detection_mk5.py --learning_rate 0.1 --epochs 1000 --activation Tanh --regularization L2 --label test3 --arch method1 --position
+python3 exercise_detection_mk5.py --learning_rate 0.01 --epochs 1000 --activation Tanh --regularization L2 --label test3 --arch method1 --position
+python3 exercise_detection_mk5.py --learning_rate 0.001 --epochs 1000 --activation Tanh --regularization L2 --label test3 --arch method1 --position
+python3 exercise_detection_mk5.py --learning_rate 0.1 --epochs 1000 --activation Relu --regularization L2 --label test1 --arch method1 --position
+python3 exercise_detection_mk5.py --learning_rate 0.01 --epochs 1000 --activation Relu --regularization L2 --label test1 --arch method1 --position
+python3 exercise_detection_mk5.py --learning_rate 0.001 --epochs 1000 --activation Relu --regularization L2 --label test1 --arch method1 --position
+python3 exercise_detection_mk5.py --learning_rate 0.1 --epochs 1000 --activation Relu --regularization L2 --label test2 --arch method1 --position
+python3 exercise_detection_mk5.py --learning_rate 0.01 --epochs 1000 --activation Relu --regularization L2 --label test2 --arch method1 --position
+python3 exercise_detection_mk5.py --learning_rate 0.001 --epochs 1000 --activation Relu --regularization L2 --label test2 --arch method1 --position
+python3 exercise_detection_mk5.py --learning_rate 0.1 --epochs 1000 --activation Relu --regularization L2 --label test3 --arch method1 --position
+python3 exercise_detection_mk5.py --learning_rate 0.01 --epochs 1000 --activation Relu --regularization L2 --label test3 --arch method1 --position
+python3 exercise_detection_mk5.py --learning_rate 0.001 --epochs 1000 --activation Relu --regularization L2 --label test3 --arch method1 --position
+python3 exercise_detection_mk5.py --learning_rate 0.1 --epochs 1000 --activation Sigmoid --regularization L2 --label test1 --arch method1 --position
+python3 exercise_detection_mk5.py --learning_rate 0.01 --epochs 1000 --activation Sigmoid --regularization L2 --label test1 --arch method1 --position
+python3 exercise_detection_mk5.py --learning_rate 0.001 --epochs 1000 --activation Sigmoid --regularization L2 --label test1 --arch method1 --position
+python3 exercise_detection_mk5.py --learning_rate 0.1 --epochs 1000 --activation Sigmoid --regularization L2 --label test2 --arch method1 --position
+python3 exercise_detection_mk5.py --learning_rate 0.01 --epochs 1000 --activation Sigmoid --regularization L2 --label test2 --arch method1 --position
+python3 exercise_detection_mk5.py --learning_rate 0.001 --epochs 1000 --activation Sigmoid --regularization L2 --label test2 --arch method1 --position
+python3 exercise_detection_mk5.py --learning_rate 0.1 --epochs 1000 --activation Sigmoid --regularization L2 --label test3 --arch method1 --position
+python3 exercise_detection_mk5.py --learning_rate 0.01 --epochs 1000 --activation Sigmoid --regularization L2 --label test3 --arch method1 --position
+python3 exercise_detection_mk5.py --learning_rate 0.001 --epochs 1000 --activation Sigmoid --regularization L2 --label test3 --arch method1 --position
+python3 exercise_detection_mk5.py --learning_rate 0.1 --epochs 1000 --activation Sigmoid --regularization L2 --label test1 --arch method3 --position
+python3 exercise_detection_mk5.py --learning_rate 0.01 --epochs 1000 --activation Sigmoid --regularization L2 --label test1 --arch method3 --position
+python3 exercise_detection_mk5.py --learning_rate 0.001 --epochs 1000 --activation Sigmoid --regularization L2 --label test1 --arch method3 --position
+python3 exercise_detection_mk5.py --learning_rate 0.1 --epochs 1000 --activation Sigmoid --regularization L2 --label test2 --arch method3 --position
+python3 exercise_detection_mk5.py --learning_rate 0.01 --epochs 1000 --activation Sigmoid --regularization L2 --label test2 --arch method3 --position
+python3 exercise_detection_mk5.py --learning_rate 0.001 --epochs 1000 --activation Sigmoid --regularization L2 --label test2 --arch method3 --position
+python3 exercise_detection_mk5.py --learning_rate 0.1 --epochs 1000 --activation Sigmoid --regularization L2 --label test3 --arch method3 --position
+python3 exercise_detection_mk5.py --learning_rate 0.01 --epochs 1000 --activation Sigmoid --regularization L2 --label test3 --arch method3 --position
+python3 exercise_detection_mk5.py --learning_rate 0.001 --epochs 1000 --activation Sigmoid --regularization L2 --label test3 --arch method3 --position
+python3 exercise_detection_mk5.py --learning_rate 0.1 --epochs 1000 --activation Tanh --regularization L2 --label test1 --arch method1 --velocity
+python3 exercise_detection_mk5.py --learning_rate 0.01 --epochs 1000 --activation Tanh --regularization L2 --label test1 --arch method1 --velocity
+python3 exercise_detection_mk5.py --learning_rate 0.001 --epochs 1000 --activation Tanh --regularization L2 --label test1 --arch method1 --velocity
+python3 exercise_detection_mk5.py --learning_rate 0.1 --epochs 1000 --activation Tanh --regularization L2 --label test2 --arch method1 --velocity
+python3 exercise_detection_mk5.py --learning_rate 0.01 --epochs 1000 --activation Tanh --regularization L2 --label test2 --arch method1 --velocity
+python3 exercise_detection_mk5.py --learning_rate 0.001 --epochs 1000 --activation Tanh --regularization L2 --label test2 --arch method1 --velocity
+python3 exercise_detection_mk5.py --learning_rate 0.1 --epochs 1000 --activation Tanh --regularization L2 --label test3 --arch method1 --velocity
+python3 exercise_detection_mk5.py --learning_rate 0.01 --epochs 1000 --activation Tanh --regularization L2 --label test3 --arch method1 --velocity
+python3 exercise_detection_mk5.py --learning_rate 0.001 --epochs 1000 --activation Tanh --regularization L2 --label test3 --arch method1 --velocity
+python3 exercise_detection_mk5.py --learning_rate 0.1 --epochs 1000 --activation Relu --regularization L2 --label test1 --arch method3 --velocity
+python3 exercise_detection_mk5.py --learning_rate 0.01 --epochs 1000 --activation Relu --regularization L2 --label test1 --arch method3 --velocity
+python3 exercise_detection_mk5.py --learning_rate 0.001 --epochs 1000 --activation Relu --regularization L2 --label test1 --arch method3 --velocity
+python3 exercise_detection_mk5.py --learning_rate 0.1 --epochs 1000 --activation Relu --regularization L2 --label test2 --arch method3 --velocity
+python3 exercise_detection_mk5.py --learning_rate 0.01 --epochs 1000 --activation Relu --regularization L2 --label test2 --arch method3 --velocity
+python3 exercise_detection_mk5.py --learning_rate 0.001 --epochs 1000 --activation Relu --regularization L2 --label test2 --arch method3 --velocity
+python3 exercise_detection_mk5.py --learning_rate 0.1 --epochs 1000 --activation Relu --regularization L2 --label test3 --arch method3 --velocity
+python3 exercise_detection_mk5.py --learning_rate 0.01 --epochs 1000 --activation Relu --regularization L2 --label test3 --arch method3 --velocity
+python3 exercise_detection_mk5.py --learning_rate 0.001 --epochs 1000 --activation Relu --regularization L2 --label test3 --arch method3 --velocity
+python3 exercise_detection_mk5.py --learning_rate 0.1 --epochs 1000 --activation Sigmoid --regularization L2 --label test1 --arch method3 --velocity
+python3 exercise_detection_mk5.py --learning_rate 0.01 --epochs 1000 --activation Sigmoid --regularization L2 --label test1 --arch method3 --velocity
+python3 exercise_detection_mk5.py --learning_rate 0.001 --epochs 1000 --activation Sigmoid --regularization L2 --label test1 --arch method3 --velocity
+python3 exercise_detection_mk5.py --learning_rate 0.1 --epochs 1000 --activation Sigmoid --regularization L2 --label test2 --arch method3 --velocity
+python3 exercise_detection_mk5.py --learning_rate 0.01 --epochs 1000 --activation Sigmoid --regularization L2 --label test2 --arch method3 --velocity
+python3 exercise_detection_mk5.py --learning_rate 0.001 --epochs 1000 --activation Sigmoid --regularization L2 --label test2 --arch method3 --velocity
+python3 exercise_detection_mk5.py --learning_rate 0.1 --epochs 1000 --activation Sigmoid --regularization L2 --label test3 --arch method3 --velocity
+python3 exercise_detection_mk5.py --learning_rate 0.01 --epochs 1000 --activation Sigmoid --regularization L2 --label test3 --arch method3 --velocity
+python3 exercise_detection_mk5.py --learning_rate 0.001 --epochs 1000 --activation Sigmoid --regularization L2 --label test3 --arch method3 --velocity
+
+python3 writingIntoExcel.py

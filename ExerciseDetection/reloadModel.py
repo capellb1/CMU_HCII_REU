@@ -84,6 +84,7 @@ tf.app.flags.DEFINE_boolean('verbose', False, 'Determines how much information i
 tf.app.flags.DEFINE_string('refinement', "None", 'Determines which refinement process to use')
 tf.app.flags.DEFINE_integer('refinement_rate',0,'Determines the number of joints to include in the data')
 tf.app.flags.DEFINE_boolean('task', False, 'Determines if the task data is included when training')
+tf.app.flags.DEFINE_boolean('save', False, 'Determines wether the model is saved')
 
 FLAGS = tf.app.flags.FLAGS
 
@@ -629,7 +630,6 @@ def main(argv = None):
 			predictions = tf.argmax(pred,1).eval()
 			predictions = findExercise(predictions) 
 			print("My preditions", predictions)
-		
 
 #needed in order to call main
 if __name__ == '__main__':

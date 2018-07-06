@@ -131,8 +131,9 @@ void setup() {
      ;
  
     //Define data path -- CHANGE FOR YOUR USE
-   data_folder = "D:\\CMU\\kinect_data\\"; 
+   //data_folder = "D:\\CMU\\kinect_data\\"; 
    //data_folder = "C:\\Users\\Deepak Subramanian\\Documents\\Internship\\HCII Research (2018)\\task_sequencer_v2\\Data\\"; 
+   data_folder = "C:\\Users\\Admin\\BlakeDeepak\\DataCollection";
 
    
    //creation and populating arrays to record and store data

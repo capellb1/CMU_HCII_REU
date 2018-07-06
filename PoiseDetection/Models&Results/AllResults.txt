@@ -1,0 +1,1152 @@
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.001ReluL1PositionFR5
+Training Accuracy:0.4964132
+Validation Accuracy:0.51884425
+Test Accuracy:0.46365914
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.001ReluL1PositionFR5
+Training Accuracy:0.48314205
+Validation Accuracy:0.46733668
+Test Accuracy:0.46115288
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.001ReluL1PositionFR5
+Training Accuracy:0.49318507
+Validation Accuracy:0.5251256
+Test Accuracy:0.518797
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.0001TanhL1PositionFR5
+Training Accuracy:0.4913917
+Validation Accuracy:0.4849246
+Test Accuracy:0.52882206
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.0001TanhL1PositionFR5
+Training Accuracy:0.50107604
+Validation Accuracy:0.53517586
+Test Accuracy:0.47619048
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.0001TanhL1PositionFR5
+Training Accuracy:0.48063126
+Validation Accuracy:0.4924623
+Test Accuracy:0.47368422
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.0001ReluL1PositionFR5
+Training Accuracy:0.5032281
+Validation Accuracy:0.4849246
+Test Accuracy:0.47619048
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.0001ReluL1PositionFR5
+Training Accuracy:0.47740316
+Validation Accuracy:0.4736181
+Test Accuracy:0.43609023
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.0001ReluL1PositionFR5
+Training Accuracy:0.5003587
+Validation Accuracy:0.49497488
+Test Accuracy:0.5338346
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.0001SigmoidL1PositionFR5
+Training Accuracy:0.44117647
+Validation Accuracy:0.43341708
+Test Accuracy:0.47619048
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.0001SigmoidL1PositionFR5
+Training Accuracy:0.4695122
+Validation Accuracy:0.46231157
+Test Accuracy:0.48370928
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.0001SigmoidL1PositionFR5
+Training Accuracy:0.46664277
+Validation Accuracy:0.4447236
+Test Accuracy:0.47869673
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.001TanhL2PositionFR5
+Training Accuracy:0.508967
+Validation Accuracy:0.5251256
+Test Accuracy:0.49624062
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.001TanhL2PositionFR5
+Training Accuracy:0.4949785
+Validation Accuracy:0.49623117
+Test Accuracy:0.48872182
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.001TanhL2PositionFR5
+Training Accuracy:0.4978479
+Validation Accuracy:0.4937186
+Test Accuracy:0.48872182
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.001ReluL2PositionFR5
+Training Accuracy:0.4781205
+Validation Accuracy:0.48115578
+Test Accuracy:0.45363408
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.001ReluL2PositionFR5
+Training Accuracy:0.5143472
+Validation Accuracy:0.5163317
+Test Accuracy:0.50626564
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.001ReluL2PositionFR5
+Training Accuracy:0.49426112
+Validation Accuracy:0.5251256
+Test Accuracy:0.52130324
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.001SigmoidL2PositionFR5
+Training Accuracy:0.4210904
+Validation Accuracy:0.44221106
+Test Accuracy:0.45864663
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.001SigmoidL2PositionFR5
+Training Accuracy:0.4246772
+Validation Accuracy:0.38316584
+Test Accuracy:0.4385965
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.001SigmoidL2PositionFR5
+Training Accuracy:0.43077475
+Validation Accuracy:0.39949748
+Test Accuracy:0.40601504
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.0001TanhL2PositionFR5
+Training Accuracy:0.4537303
+Validation Accuracy:0.45728642
+Test Accuracy:0.4310777
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.0001TanhL2PositionFR5
+Training Accuracy:0.46628407
+Validation Accuracy:0.42964825
+Test Accuracy:0.45614034
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.0001TanhL2PositionFR5
+Training Accuracy:0.45444763
+Validation Accuracy:0.4660804
+Test Accuracy:0.46616542
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.0001ReluL2PositionFR5
+Training Accuracy:0.48852223
+Validation Accuracy:0.5150754
+Test Accuracy:0.45112783
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.0001ReluL2PositionFR5
+Training Accuracy:0.5028694
+Validation Accuracy:0.5263819
+Test Accuracy:0.5112782
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.0001ReluL2PositionFR5
+Training Accuracy:0.50107604
+Validation Accuracy:0.4384422
+Test Accuracy:0.45363408
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.0001SigmoidL2PositionFR5
+Training Accuracy:0.43292683
+Validation Accuracy:0.42085427
+Test Accuracy:0.42105263
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.0001SigmoidL2PositionFR5
+Training Accuracy:0.41248205
+Validation Accuracy:0.40954775
+Test Accuracy:0.41353384
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.0001SigmoidL2PositionFR5
+Training Accuracy:0.4601865
+Validation Accuracy:0.44974875
+Test Accuracy:0.41353384
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.001TanhDefaultPositionFR5
+Training Accuracy:0.49928263
+Validation Accuracy:0.50502515
+Test Accuracy:0.5112782
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.001TanhDefaultPositionFR5
+Training Accuracy:0.49605453
+Validation Accuracy:0.49497488
+Test Accuracy:0.5263158
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.001TanhDefaultPositionFR5
+Training Accuracy:0.508967
+Validation Accuracy:0.5150754
+Test Accuracy:0.46867168
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.001ReluDefaultPositionFR5
+Training Accuracy:0.48816356
+Validation Accuracy:0.47110552
+Test Accuracy:0.5162907
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.001ReluDefaultPositionFR5
+Training Accuracy:0.49964133
+Validation Accuracy:0.5163317
+Test Accuracy:0.5162907
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.001ReluDefaultPositionFR5
+Training Accuracy:0.4817073
+Validation Accuracy:0.46105528
+Test Accuracy:0.46115288
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.001SigmoidDefaultPositionFR5
+Training Accuracy:0.5050215
+Validation Accuracy:0.50376886
+Test Accuracy:0.518797
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.001SigmoidDefaultPositionFR5
+Training Accuracy:0.5071736
+Validation Accuracy:0.4798995
+Test Accuracy:0.50877196
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.001SigmoidDefaultPositionFR5
+Training Accuracy:0.5003587
+Validation Accuracy:0.4723618
+Test Accuracy:0.518797
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.0001TanhDefaultPositionFR5
+Training Accuracy:0.50394547
+Validation Accuracy:0.5113065
+Test Accuracy:0.48621553
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.0001TanhDefaultPositionFR5
+Training Accuracy:0.50394547
+Validation Accuracy:0.48241207
+Test Accuracy:0.5338346
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.0001TanhDefaultPositionFR5
+Training Accuracy:0.4709469
+Validation Accuracy:0.42713568
+Test Accuracy:0.49624062
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.0001ReluDefaultPositionFR5
+Training Accuracy:0.48278335
+Validation Accuracy:0.4987437
+Test Accuracy:0.51378447
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.0001ReluDefaultPositionFR5
+Training Accuracy:0.4928264
+Validation Accuracy:0.49623117
+Test Accuracy:0.50626564
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.0001ReluDefaultPositionFR5
+Training Accuracy:0.49677187
+Validation Accuracy:0.48994976
+Test Accuracy:0.49373433
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.0001SigmoidDefaultPositionFR5
+Training Accuracy:0.4695122
+Validation Accuracy:0.4798995
+Test Accuracy:0.47869673
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.0001SigmoidDefaultPositionFR5
+Training Accuracy:0.47202295
+Validation Accuracy:0.44221106
+Test Accuracy:0.44862154
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.0001SigmoidDefaultPositionFR5
+Training Accuracy:0.45911047
+Validation Accuracy:0.44221106
+Test Accuracy:0.48621553
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.001ReluL1VelocityFR5
+Training Accuracy:0.49763894
+Validation Accuracy:0.48091602
+Test Accuracy:0.5532995
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.001ReluL1VelocityFR5
+Training Accuracy:0.45986196
+Validation Accuracy:0.44656488
+Test Accuracy:0.4390863
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.001ReluL1VelocityFR5
+Training Accuracy:0.48165637
+Validation Accuracy:0.4860051
+Test Accuracy:0.51269037
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.0001TanhL1VelocityFR5
+Training Accuracy:0.46603706
+Validation Accuracy:0.42620865
+Test Accuracy:0.47969544
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.0001TanhL1VelocityFR5
+Training Accuracy:0.4900109
+Validation Accuracy:0.5
+Test Accuracy:0.46192893
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.0001TanhL1VelocityFR5
+Training Accuracy:0.49073738
+Validation Accuracy:0.4491094
+Test Accuracy:0.5177665
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.0001ReluL1VelocityFR5
+Training Accuracy:0.46385762
+Validation Accuracy:0.47582698
+Test Accuracy:0.44416243
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.0001ReluL1VelocityFR5
+Training Accuracy:0.46240464
+Validation Accuracy:0.46692112
+Test Accuracy:0.50507617
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.0001ReluL1VelocityFR5
+Training Accuracy:0.48855793
+Validation Accuracy:0.44529262
+Test Accuracy:0.47969544
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.0001SigmoidL1VelocityFR5
+Training Accuracy:0.49582273
+Validation Accuracy:0.519084
+Test Accuracy:0.46446702
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.0001SigmoidL1VelocityFR5
+Training Accuracy:0.45986196
+Validation Accuracy:0.43638676
+Test Accuracy:0.47715735
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.0001SigmoidL1VelocityFR5
+Training Accuracy:0.5027243
+Validation Accuracy:0.47964376
+Test Accuracy:0.52538073
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.001ReluL1TaskFR5
+Training Accuracy:0.47712827
+Validation Accuracy:0.46596858
+Test Accuracy:0.48387095
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.001ReluL1TaskFR5
+Training Accuracy:0.48884457
+Validation Accuracy:0.46596858
+Test Accuracy:0.48299912
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.001ReluL1TaskFR5
+Training Accuracy:0.48585317
+Validation Accuracy:0.4886562
+Test Accuracy:0.5082825
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.0001TanhL1TaskFR5
+Training Accuracy:0.5041755
+Validation Accuracy:0.4930192
+Test Accuracy:0.516129
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.0001TanhL1TaskFR5
+Training Accuracy:0.5024305
+Validation Accuracy:0.50654453
+Test Accuracy:0.47428074
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.0001TanhL1TaskFR5
+Training Accuracy:0.50168264
+Validation Accuracy:0.5
+Test Accuracy:0.51700085
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.0001ReluL1TaskFR5
+Training Accuracy:0.49320704
+Validation Accuracy:0.4908377
+Test Accuracy:0.4734089
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.0001ReluL1TaskFR5
+Training Accuracy:0.50492334
+Validation Accuracy:0.4886562
+Test Accuracy:0.489102
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.0001ReluL1TaskFR5
+Training Accuracy:0.49308237
+Validation Accuracy:0.4860384
+Test Accuracy:0.5091543
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.0001SigmoidL1TaskFR5
+Training Accuracy:0.49694628
+Validation Accuracy:0.5091623
+Test Accuracy:0.5013078
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.0001SigmoidL1TaskFR5
+Training Accuracy:0.50168264
+Validation Accuracy:0.4851658
+Test Accuracy:0.5178727
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.0001SigmoidL1TaskFR5
+Training Accuracy:0.50168264
+Validation Accuracy:0.4960733
+Test Accuracy:0.51700085
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.001TanhL2TaskFR5
+Training Accuracy:0.4975695
+Validation Accuracy:0.5034904
+Test Accuracy:0.4978204
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.001TanhL2TaskFR5
+Training Accuracy:0.49806806
+Validation Accuracy:0.4925829
+Test Accuracy:0.47863993
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.001TanhL2TaskFR5
+Training Accuracy:0.49619842
+Validation Accuracy:0.5026178
+Test Accuracy:0.46992153
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.001ReluL2TaskFR5
+Training Accuracy:0.49407953
+Validation Accuracy:0.4860384
+Test Accuracy:0.48735833
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.001ReluL2TaskFR5
+Training Accuracy:0.48124143
+Validation Accuracy:0.4799302
+Test Accuracy:0.4978204
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.001ReluL2TaskFR5
+Training Accuracy:0.4823632
+Validation Accuracy:0.4646597
+Test Accuracy:0.46556234
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.001SigmoidL2TaskFR5
+Training Accuracy:0.41991773
+Validation Accuracy:0.41230366
+Test Accuracy:0.41238013
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.001SigmoidL2TaskFR5
+Training Accuracy:0.42677304
+Validation Accuracy:0.41535777
+Test Accuracy:0.43940714
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.001SigmoidL2TaskFR5
+Training Accuracy:0.42739624
+Validation Accuracy:0.41579407
+Test Accuracy:0.42894506
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.0001TanhL2TaskFR5
+Training Accuracy:0.5038016
+Validation Accuracy:0.4973822
+Test Accuracy:0.5091543
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.0001TanhL2TaskFR5
+Training Accuracy:0.50180733
+Validation Accuracy:0.52006984
+Test Accuracy:0.5213601
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.0001TanhL2TaskFR5
+Training Accuracy:0.5006855
+Validation Accuracy:0.5126527
+Test Accuracy:0.5135135
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.0001ReluL2TaskFR5
+Training Accuracy:0.49121276
+Validation Accuracy:0.46553227
+Test Accuracy:0.4777681
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.0001ReluL2TaskFR5
+Training Accuracy:0.49308237
+Validation Accuracy:0.4982548
+Test Accuracy:0.510898
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.0001ReluL2TaskFR5
+Training Accuracy:0.49582452
+Validation Accuracy:0.486911
+Test Accuracy:0.48474282
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.0001SigmoidL2TaskFR5
+Training Accuracy:0.4383647
+Validation Accuracy:0.42975566
+Test Accuracy:0.42545772
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.0001SigmoidL2TaskFR5
+Training Accuracy:0.43437618
+Validation Accuracy:0.41884816
+Test Accuracy:0.4141238
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.0001SigmoidL2TaskFR5
+Training Accuracy:0.45195064
+Validation Accuracy:0.45637
+Test Accuracy:0.4646905
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.001TanhDefaultTaskFR5
+Training Accuracy:0.4981927
+Validation Accuracy:0.5039267
+Test Accuracy:0.5082825
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.001TanhDefaultTaskFR5
+Training Accuracy:0.5014334
+Validation Accuracy:0.4882199
+Test Accuracy:0.4934612
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.001TanhDefaultTaskFR5
+Training Accuracy:0.50193197
+Validation Accuracy:0.508726
+Test Accuracy:0.48561466
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.001ReluDefaultTaskFR5
+Training Accuracy:0.49869126
+Validation Accuracy:0.48123908
+Test Accuracy:0.5213601
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.001ReluDefaultTaskFR5
+Training Accuracy:0.5006855
+Validation Accuracy:0.5074171
+Test Accuracy:0.51700085
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.001ReluDefaultTaskFR5
+Training Accuracy:0.47862396
+Validation Accuracy:0.5052356
+Test Accuracy:0.45945945
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.001SigmoidDefaultTaskFR5
+Training Accuracy:0.49806806
+Validation Accuracy:0.5074171
+Test Accuracy:0.49869224
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.001SigmoidDefaultTaskFR5
+Training Accuracy:0.50355226
+Validation Accuracy:0.4995637
+Test Accuracy:0.5091543
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.001SigmoidDefaultTaskFR5
+Training Accuracy:0.5041755
+Validation Accuracy:0.4965096
+Test Accuracy:0.47863993
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.0001TanhDefaultTaskFR5
+Training Accuracy:0.4979434
+Validation Accuracy:0.4995637
+Test Accuracy:0.516129
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.0001TanhDefaultTaskFR5
+Training Accuracy:0.5075408
+Validation Accuracy:0.4965096
+Test Accuracy:0.4952049
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.0001TanhDefaultTaskFR5
+Training Accuracy:0.49981305
+Validation Accuracy:0.4969459
+Test Accuracy:0.51700085
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.0001ReluDefaultTaskFR5
+Training Accuracy:0.4826125
+Validation Accuracy:0.47469458
+Test Accuracy:0.47951177
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.0001ReluDefaultTaskFR5
+Training Accuracy:0.4952013
+Validation Accuracy:0.4947644
+Test Accuracy:0.48212728
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.0001ReluDefaultTaskFR5
+Training Accuracy:0.49308237
+Validation Accuracy:0.4808028
+Test Accuracy:0.4803836
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.0001SigmoidDefaultTaskFR5
+Training Accuracy:0.5038016
+Validation Accuracy:0.482548
+Test Accuracy:0.505667
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.0001SigmoidDefaultTaskFR5
+Training Accuracy:0.49869126
+Validation Accuracy:0.5039267
+Test Accuracy:0.5204882
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.0001SigmoidDefaultTaskFR5
+Training Accuracy:0.5074162
+Validation Accuracy:0.5135253
+Test Accuracy:0.5135135
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.001TanhL2VelocityFR5
+Training Accuracy:0.4990919
+Validation Accuracy:0.5114504
+Test Accuracy:0.48730963
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.001TanhL2VelocityFR5
+Training Accuracy:0.5001816
+Validation Accuracy:0.5101781
+Test Accuracy:0.50507617
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.001TanhL2VelocityFR5
+Training Accuracy:0.49691245
+Validation Accuracy:0.4923664
+Test Accuracy:0.52284265
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.001ReluL2VelocityFR5
+Training Accuracy:0.4747548
+Validation Accuracy:0.51653945
+Test Accuracy:0.4390863
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.001ReluL2VelocityFR5
+Training Accuracy:0.48492554
+Validation Accuracy:0.49745548
+Test Accuracy:0.52284265
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.001ReluL2VelocityFR5
+Training Accuracy:0.49981838
+Validation Accuracy:0.46564886
+Test Accuracy:0.5101523
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.001SigmoidL2VelocityFR5
+Training Accuracy:0.43261898
+Validation Accuracy:0.41984734
+Test Accuracy:0.4314721
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.001SigmoidL2VelocityFR5
+Training Accuracy:0.42971304
+Validation Accuracy:0.43765903
+Test Accuracy:0.44923857
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.001SigmoidL2VelocityFR5
+Training Accuracy:0.431166
+Validation Accuracy:0.4058524
+Test Accuracy:0.44923857
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.0001TanhL2VelocityFR5
+Training Accuracy:0.48964766
+Validation Accuracy:0.47964376
+Test Accuracy:0.48477158
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.0001TanhL2VelocityFR5
+Training Accuracy:0.4900109
+Validation Accuracy:0.47709924
+Test Accuracy:0.47715735
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.0001TanhL2VelocityFR5
+Training Accuracy:0.48892117
+Validation Accuracy:0.48727736
+Test Accuracy:0.4543147
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.0001ReluL2VelocityFR5
+Training Accuracy:0.50381404
+Validation Accuracy:0.50127226
+Test Accuracy:0.48984772
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.0001ReluL2VelocityFR5
+Training Accuracy:0.4874682
+Validation Accuracy:0.5063613
+Test Accuracy:0.52791876
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.0001ReluL2VelocityFR5
+Training Accuracy:0.496186
+Validation Accuracy:0.4860051
+Test Accuracy:0.52791876
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.0001SigmoidL2VelocityFR5
+Training Accuracy:0.46785325
+Validation Accuracy:0.43638676
+Test Accuracy:0.4568528
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.0001SigmoidL2VelocityFR5
+Training Accuracy:0.46531057
+Validation Accuracy:0.44147584
+Test Accuracy:0.4720812
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.0001SigmoidL2VelocityFR5
+Training Accuracy:0.44969124
+Validation Accuracy:0.44402036
+Test Accuracy:0.4568528
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.001TanhDefaultVelocityFR5
+Training Accuracy:0.51144207
+Validation Accuracy:0.4860051
+Test Accuracy:0.5025381
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.001TanhDefaultVelocityFR5
+Training Accuracy:0.49763894
+Validation Accuracy:0.5025445
+Test Accuracy:0.51522845
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.001TanhDefaultVelocityFR5
+Training Accuracy:0.50780964
+Validation Accuracy:0.49491096
+Test Accuracy:0.5076142
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.001ReluDefaultVelocityFR5
+Training Accuracy:0.45695606
+Validation Accuracy:0.4173028
+Test Accuracy:0.4467005
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.001ReluDefaultVelocityFR5
+Training Accuracy:0.5009081
+Validation Accuracy:0.48218828
+Test Accuracy:0.49492386
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.001ReluDefaultVelocityFR5
+Training Accuracy:0.4783872
+Validation Accuracy:0.5025445
+Test Accuracy:0.45939085
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.001SigmoidDefaultVelocityFR5
+Training Accuracy:0.5016346
+Validation Accuracy:0.5127227
+Test Accuracy:0.4746193
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.001SigmoidDefaultVelocityFR5
+Training Accuracy:0.51144207
+Validation Accuracy:0.49745548
+Test Accuracy:0.5025381
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.001SigmoidDefaultVelocityFR5
+Training Accuracy:0.5045405
+Validation Accuracy:0.49745548
+Test Accuracy:0.5482234
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.0001TanhDefaultVelocityFR5
+Training Accuracy:0.48092988
+Validation Accuracy:0.49618322
+Test Accuracy:0.51269037
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.0001TanhDefaultVelocityFR5
+Training Accuracy:0.48892117
+Validation Accuracy:0.48854962
+Test Accuracy:0.47715735
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.0001TanhDefaultVelocityFR5
+Training Accuracy:0.50345075
+Validation Accuracy:0.5178117
+Test Accuracy:0.4720812
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.0001ReluDefaultVelocityFR5
+Training Accuracy:0.49945515
+Validation Accuracy:0.49872774
+Test Accuracy:0.48984772
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.0001ReluDefaultVelocityFR5
+Training Accuracy:0.5027243
+Validation Accuracy:0.5025445
+Test Accuracy:0.52284265
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.0001ReluDefaultVelocityFR5
+Training Accuracy:0.48165637
+Validation Accuracy:0.51399493
+Test Accuracy:0.48477158
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.0001SigmoidDefaultVelocityFR5
+Training Accuracy:0.4620414
+Validation Accuracy:0.44529262
+Test Accuracy:0.47969544
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.0001SigmoidDefaultVelocityFR5
+Training Accuracy:0.46749002
+Validation Accuracy:0.45801526
+Test Accuracy:0.44416243
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.0001SigmoidDefaultVelocityFR5
+Training Accuracy:0.49691245
+Validation Accuracy:0.49109414
+Test Accuracy:0.50507617
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.001ReluL1Position
+Training Accuracy:0.6617183
+Validation Accuracy:0.6596386
+Test Accuracy:0.685241
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.001ReluL1Position
+Training Accuracy:0.64658636
+Validation Accuracy:0.6526104
+Test Accuracy:0.6526104
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.001ReluL1Position
+Training Accuracy:0.66064256
+Validation Accuracy:0.66064256
+Test Accuracy:0.6666667
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.0001TanhL1Position
+Training Accuracy:0.67778254
+Validation Accuracy:0.6757028
+Test Accuracy:0.68373495
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.0001TanhL1Position
+Training Accuracy:0.67742395
+Validation Accuracy:0.6681727
+Test Accuracy:0.68624496
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.0001TanhL1Position
+Training Accuracy:0.67692196
+Validation Accuracy:0.67218876
+Test Accuracy:0.687751
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.0001ReluL1Position
+Training Accuracy:0.66802925
+Validation Accuracy:0.6709337
+Test Accuracy:0.6666667
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.0001ReluL1Position
+Training Accuracy:0.6662364
+Validation Accuracy:0.6558735
+Test Accuracy:0.6681727
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.0001ReluL1Position
+Training Accuracy:0.67900175
+Validation Accuracy:0.6814759
+Test Accuracy:0.6827309
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.0001SigmoidL1Position
+Training Accuracy:0.6753442
+Validation Accuracy:0.6782129
+Test Accuracy:0.6671687
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.0001SigmoidL1Position
+Training Accuracy:0.6729059
+Validation Accuracy:0.66516066
+Test Accuracy:0.687249
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.0001SigmoidL1Position
+Training Accuracy:0.657774
+Validation Accuracy:0.6664157
+Test Accuracy:0.65210843
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.001TanhL2Position
+Training Accuracy:0.64759034
+Validation Accuracy:0.66516066
+Test Accuracy:0.6571285
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.001TanhL2Position
+Training Accuracy:0.660786
+Validation Accuracy:0.6626506
+Test Accuracy:0.6480924
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.001TanhL2Position
+Training Accuracy:0.66293746
+Validation Accuracy:0.6621486
+Test Accuracy:0.6596386
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.001ReluL2Position
+Training Accuracy:0.6589214
+Validation Accuracy:0.67921686
+Test Accuracy:0.6556225
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.001ReluL2Position
+Training Accuracy:0.67304933
+Validation Accuracy:0.6706827
+Test Accuracy:0.67921686
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.001ReluL2Position
+Training Accuracy:0.5580178
+Validation Accuracy:0.5549699
+Test Accuracy:0.5431727
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.001SigmoidL2Position
+Training Accuracy:0.41652325
+Validation Accuracy:0.42193776
+Test Accuracy:0.42871487
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.001SigmoidL2Position
+Training Accuracy:0.42039588
+Validation Accuracy:0.42946786
+Test Accuracy:0.437249
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.001SigmoidL2Position
+Training Accuracy:0.42032415
+Validation Accuracy:0.43448794
+Test Accuracy:0.4121486
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.0001TanhL2Position
+Training Accuracy:0.67685026
+Validation Accuracy:0.67168677
+Test Accuracy:0.67771083
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.0001TanhL2Position
+Training Accuracy:0.6590648
+Validation Accuracy:0.6664157
+Test Accuracy:0.6566265
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.0001TanhL2Position
+Training Accuracy:0.67728055
+Validation Accuracy:0.66992974
+Test Accuracy:0.67921686
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.0001ReluL2Position
+Training Accuracy:0.67441195
+Validation Accuracy:0.65913653
+Test Accuracy:0.6641566
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.0001ReluL2Position
+Training Accuracy:0.67771083
+Validation Accuracy:0.67469877
+Test Accuracy:0.67771083
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.0001ReluL2Position
+Training Accuracy:0.6743402
+Validation Accuracy:0.6568775
+Test Accuracy:0.6671687
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.0001SigmoidL2Position
+Training Accuracy:0.5508462
+Validation Accuracy:0.5499498
+Test Accuracy:0.55923694
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.0001SigmoidL2Position
+Training Accuracy:0.5671256
+Validation Accuracy:0.56576306
+Test Accuracy:0.56626505
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.0001SigmoidL2Position
+Training Accuracy:0.57831323
+Validation Accuracy:0.58232933
+Test Accuracy:0.55421686
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.001TanhDefaultPosition
+Training Accuracy:0.6787149
+Validation Accuracy:0.6764558
+Test Accuracy:0.6752008
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.001TanhDefaultPosition
+Training Accuracy:0.68366325
+Validation Accuracy:0.67720884
+Test Accuracy:0.6691767
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.001TanhDefaultPosition
+Training Accuracy:0.6741251
+Validation Accuracy:0.6807229
+Test Accuracy:0.6706827
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.001ReluDefaultPosition
+Training Accuracy:0.667097
+Validation Accuracy:0.64683735
+Test Accuracy:0.65913653
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.001ReluDefaultPosition
+Training Accuracy:0.668603
+Validation Accuracy:0.6684237
+Test Accuracy:0.66566265
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.001ReluDefaultPosition
+Training Accuracy:0.6613597
+Validation Accuracy:0.66315264
+Test Accuracy:0.6596386
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.001SigmoidDefaultPosition
+Training Accuracy:0.6828744
+Validation Accuracy:0.6757028
+Test Accuracy:0.6787149
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.001SigmoidDefaultPosition
+Training Accuracy:0.67713714
+Validation Accuracy:0.67695785
+Test Accuracy:0.67469877
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.001SigmoidDefaultPosition
+Training Accuracy:0.67498565
+Validation Accuracy:0.6749498
+Test Accuracy:0.6762048
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.0001TanhDefaultPosition
+Training Accuracy:0.6782129
+Validation Accuracy:0.685241
+Test Accuracy:0.6691767
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.0001TanhDefaultPosition
+Training Accuracy:0.6787866
+Validation Accuracy:0.6809739
+Test Accuracy:0.69126505
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.0001TanhDefaultPosition
+Training Accuracy:0.6761331
+Validation Accuracy:0.6754518
+Test Accuracy:0.6636546
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.0001ReluDefaultPosition
+Training Accuracy:0.67642
+Validation Accuracy:0.6689257
+Test Accuracy:0.6937751
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.0001ReluDefaultPosition
+Training Accuracy:0.67720884
+Validation Accuracy:0.6736948
+Test Accuracy:0.67971885
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.0001ReluDefaultPosition
+Training Accuracy:0.67462707
+Validation Accuracy:0.6824799
+Test Accuracy:0.689759
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.0001SigmoidDefaultPosition
+Training Accuracy:0.6595668
+Validation Accuracy:0.65185744
+Test Accuracy:0.64658636
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.0001SigmoidDefaultPosition
+Training Accuracy:0.6688898
+Validation Accuracy:0.67043173
+Test Accuracy:0.6686747
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.0001SigmoidDefaultPosition
+Training Accuracy:0.6717585
+Validation Accuracy:0.6802209
+Test Accuracy:0.6711847
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.001ReluL1Velocity
+Training Accuracy:0.5493643
+Validation Accuracy:0.53521484
+Test Accuracy:0.5470259
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.001ReluL1Velocity
+Training Accuracy:0.6183073
+Validation Accuracy:0.60666156
+Test Accuracy:0.6095577
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.001ReluL1Velocity
+Training Accuracy:0.5301853
+Validation Accuracy:0.5189423
+Test Accuracy:0.5073716
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.0001TanhL1Velocity
+Training Accuracy:0.66923356
+Validation Accuracy:0.66437835
+Test Accuracy:0.68734115
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.0001TanhL1Velocity
+Training Accuracy:0.6807846
+Validation Accuracy:0.6737859
+Test Accuracy:0.6736146
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.0001TanhL1Velocity
+Training Accuracy:0.64881945
+Validation Accuracy:0.65064836
+Test Accuracy:0.65988815
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.0001ReluL1Velocity
+Training Accuracy:0.5239375
+Validation Accuracy:0.54131705
+Test Accuracy:0.5256736
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.0001ReluL1Velocity
+Training Accuracy:0.5603342
+Validation Accuracy:0.5647089
+Test Accuracy:0.56227756
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.0001ReluL1Velocity
+Training Accuracy:0.5744279
+Validation Accuracy:0.5738622
+Test Accuracy:0.58515507
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.0001SigmoidL1Velocity
+Training Accuracy:0.6391573
+Validation Accuracy:0.6496313
+Test Accuracy:0.64311135
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.0001SigmoidL1Velocity
+Training Accuracy:0.6318925
+Validation Accuracy:0.6381897
+Test Accuracy:0.63396037
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.0001SigmoidL1Velocity
+Training Accuracy:0.642935
+Validation Accuracy:0.64759725
+Test Accuracy:0.65124553
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.001TanhL2Velocity
+Training Accuracy:0.63516164
+Validation Accuracy:0.6453089
+Test Accuracy:0.63446873
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.001TanhL2Velocity
+Training Accuracy:0.635089
+Validation Accuracy:0.64581746
+Test Accuracy:0.6141332
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.001TanhL2Velocity
+Training Accuracy:0.64424264
+Validation Accuracy:0.6386982
+Test Accuracy:0.64107776
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.001ReluL2Velocity
+Training Accuracy:0.6201235
+Validation Accuracy:0.60996693
+Test Accuracy:0.59888154
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.001ReluL2Velocity
+Training Accuracy:0.57224846
+Validation Accuracy:0.5875922
+Test Accuracy:0.569395
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.001ReluL2Velocity
+Training Accuracy:0.52415544
+Validation Accuracy:0.52580726
+Test Accuracy:0.5221149
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.001SigmoidL2Velocity
+Training Accuracy:0.41961497
+Validation Accuracy:0.43757945
+Test Accuracy:0.42857143
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.001SigmoidL2Velocity
+Training Accuracy:0.42353797
+Validation Accuracy:0.4169845
+Test Accuracy:0.42145398
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.001SigmoidL2Velocity
+Training Accuracy:0.41641846
+Validation Accuracy:0.42334095
+Test Accuracy:0.41586173
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.0001TanhL2Velocity
+Training Accuracy:0.65274245
+Validation Accuracy:0.6511569
+Test Accuracy:0.65632945
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.0001TanhL2Velocity
+Training Accuracy:0.65622956
+Validation Accuracy:0.63971525
+Test Accuracy:0.6532791
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.0001TanhL2Velocity
+Training Accuracy:0.6475118
+Validation Accuracy:0.6430206
+Test Accuracy:0.63446873
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.0001ReluL2Velocity
+Training Accuracy:0.53214675
+Validation Accuracy:0.518688
+Test Accuracy:0.51448905
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.0001ReluL2Velocity
+Training Accuracy:0.64169997
+Validation Accuracy:0.6351386
+Test Accuracy:0.61515
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.0001ReluL2Velocity
+Training Accuracy:0.59026515
+Validation Accuracy:0.59318584
+Test Accuracy:0.58973056
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.0001SigmoidL2Velocity
+Training Accuracy:0.6300763
+Validation Accuracy:0.62776506
+Test Accuracy:0.6324352
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.0001SigmoidL2Velocity
+Training Accuracy:0.6459862
+Validation Accuracy:0.6351386
+Test Accuracy:0.6497204
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.0001SigmoidL2Velocity
+Training Accuracy:0.5783509
+Validation Accuracy:0.57767606
+Test Accuracy:0.57092017
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.001TanhDefaultVelocity
+Training Accuracy:0.6762078
+Validation Accuracy:0.6801424
+Test Accuracy:0.6888663
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.001TanhDefaultVelocity
+Training Accuracy:0.6807846
+Validation Accuracy:0.66564965
+Test Accuracy:0.69547534
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.001TanhDefaultVelocity
+Training Accuracy:0.6695968
+Validation Accuracy:0.6913298
+Test Accuracy:0.6573462
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.001ReluDefaultVelocity
+Training Accuracy:0.54456955
+Validation Accuracy:0.5341978
+Test Accuracy:0.54651755
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.001ReluDefaultVelocity
+Training Accuracy:0.5347621
+Validation Accuracy:0.51360285
+Test Accuracy:0.5216065
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.001ReluDefaultVelocity
+Training Accuracy:0.56294954
+Validation Accuracy:0.55987793
+Test Accuracy:0.5739705
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.001SigmoidDefaultVelocity
+Training Accuracy:0.6818017
+Validation Accuracy:0.68395627
+Test Accuracy:0.6725979
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.001SigmoidDefaultVelocity
+Training Accuracy:0.6707592
+Validation Accuracy:0.66183573
+Test Accuracy:0.66954756
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.001SigmoidDefaultVelocity
+Training Accuracy:0.6602252
+Validation Accuracy:0.65497077
+Test Accuracy:0.6614133
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.0001TanhDefaultVelocity
+Training Accuracy:0.6807846
+Validation Accuracy:0.6740402
+Test Accuracy:0.6847992
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.0001TanhDefaultVelocity
+Training Accuracy:0.67984015
+Validation Accuracy:0.68141365
+Test Accuracy:0.6700559
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.0001TanhDefaultVelocity
+Training Accuracy:0.6683618
+Validation Accuracy:0.6714976
+Test Accuracy:0.6680224
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.0001ReluDefaultVelocity
+Training Accuracy:0.5735561
+Validation Accuracy:0.5555556
+Test Accuracy:0.5582105
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.0001ReluDefaultVelocity
+Training Accuracy:0.6127134
+Validation Accuracy:0.5954742
+Test Accuracy:0.60549057
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.0001ReluDefaultVelocity
+Training Accuracy:0.56091535
+Validation Accuracy:0.56725144
+Test Accuracy:0.56685305
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.0001SigmoidDefaultVelocity
+Training Accuracy:0.6409735
+Validation Accuracy:0.64912283
+Test Accuracy:0.64107776
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.0001SigmoidDefaultVelocity
+Training Accuracy:0.6475118
+Validation Accuracy:0.6440376
+Test Accuracy:0.658363
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.0001SigmoidDefaultVelocity
+Training Accuracy:0.65288776
+Validation Accuracy:0.6478515
+Test Accuracy:0.63650227
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.001ReluL1Task
+Training Accuracy:0.6620968
+Validation Accuracy:0.660007
+Test Accuracy:0.656141
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.001ReluL1Task
+Training Accuracy:0.6720425
+Validation Accuracy:0.67606
+Test Accuracy:0.6627704
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.001ReluL1Task
+Training Accuracy:0.64282864
+Validation Accuracy:0.6481417
+Test Accuracy:0.63939285
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.0001TanhL1Task
+Training Accuracy:0.68330926
+Validation Accuracy:0.66829526
+Test Accuracy:0.6782973
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.0001TanhL1Task
+Training Accuracy:0.6735381
+Validation Accuracy:0.6754493
+Test Accuracy:0.6636427
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.0001TanhL1Task
+Training Accuracy:0.6786231
+Validation Accuracy:0.68094575
+Test Accuracy:0.67236567
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.0001ReluL1Task
+Training Accuracy:0.6731642
+Validation Accuracy:0.6713488
+Test Accuracy:0.66521287
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.0001ReluL1Task
+Training Accuracy:0.60882896
+Validation Accuracy:0.6134183
+Test Accuracy:0.60816467
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.0001ReluL1Task
+Training Accuracy:0.6614238
+Validation Accuracy:0.6578259
+Test Accuracy:0.66486394
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.0001SigmoidL1Task
+Training Accuracy:0.6761553
+Validation Accuracy:0.6770197
+Test Accuracy:0.67079556
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.0001SigmoidL1Task
+Training Accuracy:0.67772573
+Validation Accuracy:0.67597276
+Test Accuracy:0.6786462
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.0001SigmoidL1Task
+Training Accuracy:0.67770076
+Validation Accuracy:0.68312687
+Test Accuracy:0.66992325
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.001TanhL2Task
+Training Accuracy:0.67523307
+Validation Accuracy:0.6770197
+Test Accuracy:0.67445916
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.001TanhL2Task
+Training Accuracy:0.674909
+Validation Accuracy:0.6801605
+Test Accuracy:0.668702
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.001TanhL2Task
+Training Accuracy:0.6737624
+Validation Accuracy:0.67998606
+Test Accuracy:0.6713189
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.001ReluL2Task
+Training Accuracy:0.64477295
+Validation Accuracy:0.6333101
+Test Accuracy:0.65369856
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.001ReluL2Task
+Training Accuracy:0.66164815
+Validation Accuracy:0.66149014
+Test Accuracy:0.6550942
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.001ReluL2Task
+Training Accuracy:0.6658109
+Validation Accuracy:0.6565172
+Test Accuracy:0.66399163
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.001SigmoidL2Task
+Training Accuracy:0.42345083
+Validation Accuracy:0.42322457
+Test Accuracy:0.42480808
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.001SigmoidL2Task
+Training Accuracy:0.42379978
+Validation Accuracy:0.42592916
+Test Accuracy:0.4330077
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.001SigmoidL2Task
+Training Accuracy:0.42746398
+Validation Accuracy:0.4184261
+Test Accuracy:0.42725053
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.0001TanhL2Task
+Training Accuracy:0.6763797
+Validation Accuracy:0.67623454
+Test Accuracy:0.67376137
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.0001TanhL2Task
+Training Accuracy:0.6749589
+Validation Accuracy:0.676409
+Test Accuracy:0.6753315
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.0001TanhL2Task
+Training Accuracy:0.6782741
+Validation Accuracy:0.67902637
+Test Accuracy:0.6802163
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.0001ReluL2Task
+Training Accuracy:0.6621965
+Validation Accuracy:0.6720468
+Test Accuracy:0.664515
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.0001ReluL2Task
+Training Accuracy:0.64846206
+Validation Accuracy:0.6395917
+Test Accuracy:0.6461968
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.0001ReluL2Task
+Training Accuracy:0.5737076
+Validation Accuracy:0.5803525
+Test Accuracy:0.5732729
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.0001SigmoidL2Task
+Training Accuracy:0.42556956
+Validation Accuracy:0.42139244
+Test Accuracy:0.42986742
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.0001SigmoidL2Task
+Training Accuracy:0.42432326
+Validation Accuracy:0.42226487
+Test Accuracy:0.42620376
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.0001SigmoidL2Task
+Training Accuracy:0.42542002
+Validation Accuracy:0.41519806
+Test Accuracy:0.43021634
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.001TanhDefaultTask
+Training Accuracy:0.674236
+Validation Accuracy:0.6776304
+Test Accuracy:0.66852754
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.001TanhDefaultTask
+Training Accuracy:0.6792213
+Validation Accuracy:0.677107
+Test Accuracy:0.68562454
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.001TanhDefaultTask
+Training Accuracy:0.6794207
+Validation Accuracy:0.68103296
+Test Accuracy:0.6821354
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.001ReluDefaultTask
+Training Accuracy:0.66269505
+Validation Accuracy:0.663235
+Test Accuracy:0.6617237
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.001ReluDefaultTask
+Training Accuracy:0.6052894
+Validation Accuracy:0.6059152
+Test Accuracy:0.5975227
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.001ReluDefaultTask
+Training Accuracy:0.6225136
+Validation Accuracy:0.62196827
+Test Accuracy:0.6229937
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.001SigmoidDefaultTask
+Training Accuracy:0.6812403
+Validation Accuracy:0.68347585
+Test Accuracy:0.6851012
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.001SigmoidDefaultTask
+Training Accuracy:0.67872274
+Validation Accuracy:0.6867039
+Test Accuracy:0.67899513
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.001SigmoidDefaultTask
+Training Accuracy:0.6786729
+Validation Accuracy:0.6713488
+Test Accuracy:0.6852757
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.0001TanhDefaultTask
+Training Accuracy:0.6763049
+Validation Accuracy:0.6773687
+Test Accuracy:0.6706211
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.0001TanhDefaultTask
+Training Accuracy:0.67553216
+Validation Accuracy:0.68862325
+Test Accuracy:0.6795185
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.0001TanhDefaultTask
+Training Accuracy:0.6761055
+Validation Accuracy:0.67588556
+Test Accuracy:0.67498255
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.0001ReluDefaultTask
+Training Accuracy:0.6618974
+Validation Accuracy:0.66681206
+Test Accuracy:0.6566643
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.0001ReluDefaultTask
+Training Accuracy:0.66745603
+Validation Accuracy:0.66306055
+Test Accuracy:0.6631193
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.0001ReluDefaultTask
+Training Accuracy:0.6673064
+Validation Accuracy:0.67283195
+Test Accuracy:0.6606769
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test1E1000LR0.0001SigmoidDefaultTask
+Training Accuracy:0.67844856
+Validation Accuracy:0.67248297
+Test Accuracy:0.6718423
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test2E1000LR0.0001SigmoidDefaultTask
+Training Accuracy:0.6815893
+Validation Accuracy:0.68478453
+Test Accuracy:0.6782973
+C:\Users\Admin\CMU_HCII_REU\PoiseDetection\Models&Results\test3E1000LR0.0001SigmoidDefaultTask
+Training Accuracy:0.67406154
+Validation Accuracy:0.6770197
+Test Accuracy:0.66905093
