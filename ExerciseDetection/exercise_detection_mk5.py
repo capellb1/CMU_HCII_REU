@@ -76,6 +76,7 @@ tf.app.flags.DEFINE_string('label', 'test1', 'This is the label name where the f
 tf.app.flags.DEFINE_string('arch', 'method1', 'This specifies the architecture used')
 tf.app.flags.DEFINE_boolean('position', False, 'Determines if the position data is included when training')
 tf.app.flags.DEFINE_boolean('velocity', False, 'Determines if the velocity data is included when training')
+tf.app.flags.DEFINE_boolean('task', False, 'Determines if the task data is included when training')
 tf.app.flags.DEFINE_boolean('test', False, 'What mode are we running this model on. True runs the testing function')
 tf.app.flags.DEFINE_float('regularization_rate',0.01,'Strength of regularization')
 tf.app.flags.DEFINE_boolean('verbose', False, 'Determines how much information is printed into the results file')
@@ -176,9 +177,24 @@ filename = dirname + '\\Data\\TestNumber.txt'
 epochsLable = str(FLAGS.epochs)
 learning_rateLable = str(FLAGS.learning_rate)
 regularization_rateLable = str(FLAGS.regularization_rate)
-positionLable = str(FLAGS.position)
-velocityLable = str(FLAGS.velocity)
-folderName = FLAGS.label + "E" + epochsLable + "LR" + learning_rateLable + FLAGS.activation + FLAGS.regularization + "RR" + regularization_rateLable  + "Pos" + positionLable + "Vel" + velocityLable + FLAGS.arch
+if(FLAGS.position):
+	positionLable = "Position"
+else:
+	positionLable = ""
+
+if(FLAGS.velocity):
+	velocityLable = "Velocity"
+else:
+	velocityLable = ""
+
+if(FLAGS.task):
+	taskLable = "Task"
+else:
+	taskLable = ""
+
+refinementLable = str(FLAGS.refinement)
+refinement_rateLable = str(FLAGS.refinement_rate)
+folderName = FLAGS.label + "E" + epochsLable + "LR" + learning_rateLable + FLAGS.activation + FLAGS.regularization + "RR" + regularization_rateLable  +  positionLable + velocityLable + taskLable + FLAGS.arch + "Ref" + refinementLable + "RefR" + refinement_rateLable
 
 #establish the directory used to store the saved model and results
 newDir = dirname + '\\Models&Results\\' + folderName
@@ -202,6 +218,9 @@ if FLAGS.position:
 	numSections = numSections + 1
 if FLAGS.velocity:
 	numSections = numSections + 1	
+if FLAGS.task:
+	numSections = numSections + 1	
+
 if FLAGS.verbose:
 	print("Number of datasets: ", numSections)
 	resultsFile.write("Number of datasets: " + str(numSections) + '\n')
@@ -263,7 +282,8 @@ def extractData():
 	
 	#enables downsampling by 50%
 	sample = True
-	
+	labels = []
+
 	for i in range(0, int(numberTests)):
 		k = 0
 		for j in range(0,bodySize):
@@ -288,15 +308,23 @@ def extractData():
 							sample = False
 					else:
 						sample = True
-	print(k)
-	labels = []
-	#seperate the label from the name and event number stored within the label.csv file(s)
-	for i in range (0, int(numberTests)):
+
+			if FLAGS.task:
+				for line in open(dirname + "\\Data\\test" + str(i)+ "\\Task_" + file_names[j]):
+					if sample:
+						row = line.split(',')
+						for l in range(0,3):
+							data[i][k] = row[l]
+							k = k +1
+							sample = False
+					else:
+						sample = True
+		
+		#seperate the label from the name and event number stored within the label.csv file(s)
 		for line in open(dirname + "\\Data\\test" + str(i)+ "\\label.csv"):
 			temporaryLabel = line.split()
 			labels.append(str(temporaryLabel[0]))
-		
-	
+
 	#shuffle the data
 	shuffledData = np.empty(data.shape, dtype=data.dtype)
 	shuffledLabels = labels

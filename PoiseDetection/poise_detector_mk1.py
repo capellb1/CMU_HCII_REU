@@ -82,6 +82,7 @@ tf.app.flags.DEFINE_float('regularization_rate',0.01,'Strength of regularization
 tf.app.flags.DEFINE_boolean('verbose', False, 'Determines how much information is printed into the results file')
 tf.app.flags.DEFINE_string('refinement', "None", 'Determines which refinement process to use')
 tf.app.flags.DEFINE_integer('refinement_rate',0,'Determines the number of joints to include in the data')
+tf.app.flags.DEFINE_boolean('task', False, 'Determines if the task data is included when training')
 
 FLAGS = tf.app.flags.FLAGS
 
@@ -176,9 +177,24 @@ filename = dirname + '\\Data\\TestNumber.txt'
 epochsLable = str(FLAGS.epochs)
 learning_rateLable = str(FLAGS.learning_rate)
 regularization_rateLable = str(FLAGS.regularization_rate)
-positionLable = str(FLAGS.position)
-velocityLable = str(FLAGS.velocity)
-folderName = FLAGS.label + "E" + epochsLable + "LR" + learning_rateLable + FLAGS.activation + FLAGS.regularization + "RR" + regularization_rateLable  + "Pos" + positionLable + "Vel" + velocityLable + FLAGS.arch
+if(FLAGS.position):
+	positionLable = "Position"
+else:
+	positionLable = ""
+
+if(FLAGS.velocity):
+	velocityLable = "Velocity"
+else:
+	velocityLable = ""
+
+if(FLAGS.task):
+	taskLable = "Task"
+else:
+	taskLable = ""
+
+refinementLable = str(FLAGS.refinement)
+refinement_rateLable = str(FLAGS.refinement_rate)
+folderName = FLAGS.label + "E" + epochsLable + "LR" + learning_rateLable + FLAGS.activation + FLAGS.regularization + "RR" + regularization_rateLable  +  positionLable + velocityLable + taskLable + FLAGS.arch + "Ref" + refinementLable + "RefR" + refinement_rateLable
 
 #establish the directory used to store the saved model and results
 newDir = dirname + '\\Models&Results\\' + folderName
@@ -192,15 +208,17 @@ resultsFile = open(newDir + '\\Results.txt',"w+")
 numberTestFiles = open(filename,"r")
 numberTests = numberTestFiles.read()
 if FLAGS.verbose:
-	print("Number of Filed Detected: ", numberTests)
-	resultsFile.write("Number of Filed Detected: " + str(numberTests) + '\n')
+	print("Number of Files Detected: ", numberTests)
+	resultsFile.write("Number of Files Detected: " + str(numberTests) + '\n')
 
 #Determine the number of datasets included (velocity, position) in order to size the data array
 numSections = 0
 if FLAGS.position:
 	numSections = numSections + 1
 if FLAGS.velocity:
-	numSections = numSections + 1		
+	numSections = numSections + 1	
+if FLAGS.task:
+	numSections = numSections + 1	
 if FLAGS.verbose:
 	print("Number of datasets: ", numSections)
 	resultsFile.write("Number of datasets: " + str(numSections) + '\n')
@@ -250,7 +268,6 @@ for i in range(0,int(numberTests)):
 
 if FLAGS.verbose:
 	print("Maximum Number of Entries in a Single Exercise: ", maxEntries)
-	resultsFile.write("Maximum Number of Entries in Single Exercise: " + str(maxEntries) + '\n')
 
 def extractData():
 	'''
@@ -292,33 +309,23 @@ def extractData():
 							for m in range(0,3):
 								data[l][k]= row[m]
 								k = k + 1
-			if FLAGS.position:
-				for line in open(dirname + "\\Data\\test" + str(i)+ "\\label.csv"):
-					temporaryLabel = line.split()
-					labels.append(str(temporaryLabel[0]))
-			if FLAGS.velocity:
-				for line in open(dirname + "\\Data\\test" + str(i)+ "\\label.csv"):
-					temporaryLabel = line.split()
-					labels.append(str(temporaryLabel[0]))
+				if FLAGS.task:
+					fp = open(dirname + "\\Data\\test" + str(i)+ "\\Task_" + file_names[j])
+					for n, line in enumerate(fp):
+						if n == w:
+							row = line.split(',')
+							for m in range(0,3):
+								data[l][k]= row[m]
+								k = k + 1
 
-
-			w=w+2				
-			
-	
-		numTimeStamps = timeScores[i] + numTimeStamps
-	print(len(labels), " = ", len(data))
-
-	fp.close()
-	'''
-	labels = []
-	sample = True
-	#seperate the label from the name and event number stored within the label.csv file(s)
-	for i in range (0, int(numberTests)):
-		for line in open(dirname + "\\Data\\test" + str(i)+ "\\label.csv"):
-			temporaryLabel = line.split()
-			for j in range(0,timeScores[i]//2):
+			for line in open(dirname + "\\Data\\test" + str(i)+ "\\label.csv"):
+				temporaryLabel = line.split()
 				labels.append(str(temporaryLabel[0]))
-	'''			
+			
+			w=w+2					
+		numTimeStamps = timeScores[i] + numTimeStamps
+
+	fp.close()		
 	#shuffle the data
 	shuffledData = np.empty(data.shape, dtype=data.dtype)
 	shuffledLabels = labels

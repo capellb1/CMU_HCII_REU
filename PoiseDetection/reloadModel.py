@@ -83,7 +83,7 @@ tf.app.flags.DEFINE_boolean('test', False, 'What mode are we running this model 
 tf.app.flags.DEFINE_boolean('verbose', False, 'Determines how much information is printed into the results file')
 tf.app.flags.DEFINE_string('refinement', "None", 'Determines which refinement process to use')
 tf.app.flags.DEFINE_integer('refinement_rate',0,'Determines the number of joints to include in the data')
-
+tf.app.flags.DEFINE_boolean('task', False, 'Determines if the task data is included when training')
 
 FLAGS = tf.app.flags.FLAGS
 
@@ -95,11 +95,11 @@ numSections = 0
 if FLAGS.position:
 	numSections = numSections + 1
 if FLAGS.velocity:
+	numSections = numSections + 1
+if FLAGS.task:
 	numSections = numSections + 1	
-if FLAGS.verbose:
-	print("Number of datasets: ", numSections)
-	resultsFile.write("Number of datasets: " + str(numSections) + '\n')
-	
+
+
 #Predetermined selection of Bodyparts (CHANGE FOR REFINEMENT)
 if (FLAGS.refinement == "None") or (FLAGS.refinement_rate == 0):
 	file_names =[
@@ -186,18 +186,34 @@ elif (FLAGS.refinement == "Uniform") and (FLAGS.refinement_rate == 75):
 dirname = os.path.realpath('.')
 filename = dirname + '\\Data\\TestNumber.txt'
 
-#Creating a folder to save the results
+#Creating a unuiqe folder name to save the results
 epochsLable = str(FLAGS.epochs)
 learning_rateLable = str(FLAGS.learning_rate)
 regularization_rateLable = str(FLAGS.regularization_rate)
-positionLable = str(FLAGS.position)
-velocityLable = str(FLAGS.velocity)
+if(FLAGS.position):
+	positionLable = "Position"
+else:
+	positionLable = ""
 
-folderName = FLAGS.label + "E" + epochsLable + "LR" + learning_rateLable + FLAGS.activation + FLAGS.regularization + "RR" + regularization_rateLable  + "Pos" + positionLable + "Vel" + velocityLable + FLAGS.arch
+if(FLAGS.velocity):
+	velocityLable = "Velocity"
+else:
+	velocityLable = ""
+
+if(FLAGS.task):
+	taskLable = "Task"
+else:
+	taskLable = ""
+
+refinementLable = str(FLAGS.refinement)
+refinement_rateLable = str(FLAGS.refinement_rate)
+folderName = FLAGS.label + "E" + epochsLable + "LR" + learning_rateLable + FLAGS.activation + FLAGS.regularization + "RR" + regularization_rateLable  +  positionLable + velocityLable + taskLable + FLAGS.arch + "Ref" + refinementLable + "RefR" + refinement_rateLable
+
 newDir = dirname + '\\Models&Results\\' + folderName
 if not (os.path.exists(newDir)):
 	os.makedirs(newDir)
 
+#Open file used to store accuracy scores and any other printed data
 resultsFile = open(newDir + '\\Results.txt',"w+")
 
 #Read the number of files(events) that the data contains from the TestNumber.txt file
@@ -205,6 +221,10 @@ numberTestFiles = open(filename,"r")
 numberTests = numberTestFiles.read()
 print("Number of Filed Detected: ", numberTests)
 resultsFile.write("Number of Filed Detected: " + str(numberTests) + '\n')
+
+if FLAGS.verbose:
+	print("Number of sections: ", numSections)
+	resultsFile.write("Number of datasets: " + str(numSections) + '\n')
 
 arch = FLAGS.arch
 numberClasses = 11
@@ -231,14 +251,7 @@ else:
 	hiddenLayer5 = 24
 
 
-#determine the number of datasets included for data matrix size allocation
-numSections = 0
-if FLAGS.position:
-	numSections = numSections + 1
-if FLAGS.velocity:
-	numSections = numSections + 1	
 #batch Index variable
-
 batchIndex = 0
 
 #Determine the maximum/longest running event in the group of seperate tests
@@ -255,16 +268,24 @@ for i in range(0,int(numberTests)):
 print("Maximum Number of Entries in a Single Exercise: ", maxEntries)
 resultsFile.write("Maximum Number of Entries in Single Exercise: " + str(maxEntries) + '\n')
 
-#read data from files into a flattened array
-#each time stamp is a single row and has a corresponding event label... the row containse the xyz for each bodypart
-#[Arm1xyz, Head1xyz, Foot1xyz, ...] EVENT 10
-#[Arm2xyz, Head2xyz, Foot2xyz, ...] EVENT 2
-
 def extractData():
+	'''
+		Moves data from the text files into flattened arrays.
+		Each time stamp is a single row and has a corresponding event label
+			[Arm1xyz, Head1xyz, Foot1xyz, ...] EVENT 10
+			[Arm2xyz, Head2xyz, Foot2xyz, ...] EVENT 2
+		
+		Parameters: None
+		Returns:
+			nparray shuffledlabels
+			nparray shuffledData
+	'''
 	data =  np.empty((sum(timeScores), int(bodySize*3*numSections)))
-	
+	sample = True
 	numTimeStamps = 0
+	labels = []
 	c=0
+
 	for i in range(0, int(numberTests)):
 		#Determine the number of time stamps in this event
 		w=0
@@ -279,6 +300,7 @@ def extractData():
 							for m in range(0,3):
 								data[l][k]= row[m]
 								k = k + 1
+			
 				if FLAGS.velocity:
 					fp = open(dirname + "\\Data\\test" + str(i)+ "\\Velocity_" + file_names[j])
 					for n, line in enumerate(fp):
@@ -287,12 +309,20 @@ def extractData():
 							for m in range(0,3):
 								data[l][k]= row[m]
 								k = k + 1
-			if sample:				
-				w = w+1
-				sample = False
-			else:
-				w = w+2
-				sample = True
+				if FLAGS.task:
+					fp = open(dirname + "\\Data\\test" + str(i)+ "\\Task_" + file_names[j])
+					for n, line in enumerate(fp):
+						if n == w:
+							row = line.split(',')
+							for m in range(0,3):
+								data[l][k]= row[m]
+								k = k + 1
+
+			for line in open(dirname + "\\Data\\test" + str(i)+ "\\label.csv"):
+				temporaryLabel = line.split()
+				labels.append(str(temporaryLabel[0]))
+			
+			w=w+2					
 		numTimeStamps = timeScores[i] + numTimeStamps
 	fp.close()
 
@@ -300,19 +330,6 @@ def extractData():
 		print("Number of Sections: ", numSections)
 		print("Length of Data: ", data[0][:])
 		print("data shape: [", int(numberTests), ", ", int(bodySize*maxEntries*3*numSections), "]")
-	
-	labels = []
-	sample = True
-	#seperate the label from the name and event number stored within the label.csv file(s)
-	for i in range (0, int(numberTests)):
-		for line in open(dirname + "\\Data\\test" + str(i)+ "\\label.csv"):
-			temporaryLabel = line.split()
-			for j in range(0,timeScores[i]):
-				if sample:
-					labels.append(str(temporaryLabel[0]))
-					sample = False
-				else:
-					sample = True
 	
 	return data, labels
 
@@ -538,7 +555,7 @@ def main(argv = None):
 	labelText = labels
 	labels = oneHot(labels)
 
-	inputLayer = bodySize*3
+	inputLayer = bodySize*3*numSections
 
 	#tf Graph input
 	X = tf.placeholder(data.dtype, [None, inputLayer])

@@ -83,6 +83,7 @@ tf.app.flags.DEFINE_boolean('test', False, 'What mode are we running this model 
 tf.app.flags.DEFINE_boolean('verbose', False, 'Determines how much information is printed into the results file')
 tf.app.flags.DEFINE_string('refinement', "None", 'Determines which refinement process to use')
 tf.app.flags.DEFINE_integer('refinement_rate',0,'Determines the number of joints to include in the data')
+tf.app.flags.DEFINE_boolean('task', False, 'Determines if the task data is included when training')
 
 FLAGS = tf.app.flags.FLAGS
 
@@ -90,15 +91,6 @@ TRAIN_PERCENT = 0.7
 VALIDATION_PERCENT = 0.2
 TEST_PERCENT = 0.1
 
-numSections = 0
-if FLAGS.position:
-	numSections = numSections + 1
-if FLAGS.velocity:
-	numSections = numSections + 1	
-if FLAGS.verbose:
-	print("Number of datasets: ", numSections)
-	resultsFile.write("Number of datasets: " + str(numSections) + '\n')
-	
 #Predetermined selection of Bodyparts (CHANGE FOR REFINEMENT)
 if (FLAGS.refinement == "None") or (FLAGS.refinement_rate == 0):
 	file_names =[
@@ -184,14 +176,29 @@ elif (FLAGS.refinement == "Uniform") and (FLAGS.refinement_rate == 75):
 dirname = os.path.realpath('.')
 filename = dirname + '\\Data\\TestNumber.txt'
 
-#Creating a folder to save the results
+#Creating a unuiqe folder name to save the results
 epochsLable = str(FLAGS.epochs)
 learning_rateLable = str(FLAGS.learning_rate)
 regularization_rateLable = str(FLAGS.regularization_rate)
-positionLable = str(FLAGS.position)
-velocityLable = str(FLAGS.velocity)
+if(FLAGS.position):
+	positionLable = "Position"
+else:
+	positionLable = ""
 
-folderName = FLAGS.label + "E" + epochsLable + "LR" + learning_rateLable + FLAGS.activation + FLAGS.regularization + "RR" + regularization_rateLable  + "Pos" + positionLable + "Vel" + velocityLable + FLAGS.arch
+if(FLAGS.velocity):
+	velocityLable = "Velocity"
+else:
+	velocityLable = ""
+
+if(FLAGS.task):
+	taskLable = "Task"
+else:
+	taskLable = ""
+
+refinementLable = str(FLAGS.refinement)
+refinement_rateLable = str(FLAGS.refinement_rate)
+folderName = FLAGS.label + "E" + epochsLable + "LR" + learning_rateLable + FLAGS.activation + FLAGS.regularization + "RR" + regularization_rateLable  +  positionLable + velocityLable + taskLable + FLAGS.arch + "Ref" + refinementLable + "RefR" + refinement_rateLable
+
 newDir = dirname + '\\Models&Results\\' + folderName
 
 #Read the number of files(events) that the data contains from the TestNumber.txt file
@@ -204,6 +211,8 @@ numSections = 0
 if FLAGS.position:
 	numSections = numSections + 1
 if FLAGS.velocity:
+	numSections = numSections + 1
+if FLAGS.task:
 	numSections = numSections + 1		
 #GLOBAL
 #network parameters:
@@ -255,6 +264,10 @@ print("Maximum Number of Entries in a Single Exercise: ", maxEntries)
 def extractData():
 	data =  np.empty((int(numberTests), int(bodySize*maxEntries*3*numSections)))
 	
+	#enables downsampling by 50%
+	sample = True
+	labels = []
+
 	for i in range(0, int(numberTests)):
 		k = 0
 		for j in range(0,bodySize):
@@ -268,6 +281,7 @@ def extractData():
 							sample = False
 					else:
 						sample = True
+
 			if FLAGS.velocity:
 				for line in open(dirname + "\\Data\\test" + str(i)+ "\\Velocity_" + file_names[j]):
 					if sample:
@@ -278,18 +292,22 @@ def extractData():
 							sample = False
 					else:
 						sample = True
-	if FLAGS.verbose:
-		print("Number of Sections: ", numSections)
-		print("Length of Data: ", data[0][:])
-		print("data shape: [", int(numberTests), ", ", int(bodySize*maxEntries*3*numSections), "]")
-	
-	labels = []
-	#seperate the label from the name and event number stored within the label.csv file(s)
-	for i in range (0, int(numberTests)):
+			if FLAGS.task:
+				for line in open(dirname + "\\Data\\test" + str(i)+ "\\Task_" + file_names[j]):
+					if sample:
+						row = line.split(',')
+						for l in range(0,3):
+							data[i][k] = row[l]
+							k = k +1
+							sample = False
+					else:
+						sample = True
+
+		#seperate the label from the name and event number stored within the label.csv file(s)
 		for line in open(dirname + "\\Data\\test" + str(i)+ "\\label.csv"):
 			temporaryLabel = line.split()
 			labels.append(str(temporaryLabel[0]))
-		
+
 	return data, labels
 
 def oneHot(labels):
@@ -513,7 +531,7 @@ def main(argv = None):
 	labelText = labels
 	labels = oneHot(labels)
 
-	inputLayer = bodySize*maxEntries*3
+	inputLayer = bodySize*maxEntries*3*numSections
 
 	#initialize global variables
 	init = tf.global_variables_initializer()

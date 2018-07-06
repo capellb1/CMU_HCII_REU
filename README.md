@@ -82,8 +82,8 @@ Flags:
 	verbose
 		Increases the amount of data written to the results file
 			DEFAULT: False
-	regularization
-		Determines the method of regularization
+	refinement
+		Determines the method of refinement
 			DEFAULT: None
 			OPTIONS: Uniform, Tailored, None
 	regularization rate:
