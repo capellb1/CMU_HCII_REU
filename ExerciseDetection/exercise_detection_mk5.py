@@ -2,15 +2,18 @@
 CMU HCII REU Summer 2018
 PI: Dr. Sieworek
 Students:  Blake Capella & Deepak Subramanian
-Date: 06/26/18
+Date: 07/09/18
 
-The following code trains a neural net by grouping entire motions as a single feature.
-The source of the data being used to train the net can be toggled between the natural data (Position) and synthetic/calculated
-features (Position, Velocity). This is controlled by the --source flag.
+The following code is used to either train or visualize the results of a neural net. The project's goal is to analyze the
+difference in performance between multi frame analysis (exercise_detector) and single frame analysis (poise_detector). Built
+in to each of the files are a large number of flags used change numerous features ranging from input data
+to network architecture and other hyperparameters. For more detailed information on the flags, see the code or visit 
+https://github.com/capellb1/CMU_HCII_REU.git
 
-Flags might not be used in this file, they were included for consistency between the multiple training files.
+Many flags might not be used in this file, they were included for consistency between the multiple training files.
 	poise_detector_mk*.py
 	exercise_detection_mk*.py
+	reloadModel.py
 
 	Unless otherwise stated, assume highest number to be the most current/advanced file
 
@@ -66,33 +69,59 @@ from sklearn import metrics
 import seaborn as sns
 import glob
 
-#Define Flags to change the Hyperperameters
-tf.app.flags.DEFINE_integer('batch_size',10,'number of randomly sampled images from the training set')
+#Define Flags to change the Hyperperameters and other variables
+tf.app.flags.DEFINE_integer('batch_size',1000,'number of randomly sampled images from the training set')
 tf.app.flags.DEFINE_float('learning_rate',0.001,'how quickly the model progresses along the loss curve during optimization')
 tf.app.flags.DEFINE_integer('epochs',10,'number of passes over the training data')
+tf.app.flags.DEFINE_float('regularization_rate',0.01,'Strength of regularization')
 tf.app.flags.DEFINE_string('regularization', 'Default', 'This is the regularization function used in cost calcuations')
 tf.app.flags.DEFINE_string('activation', 'Default', 'This is the activation function to use in the layers')
 tf.app.flags.DEFINE_string('label', 'test1', 'This is the label name where the files are saved')
+tf.app.flags.DEFINE_string('source', 'Position', 'What files to draw data frome (Task, Velocity, Position)')
 tf.app.flags.DEFINE_string('arch', 'method1', 'This specifies the architecture used')
 tf.app.flags.DEFINE_boolean('position', False, 'Determines if the position data is included when training')
 tf.app.flags.DEFINE_boolean('velocity', False, 'Determines if the velocity data is included when training')
-tf.app.flags.DEFINE_boolean('task', False, 'Determines if the task data is included when training')
 tf.app.flags.DEFINE_boolean('test', False, 'What mode are we running this model on. True runs the testing function')
-tf.app.flags.DEFINE_float('regularization_rate',0.01,'Strength of regularization')
 tf.app.flags.DEFINE_boolean('verbose', False, 'Determines how much information is printed into the results file')
 tf.app.flags.DEFINE_string('refinement', "None", 'Determines which refinement process to use')
 tf.app.flags.DEFINE_integer('refinement_rate',0,'Determines the number of joints to include in the data')
+tf.app.flags.DEFINE_boolean('task', False, 'Determines if the task data is included when training')
 tf.app.flags.DEFINE_boolean('save', False, 'Determines wether the model is saved')
 
 FLAGS = tf.app.flags.FLAGS
 
-#Global Variables
 TRAIN_PERCENT = 0.7
-TEST_PERCENT = 0.3
+VALIDATION_PERCENT = 0.2
+TEST_PERCENT = 0.1
 
-#Predetermined selection of Bodyparts (CHANGE FOR REFINEMENT)
-if (FLAGS.refinement == "None") or (FLAGS.refinement_rate == 0):
-	file_names =[
+batchIndex = 0
+
+arch = FLAGS.arch
+numberClasses = 11
+if (arch == 'method1'):
+	hiddenLayer1 = 60
+	hiddenLayer2 = 60
+
+elif (arch == 'method2'):
+	hiddenLayer1 = 40
+	hiddenLayer2 = 40
+	hiddenLayer3 = 40
+
+elif (arch == 'method3'):
+	hiddenLayer1 = 30
+	hiddenLayer2 = 30
+	hiddenLayer3 = 30
+	hiddenLayer4 = 30
+
+else:
+	hiddenLayer1 = 24
+	hiddenLayer2 = 24
+	hiddenLayer3 = 24
+	hiddenLayer4 = 24
+	hiddenLayer5 = 24
+
+#list of all possible files
+file_names_super =[
 	'Head.csv',   
 	'Neck.csv',    
 	'SpineShoulder.csv', 
@@ -118,261 +147,178 @@ if (FLAGS.refinement == "None") or (FLAGS.refinement_rate == 0):
 	'KneeLeft.csv',
 	'AnkleLeft.csv',     
 	'FootLeft.csv']
-	bodySize = 25
 
-elif (FLAGS.refinement == "Uniform") and (FLAGS.refinement_rate == 25):
-	file_names =[
-	'Head.csv',   
-	'Neck.csv',    
-	'SpineShoulder.csv', 
-	'SpineMid.csv',
-	'SpineBase.csv',    
-	'ShoulderRight.csv', 
-	'ShoulderLeft.csv',  
-	'HipRight.csv',
-	'HipLeft.csv', 
-	'ElbowRight.csv',    
-	'WristRight.csv',      
-	'ElbowLeft.csv',     
-	'WristLeft.csv',      
-	'KneeRight.csv',    
-	'AnkleRight.csv',   
-	'FootRight.csv',     
-	'KneeLeft.csv',
-	'AnkleLeft.csv',     
-	'FootLeft.csv']
-	bodySize = 19
+if FLAGS.refinement == "Uniform":
+	file_names = uniformRefinement()
 
-elif (FLAGS.refinement == "Uniform") and (FLAGS.refinement_rate == 50):
-	file_names =[
-	'Head.csv',          
-	'ShoulderRight.csv', 
-	'ShoulderLeft.csv',  
-	'HipRight.csv',
-	'HipLeft.csv', 
-	'ElbowRight.csv',    
-	'WristRight.csv',      
-	'ElbowLeft.csv',     
-	'WristLeft.csv',         
-	'KneeRight.csv',    
-	'AnkleRight.csv',       
-	'KneeLeft.csv',
-	'AnkleLeft.csv']
-	bodySize = 13
+elif FLAGS.refinement == "None":
+	file_names = file_names_super
 
-elif (FLAGS.refinement == "Uniform") and (FLAGS.refinement_rate == 75):
-	file_names =[         
-	'ShoulderRight.csv', 
-	'ShoulderLeft.csv',      
-	'WristRight.csv',        
-	'WristLeft.csv',            
-	'AnkleRight.csv',       
-	'AnkleLeft.csv']
-	bodySize = 6
-
-#Set the read path to the data folder of the current working directory (allows github upload of data)
-dirname = os.path.realpath('.')
-filename = dirname + '\\Data\\TestNumber.txt'
-
-#Creating a unuiqe folder name to save the results
-epochsLable = str(FLAGS.epochs)
-learning_rateLable = str(FLAGS.learning_rate)
-regularization_rateLable = str(FLAGS.regularization_rate)
-if(FLAGS.position):
-	positionLable = "Position"
-else:
-	positionLable = ""
-
-if(FLAGS.velocity):
-	velocityLable = "Velocity"
-else:
-	velocityLable = ""
-
-if(FLAGS.task):
-	taskLable = "Task"
-else:
-	taskLable = ""
-
-refinementLable = str(FLAGS.refinement)
-refinement_rateLable = str(FLAGS.refinement_rate)
-folderName = FLAGS.label + "E" + epochsLable + "LR" + learning_rateLable + FLAGS.activation + FLAGS.regularization + "RR" + regularization_rateLable  +  positionLable + velocityLable + taskLable + FLAGS.arch + "Ref" + refinementLable + "RefR" + refinement_rateLable
-
-
-#establish the directory used to store the saved model and results
-newDir = dirname + '\\Models&Results\\' + folderName
-if not (os.path.exists(newDir)):
-	os.makedirs(newDir)
-
-#Open file used to store accuracy scores and any other printed data
-resultsFile = open(newDir + '\\Results.txt',"w+")
-results2File = open(dirname + '\\Models&Results\\ResultsFinal.txt', "a")
-
-#Read the number of files(events) that the data contains from the TestNumber.txt file
-numberTestFiles = open(filename,"r")
-numberTests = numberTestFiles.read()
-
-if FLAGS.verbose:
-	resultsFile.write("Number of Filed Detected: " + str(numberTests) + '\n')
-	print("Number of Filed Detected: ", numberTests)
-
-#Determine the number of datasets included (velocity, position) in order to size the data array
-numSections = 0
-if FLAGS.position:
-	numSections = numSections + 1
-if FLAGS.velocity:
-	numSections = numSections + 1	
-if FLAGS.task:
-	numSections = numSections + 1	
-if numSections == 0:
-	print("NO DATA SELECTED")
-	
-if FLAGS.verbose:
-	print("Number of datasets: ", numSections)
-	resultsFile.write("Number of datasets: " + str(numSections) + '\n')
-
-#GLOBAL
-#Determine structure of network based on flags
-arch = FLAGS.arch
-numberClasses = 11
-if (arch == 'method1'):
-	hiddenLayer1 = 60
-	hiddenLayer2 = 60
-
-elif (arch == 'method2'):
-	hiddenLayer1 = 40
-	hiddenLayer2 = 40
-	hiddenLayer3 = 40
-
-elif (arch == 'method3'):
-	hiddenLayer1 = 30
-	hiddenLayer2 = 30
-	hiddenLayer3 = 30
-	hiddenLayer4 = 30
-
-else:
-	hiddenLayer1 = 24
-	hiddenLayer2 = 24
-	hiddenLayer3 = 24
-	hiddenLayer4 = 24
-	hiddenLayer5 = 24
-
-#batch Index variable
-batchIndex = 0
-
-#Determine the maximum/longest running event in the group of seperate tests
-#used to define size of the data arrays
-maxEntries = 0
-for i in range(0,int(numberTests)):
-	numEntries = 0
-	for line in open(dirname + "\\Data\\test" + str(i) + "\\Position_" + file_names[1]):
-		numEntries = numEntries + 1
-	if numEntries > maxEntries:
-		maxEntries = numEntries	
-
-if FLAGS.verbose:
-	print("Maximum Number of Entries in a Single Exercise: ", maxEntries)
-	resultsFile.write("Maximum Number of Entries in Single Exercise: " + str(maxEntries) + '\n')
-
-def extractData():
+def writeFolderLabel():
 	'''
-		Moves data from the text files into flattened arrays:
-			[event] [HeadX1, HeadY1, HeadZ1, HeadX2....ArmX1, ArmY1, ArmZ1, ArmX2 etc]
+		Creating a unuiqe folder name to save the results
 
-		Parameters: None
-		Returns:
-			nparray shuffledlabels
-			nparray shuffledData
+		Returns
+			String
 	'''
-	data =  np.empty((int(numberTests), int(bodySize*maxEntries*3*numSections)))
-	
-	#enables downsampling by 50%
-	sample = True
-	labels = []
+	epochsLable = str(FLAGS.epochs)
+	learning_rateLable = str(FLAGS.learning_rate)
+	regularization_rateLable = str(FLAGS.regularization_rate)
+	if(FLAGS.position):
+		positionLable = "Position"
+	else:
+		positionLable = ""
 
-	for i in range(0, int(numberTests)):
-		k = 0
-		for j in range(0,bodySize):
-			if FLAGS.position:
-				for line in open(dirname + "\\Data\\test" + str(i)+ "\\Position_" + file_names[j]):
-					if sample:
-						row = line.split(',')
-						for l in range(0,3):
-							data[i][k] = row[l]
-							k = k +1
-							sample = False
-					else:
-						sample = True
+	if(FLAGS.velocity):
+		velocityLable = "Velocity"
+	else:
+		velocityLable = ""
 
-			if FLAGS.velocity:
-				for line in open(dirname + "\\Data\\test" + str(i)+ "\\Velocity_" + file_names[j]):
-					if sample:
-						row = line.split(',')
-						for l in range(0,3):
-							data[i][k] = row[l]
-							k = k +1
-							sample = False
-					else:
-						sample = True
+	if(FLAGS.task):
+		taskLable = "Task"
+	else:
+		taskLable = ""
 
-			if FLAGS.task:
-				for line in open(dirname + "\\Data\\test" + str(i)+ "\\Task_" + file_names[j]):
-					if sample:
-						row = line.split(',')
-						for l in range(0,3):
-							data[i][k] = row[l]
-							k = k +1
-							sample = False
-					else:
-						sample = True
-		
-		#seperate the label from the name and event number stored within the label.csv file(s)
-		for line in open(dirname + "\\Data\\test" + str(i)+ "\\label.csv"):
-			temporaryLabel = line.split()
-			labels.append(str(temporaryLabel[0]))
+	refinementLable = str(FLAGS.refinement)
+	refinement_rateLable = str(FLAGS.refinement_rate)
+	folderName = FLAGS.label + "E" + epochsLable + "LR" + learning_rateLable + FLAGS.activation + FLAGS.regularization + "RR" + regularization_rateLable  +  positionLable + velocityLable + taskLable + FLAGS.arch + "Ref" + refinementLable + "RefR" + refinement_rateLable
 
-	#shuffle the data
-	shuffledData = np.empty(data.shape, dtype=data.dtype)
-	shuffledLabels = labels
-	permutation = np.random.permutation(len(labels))
-	for old_index, new_index in enumerate(permutation):
-		shuffledData[new_index] = data[old_index]
-		shuffledLabels[new_index] = labels[old_index]
+	return folderName
 
-	shuffledLabels = np.asarray(shuffledLabels)
-	return shuffledData, shuffledLabels
+def calcNumTests():
+	dirname = os.path.realpath('.')
+	filename = dirname + '\\Data\\TestNumber.txt'
+	numberTestFiles = open(filename,"r")
+	numberTests = numberTestFiles.read()
+	if FLAGS.verbose:
+		print("Number of Filed Detected: ", numberTests)
+		resultsFile.write("Number of Filed Detected: " + str(numberTests) + '\n')
 
-def partitionData(features, labels):
-	'''
-		Divides the total data up into training, validation, and test sets.
-		Division based off of percentages stored at the top of the code. Accepts arrays
-		and returns separated data along with indicator of how many files are in each division
+	return numberTests
 
-		Accepts:
-			nparray features, lables
-
-		Returns:
-			nparray trainLabels, trainFeatures, testLabels, testFeatures
-			int train, test
-	'''
-	train = math.floor(float(numberTests) * TRAIN_PERCENT)
-	test = math.ceil(float(numberTests) * TEST_PERCENT)
-
-	trainLabels = labels[:train]
-	trainFeatures = features[:train]
-	testLabels = labels[train:train+test]
-	testFeatures = features[train:train+test]
+def calcMaxEntries():
+	maxEntries = 0
+	timeScores = []
+	for i in range(0,int(numberTests)):
+		numEntries = 0
+		for line in open(dirname + "\\Data\\test" + str(i) + "\\" + FLAGS.source + "_" + file_names_super[0]):
+			numEntries = numEntries + 1
+		if numEntries > maxEntries:
+			maxEntries = numEntries	
+		timeScores.append(numEntries)
 	
 	if FLAGS.verbose:
-		#Output details on the data we are using
-		print("Number of Training Cases: ", train)
-		resultsFile.write("Number of Training Cases: " + str(train) + '\n')
-		print("Training Labels (Randomized): ", trainLabels)
-		
-		print("Number of Test Cases: ", test)
-		resultsFile.write("Number of Test Cases: " + str(test) + '\n')
-		print("Test Lables (Randomized): ", testLabels)
+		print("Maximum Number of Entries in a Single Exercise: ", maxEntries)
+		resultsFile.write("Maximum Number of Entries in Single Exercise: " + str(maxEntries) + '\n')
 
-	return trainLabels, trainFeatures, train, testLabels, testFeatures, test
+	return maxEntries, timeScores
+
+def calcBodySize():
+	'''
+		Establishes how many files will be read from, indepenent of the type of refinement
+
+		Returns:
+			int (number of joints used)
+	'''
+	if FLAGS.refinement_rate == 25:
+		return 19
+
+	elif FLAGS.refinement_rate == 50:
+		return 13
+
+	elif FLAGS.refinement_rate == 75:
+		return 6
+
+	else:
+		return 25
+
+def uniformRefinement():
+	'''
+		Applies uniform refinement. Changes the joints being used to train the data
+		between predetermined levels. As refinement_rate increases, the number of joints
+		decreases
+
+		Returns:
+			List of selected filenames
+	'''
+	if (FLAGS.refinement_rate == 0):
+		file_names = file_names_super
+		return file_names
+
+
+	elif (FLAGS.refinement_rate == 25):
+		file_names =[
+		'Head.csv',   
+		'Neck.csv',    
+		'SpineShoulder.csv', 
+		'SpineMid.csv',
+		'SpineBase.csv',    
+		'ShoulderRight.csv', 
+		'ShoulderLeft.csv',  
+		'HipRight.csv',
+		'HipLeft.csv', 
+		'ElbowRight.csv',    
+		'WristRight.csv',      
+		'ElbowLeft.csv',     
+		'WristLeft.csv',      
+		'KneeRight.csv',    
+		'AnkleRight.csv',   
+		'FootRight.csv',     
+		'KneeLeft.csv',
+		'AnkleLeft.csv',     
+		'FootLeft.csv']
+		return file_names
+
+	elif (FLAGS.refinement_rate == 50):
+		file_names =[
+		'Head.csv',          
+		'ShoulderRight.csv', 
+		'ShoulderLeft.csv',  
+		'HipRight.csv',
+		'HipLeft.csv', 
+		'ElbowRight.csv',    
+		'WristRight.csv',      
+		'ElbowLeft.csv',     
+		'WristLeft.csv',         
+		'KneeRight.csv',    
+		'AnkleRight.csv',       
+		'KneeLeft.csv',
+		'AnkleLeft.csv']
+		return file_names
+
+	elif (FLAGS.refinement_rate == 75):
+		file_names =[         
+		'ShoulderRight.csv', 
+		'ShoulderLeft.csv',      
+		'WristRight.csv',        
+		'WristLeft.csv',            
+		'AnkleRight.csv',       
+		'AnkleLeft.csv']
+		return file_names
+
+def calcSections():
+	'''
+		Determines the number of datasets being used. Values range from 0-3.
+		Used for matrix size allocation
+
+		Returns:
+			int numSections
+	'''
+	numSections = 0
+	if FLAGS.position:
+		numSections = numSections + 1
+	if FLAGS.velocity:
+		numSections = numSections + 1
+	if FLAGS.task:
+		numSections = numSections + 1	
+	if numSections == 0:
+		print("NO DATA SELECTED")
+
+	if FLAGS.verbose:
+		print("Number of sections: ", numSections)
+		resultsFile.write("Number of datasets: " + str(numSections) + '\n')
+
+	return numSections
 
 def oneHot(labels):
 	'''
@@ -410,8 +356,98 @@ def oneHot(labels):
 		else: #OOV
 			one_hot_labels.append([0,0,0,0,0,0,0,0,0,0,1])
 	one_hot_labels = np.asarray(one_hot_labels)
-
+	print("Lable Encoding Complete")
 	return one_hot_labels
+
+def findExercise (predictions):
+	'''
+	Reverses the encoding process to generate a list of strings.
+	Used for increased readability
+
+	Accepts:
+		List of Integers ranging from 0 to numClasses
+
+	Returns:
+		List of Strings of the same length
+	'''
+	one_hot_labels = []
+	for i in range(0,len(predictions)):
+		if predictions[i] == 0:
+			one_hot_labels.append("y")
+		elif predictions[i] == 1:
+			one_hot_labels.append("cat")
+		elif predictions[i] == 2:
+			one_hot_labels.append("supine")
+		elif predictions[i] == 3:
+			one_hot_labels.append("seated")
+		elif predictions[i] == 4:
+			one_hot_labels.append("sumo")
+		elif predictions[i] == 5:
+			one_hot_labels.append("mermaid")
+		elif predictions[i] == 6:
+			one_hot_labels.append("towel")
+		elif predictions[i] == 7:
+			one_hot_labels.append("trunk")
+		elif predictions[i] == 8:
+			one_hot_labels.append("wall")
+		elif predictions[i] == 9:
+			one_hot_labels.append("pretzel")
+		else: #OOV
+			one_hot_labels.append("oov")
+	one_hot_labels = np.asarray(one_hot_labels)
+	if FLAGS.verbose:
+		print("Label Conversion Complete")
+	return one_hot_labels
+
+def tailor(i, refinement_rate):
+	'''
+		Scores each bodypart to reflect the amount of activity present in the joint. This
+		information and a predetermined cutoff point (refinement_rate) is used to select
+		which joints' data to use. Specialized to the person and exercise
+
+		Accepts:
+			int i (number of file examining, follows file name format)
+			int refinement_rate
+
+		Returns:
+			List of Strings corresponding to the names of the most active joints
+	'''
+
+	jointActivity = []
+	for j in range(0,24):
+		activitySum = 0
+		for line in open(dirname + "\\Data\\test" + str(i)+ "\\Task_" + file_names_super[j]):
+			row = line.split(',')
+			for l in range(0,3):
+				activitySum = activitySum + int(row[l])
+
+		jointActivity.append((activitySum,j))
+
+	jointActivity.sort()
+
+	jointIndexActivity = [x[1] for x in jointActivity]
+
+	if refinement_rate == 0:
+		return
+	
+	elif refinement_rate == 25:
+		selectedJoints = jointIndexActivity[-20:-1]
+	
+	elif refinement_rate == 50:
+		selectedJoints = jointIndexActivity[-14:-1]
+	
+	elif refinement_rate == 75:
+		selectedJoints = jointIndexActivity[-7:-1]
+
+	new_file_names = []
+
+	for x in selectedJoints:
+		new_file_names.append(file_names_super[x])
+
+	if FLAGS.verbose:
+		print("New file names:", new_file_names)
+
+	return new_file_names
 
 def multilayer_perception(x, weights, biases):
 	'''
@@ -426,7 +462,6 @@ def multilayer_perception(x, weights, biases):
 			outlayer (Structure of the model)
 
 	'''
-
 	activation = FLAGS.activation
 	if (arch == "method1" and activation == "Sigmoid"):
 		print('Activation Layer: sigmoid \nArchitecture Used: method2 \n')
@@ -566,6 +601,7 @@ def multilayer_perception(x, weights, biases):
 		layer5 = tf.nn.sigmoid(tf.add(tf.matmul(layer4, weights['h5']), biases['b5']))
 		outLayer = tf.add(tf.matmul(layer5, weights['out']), biases['out'])
 		return outLayer
+
 def nextBatch(batchSize, trainNumber):
 	'''
 		Determines which portion of the data to feed into the net
@@ -584,8 +620,132 @@ def nextBatch(batchSize, trainNumber):
 	if batchIndex > trainNumber:
 		batchIndex = trainNumber
 	end = batchIndex
-	
 	return start, end
+
+def extractData():
+	'''
+		Moves data from the text files into flattened arrays:
+			[event] [HeadX1, HeadY1, HeadZ1, HeadX2....ArmX1, ArmY1, ArmZ1, ArmX2 etc]
+
+		Parameters: None
+		Returns:
+			nparray shuffledlabels
+			nparray shuffledData
+	'''
+	data =  np.empty((int(numberTests), int(bodySize*maxEntries*3*numSections)))
+	
+	#enables downsampling by 50%
+	sample = True
+	labels = []
+
+	for i in range(0, int(numberTests)):
+		k = 0
+
+		if FLAGS.refinement == "Tailored":
+			global file_names 
+			file_names = tailor(i, FLAGS.refinement_rate)
+
+		for j in range(0,bodySize):
+			if FLAGS.position:
+				for line in open(dirname + "\\Data\\test" + str(i)+ "\\Position_" + file_names[j]):
+					if sample:
+						row = line.split(',')
+						for l in range(0,3):
+							data[i][k] = row[l]
+							k = k +1
+							sample = False
+					else:
+						sample = True
+
+			if FLAGS.velocity:
+				for line in open(dirname + "\\Data\\test" + str(i)+ "\\Velocity_" + file_names[j]):
+					if sample:
+						row = line.split(',')
+						for l in range(0,3):
+							data[i][k] = row[l]
+							k = k +1
+							sample = False
+					else:
+						sample = True
+
+			if FLAGS.task:
+				for line in open(dirname + "\\Data\\test" + str(i)+ "\\Task_" + file_names[j]):
+					if sample:
+						row = line.split(',')
+						for l in range(0,3):
+							data[i][k] = row[l]
+							k = k +1
+							sample = False
+					else:
+						sample = True
+		
+		#seperate the label from the name and event number stored within the label.csv file(s)
+		for line in open(dirname + "\\Data\\test" + str(i)+ "\\label.csv"):
+			temporaryLabel = line.split()
+			labels.append(str(temporaryLabel[0]))
+
+	#shuffle the data
+	shuffledData = np.empty(data.shape, dtype=data.dtype)
+	shuffledLabels = labels
+	permutation = np.random.permutation(len(labels))
+	for old_index, new_index in enumerate(permutation):
+		shuffledData[new_index] = data[old_index]
+		shuffledLabels[new_index] = labels[old_index]
+
+	shuffledLabels = np.asarray(shuffledLabels)
+	return shuffledData, shuffledLabels
+
+def partitionData(features, labels):
+	'''
+		Divides the total data up into training, validation, and test sets.
+		Division based off of percentages stored at the top of the code. Accepts arrays
+		and returns separated data along with indicator of how many files are in each division
+		Accepts:
+			nparray features, lables
+		Returns:
+			nparray trainLabels, trainFeatures, testLabels, testFeatures
+			int train, test
+	'''
+	train = math.floor(float(numberTests) * TRAIN_PERCENT)
+	test = math.ceil(float(numberTests) * TEST_PERCENT)
+
+	trainLabels = labels[:train]
+	trainFeatures = features[:train]
+	testLabels = labels[train:train+test]
+	testFeatures = features[train:train+test]
+	
+	if FLAGS.verbose:
+		#Output details on the data we are using
+		print("Number of Training Cases: ", train)
+		resultsFile.write("Number of Training Cases: " + str(train) + '\n')
+		print("Training Labels (Randomized): ", trainLabels)
+		
+		print("Number of Test Cases: ", test)
+		resultsFile.write("Number of Test Cases: " + str(test) + '\n')
+		print("Test Lables (Randomized): ", testLabels)
+
+	return trainLabels, trainFeatures, train, testLabels, testFeatures, test
+
+
+dirname = os.path.realpath('.')
+
+numSections = calcSections()
+
+bodySize = calcBodySize()
+
+numberTests = calcNumTests()
+
+maxEntries, timeScores = calcMaxEntries()
+
+folderName = writeFolderLabel()
+
+
+#Open file used to store accuracy scores and any other printed data
+newDir = dirname + '\\Models&Results\\' + folderName
+if not (os.path.exists(newDir)):
+	os.makedirs(newDir)
+resultsFile = open(newDir + '\\Results.txt',"w+")
+results2File = open(dirname + '\\Models&Results\\totalResults.txt',"a")
 
 def main(argv = None):
 	'''
@@ -760,6 +920,7 @@ def main(argv = None):
 		resultsFile.write(" \n Training Accuracy:" + str(accuracy2.eval({X: trainData, Y: trainLabels})) + '\n')	
 		results2File.write("Training Accuracy:" + str(accuracy2.eval({X: trainData, Y: trainLabels})) + '\n')	
 		results2File.write("Testing Accuracy:" + str(accuracy2.eval({X: testData, Y: testLabels})) + '\n')	
+
 
 
 #needed in order to call main

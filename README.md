@@ -86,7 +86,7 @@ Flags:
 		Determines the method of refinement
 			DEFAULT: None
 			OPTIONS: Uniform, Tailored, None
-	regularization rate:
+	refinement rate:
 		Determines the number of joints to check
 		0 = 25 joints
 		25 = 19 joints (minus hands/feet)
