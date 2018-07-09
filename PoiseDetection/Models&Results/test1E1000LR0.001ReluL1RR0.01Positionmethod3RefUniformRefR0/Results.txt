@@ -1,2 +1,0 @@
-Number of Filed Detected: 51
-Maximum Number of Entries in Single Exercise: 849
