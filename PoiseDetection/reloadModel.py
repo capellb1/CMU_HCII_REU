@@ -649,8 +649,59 @@ def main(argv = None):
 		else: 		
 			predictions = tf.argmax(pred,1).eval()
 			predictions = findExercise(predictions) 
-			print("My preditions", predictions)
+			correctPredictions = tf.argmax(labels,1).eval()
+			correctPredictions = findExercise(correctPredictions) 
+
+			start = 0
+			#this needs to be declared for each exercise
+			dataRecord =np.zeros((11,maxEntries))
+			#range from 0-10
 		
+			for i in range (0, len(timeScores)):
+				graphData = []
+				graphDataX = []
+				for j in range (0, timeScores[i]):
+					if predictions[start+j] == correctPredictions[start]:
+						graphData.append(1)
+						if (correctPredictions[start] == "seated"):
+							dataRecord[3][j] = dataRecord[3][j] + 1
+						elif (correctPredictions[start] == "towel"):
+							dataRecord[6][j] = dataRecord[6][j] + 1
+						elif (correctPredictions[start] == "oov"):
+							dataRecord[10][j] = dataRecord[10][j] + 1
+
+					else:
+						graphData.append(0)
+					
+					graphDataX.append(j)
+				
+				print(timeScores[i])
+				print("My preditions", predictions[start:start + timeScores[i]])
+				print ("Correct predictions", correctPredictions[start])
+				
+				print(graphData)
+				width = .99
+				plt.bar(graphDataX, graphData, width, facecolor='blue')
+				plt.savefig(newDir +"\\test" + str(i) + str(correctPredictions[start]) + ".png")
+				
+
+				start = start + timeScores[i]
+			'''
+			totalDataX = []
+			for i in range (0, maxEntries):
+				totalDataX.append(i)
+			'''
+			totalDataX = range(0, maxEntries)
+			
+			width = .99
+			plt.bar(totalDataX, dataRecord[3][:], width, facecolor='blue')
+			plt.savefig(newDir +"\\seatedTotalData.png")
+			plt.bar(totalDataX, dataRecord[6][:], width, facecolor='blue')
+			plt.savefig(newDir +"\\towelTotalData.png")
+			plt.bar(totalDataX, dataRecord[10][:], width, facecolor='blue')
+			plt.savefig(newDir +"\\oovTotalData.png")
+
+
 
 
 	

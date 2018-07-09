@@ -628,7 +628,7 @@ def main(argv = None):
 		else: 		
 			predictions = tf.argmax(pred,1).eval()
 			predictions = findExercise(predictions) 
-			print("My preditions", predictions)
+			print("My preditions: ", predictions)
 		
 
 #needed in order to call main
