@@ -84,6 +84,7 @@ tf.app.flags.DEFINE_boolean('verbose', False, 'Determines how much information i
 tf.app.flags.DEFINE_string('refinement', "None", 'Determines which refinement process to use')
 tf.app.flags.DEFINE_integer('refinement_rate',0,'Determines the number of joints to include in the data')
 tf.app.flags.DEFINE_boolean('task', False, 'Determines if the task data is included when training')
+tf.app.flags.DEFINE_boolean('save', False, 'Determines wether the model is saved')
 
 FLAGS = tf.app.flags.FLAGS
 
@@ -653,11 +654,13 @@ def main(argv = None):
 			correctPredictions = findExercise(correctPredictions) 
 
 			start = 0
-			#this needs to be declared for each exercise
+			#avgFrames = average(timeScores)
+			print("len Timscores: ", len(timeScores))
+			
 			dataRecord =np.zeros((11,maxEntries))
 			#range from 0-10
 		
-			for i in range (0, len(timeScores)):
+			for i in range (0, int(numberTests)):
 				graphData = []
 				graphDataX = []
 				for j in range (0, timeScores[i]):
@@ -671,37 +674,53 @@ def main(argv = None):
 							dataRecord[10][j] = dataRecord[10][j] + 1
 
 					else:
-						graphData.append(0)
+						graphData.append(0.2)
 					
 					graphDataX.append(j)
 				
-				print(timeScores[i])
-				print("My preditions", predictions[start:start + timeScores[i]])
-				print ("Correct predictions", correctPredictions[start])
+				if FLAGS.verbose:
+					print(timeScores[i])
+					print("My preditions", predictions[start:start + timeScores[i]])
+					print ("Correct predictions", correctPredictions[start])
+					print(graphData)
 				
-				print(graphData)
 				width = .99
 				plt.bar(graphDataX, graphData, width, facecolor='blue')
+				plt.xlabel("Frames")
+				plt.ylabel("Accuracy (Bool)")
+				plt.title("Test" + str(i) +": " + str(correctPredictions[start]))
+				plt.grid(True)
 				plt.savefig(newDir +"\\test" + str(i) + str(correctPredictions[start]) + ".png")
 				
 
 				start = start + timeScores[i]
-			'''
-			totalDataX = []
-			for i in range (0, maxEntries):
-				totalDataX.append(i)
-			'''
+		
 			totalDataX = range(0, maxEntries)
 			
 			width = .99
+			
 			plt.bar(totalDataX, dataRecord[3][:], width, facecolor='blue')
+			plt.xlabel("Frames")
+			plt.ylabel("Frequency of Hits")
+			plt.title("Seated")
+			plt.grid(True)
 			plt.savefig(newDir +"\\seatedTotalData.png")
+
 			plt.bar(totalDataX, dataRecord[6][:], width, facecolor='blue')
+			plt.xlabel("Frames")
+			plt.ylabel("Frequency of Hits")
+			plt.title("Towel")
+			plt.grid(True)
 			plt.savefig(newDir +"\\towelTotalData.png")
+
 			plt.bar(totalDataX, dataRecord[10][:], width, facecolor='blue')
+			plt.xlabel("Frames")
+			plt.ylabel("Frequency of Hits")
+			plt.title("OOV")
+			plt.grid(True)
 			plt.savefig(newDir +"\\oovTotalData.png")
 
-
+		
 
 
 	

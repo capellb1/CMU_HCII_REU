@@ -82,6 +82,7 @@ tf.app.flags.DEFINE_float('regularization_rate',0.01,'Strength of regularization
 tf.app.flags.DEFINE_boolean('verbose', False, 'Determines how much information is printed into the results file')
 tf.app.flags.DEFINE_string('refinement', "None", 'Determines which refinement process to use')
 tf.app.flags.DEFINE_integer('refinement_rate',0,'Determines the number of joints to include in the data')
+tf.app.flags.DEFINE_boolean('save', False, 'Determines wether the model is saved')
 
 FLAGS = tf.app.flags.FLAGS
 
@@ -196,6 +197,7 @@ refinementLable = str(FLAGS.refinement)
 refinement_rateLable = str(FLAGS.refinement_rate)
 folderName = FLAGS.label + "E" + epochsLable + "LR" + learning_rateLable + FLAGS.activation + FLAGS.regularization + "RR" + regularization_rateLable  +  positionLable + velocityLable + taskLable + FLAGS.arch + "Ref" + refinementLable + "RefR" + refinement_rateLable
 
+
 #establish the directory used to store the saved model and results
 newDir = dirname + '\\Models&Results\\' + folderName
 if not (os.path.exists(newDir)):
@@ -203,6 +205,7 @@ if not (os.path.exists(newDir)):
 
 #Open file used to store accuracy scores and any other printed data
 resultsFile = open(newDir + '\\Results.txt',"w+")
+results2File = open(dirname + '\\Models&Results\\ResultsFinal.txt', "a")
 
 #Read the number of files(events) that the data contains from the TestNumber.txt file
 numberTestFiles = open(filename,"r")
@@ -592,6 +595,8 @@ def main(argv = None):
 	epochsTrained = FLAGS.epochs
 	batchSize = FLAGS.batch_size
 
+	print(bodySize)
+
 	data, labels = extractData()
 	labels = oneHot(labels)
 	trainLabels, trainData, trainNumber, testLabels, testData, testNumber = partitionData(data, labels)
@@ -700,7 +705,8 @@ def main(argv = None):
 	#initialize arrays for losses
 	trainingLoss = []
 	# 'Saver' op to save and restore all the variables
-	saver = tf.train.Saver()
+	if FLAGS.save:
+		saver = tf.train.Saver()
 	
 	#creating and running session
 	with tf.Session() as sess:
@@ -734,7 +740,8 @@ def main(argv = None):
 				accuracy = tf.reduce_mean(tf.cast(correctPrediction, "float"))
 				
 		modelPath =  newDir + "\\ExercisePredicter"
-		saver.save(sess, modelPath)
+		if FLAGS.save:
+			saver.save(sess, modelPath)
 		print("Model Saved")
 		print("Optimization Finished")
 
@@ -747,9 +754,11 @@ def main(argv = None):
 		accuracy2 = tf.reduce_mean(tf.cast(correctPrediction2, "float"))
 
 		print("Final Training Accuracy:", "{0:.2%}".format(accuracy2.eval({X: trainData, Y: trainLabels})))
-		resultsFile.write("Training Accuracy:" + str(accuracy2.eval({X: trainData, Y: trainLabels})) + '\n')	
-		print("Final Testing Accuracy:", "{0:.2%}".format(accuracy2.eval({X: testData, Y: testLabels})))
-		resultsFile.write("Testing Accuracy:" + str(accuracy2.eval({X: testData, Y: testLabels})) + '\n')	
+		print("Final Testing Accuracy:", "{0:.2%}".format(accuracy2.eval({X: testData, Y: testLabels})))	
+		resultsFile.write(" \n Training Accuracy:" + str(accuracy2.eval({X: trainData, Y: trainLabels})) + '\n')	
+		results2File.write("Training Accuracy:" + str(accuracy2.eval({X: trainData, Y: trainLabels})) + '\n')	
+		results2File.write("Testing Accuracy:" + str(accuracy2.eval({X: testData, Y: testLabels})) + '\n')	
+
 
 #needed in order to call main
 if __name__ == '__main__':
