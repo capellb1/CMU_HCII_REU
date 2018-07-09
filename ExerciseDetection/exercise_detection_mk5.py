@@ -223,7 +223,9 @@ if FLAGS.velocity:
 	numSections = numSections + 1	
 if FLAGS.task:
 	numSections = numSections + 1	
-
+if numSections == 0:
+	print("NO DATA SELECTED")
+	
 if FLAGS.verbose:
 	print("Number of datasets: ", numSections)
 	resultsFile.write("Number of datasets: " + str(numSections) + '\n')

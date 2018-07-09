@@ -215,6 +215,9 @@ if FLAGS.velocity:
 	numSections = numSections + 1
 if FLAGS.task:
 	numSections = numSections + 1		
+if numSections == 0:
+	print("NO DATA SELECTED")
+	
 #GLOBAL
 #network parameters:
 arch = FLAGS.arch

@@ -99,7 +99,8 @@ if FLAGS.velocity:
 	numSections = numSections + 1
 if FLAGS.task:
 	numSections = numSections + 1	
-
+if numSections == 0:
+	print("NO DATA SELECTED")
 
 #Predetermined selection of Bodyparts (CHANGE FOR REFINEMENT)
 if (FLAGS.refinement == "None") or (FLAGS.refinement_rate == 0):
@@ -391,7 +392,8 @@ def findExercise (predictions):
 		else: #OOV
 			one_hot_labels.append("oov")
 	one_hot_labels = np.asarray(one_hot_labels)
-	print("Labl Conversion Complete")
+	if FLAGS.verbose:
+		print("Label Conversion Complete")
 	return one_hot_labels
 
 #creates the model
@@ -574,8 +576,6 @@ def main(argv = None):
 		'b2' : tf.Variable(tf.random_normal([hiddenLayer2], dtype=data.dtype, name = 'b2')),
 		'out' : tf.Variable(tf.random_normal([numberClasses], dtype=data.dtype, name = 'outb'))
 		}
-
-	
 	elif (arch == "method2"):
 		weights = {
 		'h1' : tf.Variable(tf.random_normal([inputLayer, hiddenLayer1], dtype=data.dtype, name='h1')),
@@ -654,10 +654,9 @@ def main(argv = None):
 			correctPredictions = findExercise(correctPredictions) 
 
 			start = 0
-			#avgFrames = average(timeScores)
-			print("len Timscores: ", len(timeScores))
-			
-			dataRecord =np.zeros((11,maxEntries))
+			#avgFrames = average(timeScores)	
+			dataRecord = np.zeros((11,maxEntries))
+			timeRecord = [[0],[0],[0],[0],[0],[0],[0],[0],[0],[0],[0]]
 			#range from 0-10
 		
 			for i in range (0, int(numberTests)):
@@ -666,61 +665,132 @@ def main(argv = None):
 				for j in range (0, timeScores[i]):
 					if predictions[start+j] == correctPredictions[start]:
 						graphData.append(1)
-						if (correctPredictions[start] == "seated"):
+						
+						if (correctPredictions[start] == "y"):
+							dataRecord[0][j] = dataRecord[0][j] + 1
+						elif (correctPredictions[start] == "cat"):
+							dataRecord[1][j] = dataRecord[1][j] + 1
+						elif (correctPredictions[start] == "supine"):
+							dataRecord[2][j] = dataRecord[2][j] + 1
+						elif (correctPredictions[start] == "seated"):
 							dataRecord[3][j] = dataRecord[3][j] + 1
+						elif (correctPredictions[start] == "sumo"):
+							dataRecord[4][j] = dataRecord[4][j] + 1
+						elif (correctPredictions[start] == "mermaid"):
+							dataRecord[5][j] = dataRecord[5][j] + 1
 						elif (correctPredictions[start] == "towel"):
 							dataRecord[6][j] = dataRecord[6][j] + 1
+						elif (correctPredictions[start] == "trunk"):
+							dataRecord[7][j] = dataRecord[7][j] + 1
+						elif (correctPredictions[start] == "wall"):
+							dataRecord[8][j] = dataRecord[8][j] + 1
+						elif (correctPredictions[start] == "pretzel"):
+							dataRecord[9][j] = dataRecord[9][j] + 1
 						elif (correctPredictions[start] == "oov"):
 							dataRecord[10][j] = dataRecord[10][j] + 1
 
 					else:
-						graphData.append(0.2)
+						graphData.append(0)
 					
 					graphDataX.append(j)
+
+				if (correctPredictions[start] == "seated"):
+					if (correctPredictions[start] == "y"):
+						timeRecord[0].append(graphDataX[-1])
+					elif (correctPredictions[start] == "cat"):
+						timeRecord[1].append(graphDataX[-1])
+					elif (correctPredictions[start] == "supine"):
+						timeRecord[2].append(graphDataX[-1])
+					elif (correctPredictions[start] == "seated"):
+						timeRecord[3].append(graphDataX[-1])
+					elif (correctPredictions[start] == "sumo"):
+						timeRecord[4].append(graphDataX[-1])
+					elif (correctPredictions[start] == "mermaid"):
+						timeRecord[5].append(graphDataX[-1])
+					elif (correctPredictions[start] == "towel"):
+						timeRecord[6].append(graphDataX[-1])
+					elif (correctPredictions[start] == "trunk"):
+						timeRecord[7].append(graphDataX[-1])
+					elif (correctPredictions[start] == "wall"):
+						timeRecord[8].append(graphDataX[-1])
+					elif (correctPredictions[start] == "pretzel"):
+						timeRecord[9].append(graphDataX[-1])
+					elif (correctPredictions[start] == "oov"):
+						timeRecord[10].append(graphDataX[-1])
 				
 				if FLAGS.verbose:
 					print(timeScores[i])
 					print("My preditions", predictions[start:start + timeScores[i]])
 					print ("Correct predictions", correctPredictions[start])
+					print("Length of single test time scores: ", graphDataX[-1])
 					print(graphData)
 				
 				width = .99
 				plt.bar(graphDataX, graphData, width, facecolor='blue')
 				plt.xlabel("Frames")
+				plt.annotate(str(graphDataX[-1]), xy = (graphDataX[-1], 1))
 				plt.ylabel("Accuracy (Bool)")
 				plt.title("Test" + str(i) +": " + str(correctPredictions[start]))
 				plt.grid(True)
 				plt.savefig(newDir +"\\test" + str(i) + str(correctPredictions[start]) + ".png")
-				
-
+				plt.close()
 				start = start + timeScores[i]
 		
 			totalDataX = range(0, maxEntries)
 			
+			averageTs = []
+			for i in range(0,11):
+				current_avg = sum(timeRecord[i])/float(len(timeRecord[i]))
+				averageTs.append(int(current_avg))
+
 			width = .99
 			
+			#y
+			
+			#cat
+
+			#supine
+
+			#Seated
 			plt.bar(totalDataX, dataRecord[3][:], width, facecolor='blue')
 			plt.xlabel("Frames")
 			plt.ylabel("Frequency of Hits")
 			plt.title("Seated")
+			annotation = "Average Timespan: " + str(averageTs[3])
+			plt.annotate(annotation, xy = (averageTs[3], 5))
 			plt.grid(True)
 			plt.savefig(newDir +"\\seatedTotalData.png")
+			plt.close()
+			#sumo
 
+			#mermaid
+
+			#towel
 			plt.bar(totalDataX, dataRecord[6][:], width, facecolor='blue')
 			plt.xlabel("Frames")
 			plt.ylabel("Frequency of Hits")
 			plt.title("Towel")
+			annotation = "Average Timespan: " + str(averageTs[6])
+			plt.annotate(annotation, xy = (averageTs[6], 5))
 			plt.grid(True)
 			plt.savefig(newDir +"\\towelTotalData.png")
+			plt.close()
+			#trunk
 
+			#wall
+
+			#Pretzel
+
+			#oov
 			plt.bar(totalDataX, dataRecord[10][:], width, facecolor='blue')
 			plt.xlabel("Frames")
 			plt.ylabel("Frequency of Hits")
 			plt.title("OOV")
+			annotation = "Average Timespan: " + str(averageTs[10])
+			plt.annotate(annotation, xy = (averageTs[10], 5))
 			plt.grid(True)
 			plt.savefig(newDir +"\\oovTotalData.png")
-
-		
+			plt.close()
 
 
 	
