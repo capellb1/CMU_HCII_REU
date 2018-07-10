@@ -674,14 +674,6 @@ elif FLAGS.refinement == "None":
 
 dirname = os.path.realpath('.')
 
-numSections = calcSections()
-
-bodySize = calcBodySize()
-
-numberTests = calcNumTests()
-
-maxEntries, timeScores = calcMaxEntries()
-
 folderName = writeFolderLabel()
 
 #Open file used to store accuracy scores and any other printed data
@@ -689,6 +681,14 @@ newDir = dirname + '\\Models&Results\\' + folderName
 if not (os.path.exists(newDir)):
 	os.makedirs(newDir)
 resultsFile = open(newDir + '\\Results.txt',"w+")
+
+numSections = calcSections()
+
+bodySize = calcBodySize()
+
+numberTests = calcNumTests()
+
+maxEntries, timeScores = calcMaxEntries()
 
 def main(argv = None):
 	'''

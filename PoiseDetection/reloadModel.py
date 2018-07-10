@@ -945,8 +945,16 @@ if FLAGS.refinement == "Uniform":
 
 elif FLAGS.refinement == "None":
 	file_names = file_names_super
-	
+
 dirname = os.path.realpath('.')
+
+folderName = writeFolderLabel()
+
+#Open file used to store accuracy scores and any other printed data
+newDir = dirname + '\\Models&Results\\' + folderName
+if not (os.path.exists(newDir)):
+	os.makedirs(newDir)
+resultsFile = open(newDir + '\\Results.txt',"w+")
 
 numSections = calcSections()
 
@@ -955,17 +963,6 @@ bodySize = calcBodySize()
 numberTests = calcNumTests()
 
 maxEntries, timeScores = calcMaxEntries()
-
-folderName = writeFolderLabel()
-
-
-
-#Open file used to store accuracy scores and any other printed data
-newDir = dirname + '\\Models&Results\\' + folderName
-if not (os.path.exists(newDir)):
-	os.makedirs(newDir)
-resultsFile = open(newDir + '\\Results.txt',"w+")
-
 
 def main(argv = None):
 	'''
