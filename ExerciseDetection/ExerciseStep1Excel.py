@@ -1,155 +1,107 @@
 import openpyxl
 import os
+import math
 
 dirname = os.path.realpath('.')
-filename = dirname + '\\Summary of Good Tests.xlsx'
-data = dirname + '\\Models&Results\\ResultsFinal.txt'
+filename = dirname + '\\Summary of Exercises Final.xlsx'
+data = dirname + '\\Models&Results\\totalResults.txt'
 myworkbook = openpyxl.load_workbook(filename)
 
-worksheetP = myworkbook['Best Exercise Position']
-worksheetV = myworkbook['Best Exercise Velocity']
+worksheetP = myworkbook['Step 1']
 
 f=open(data)
 lines=f.readlines()
 
 dataA = []
 for line in lines:
-	print (line)
 	newLine = line.split(':')
-	print(newLine)
 	newLine = newLine[1].split('\n')
 	dataA.append(float((newLine[0])))
 
-print (dataA)
-print (len(dataA))
+for i in range (0, len(dataA)):
+	col = math.floor(i / 72)
+	row = i%72
+	if col == 0:
+		if (row < 18):
+			worksheetP ['D' + str(5+row)] = dataA[i]
+		elif (row >= 18 and row < 36):
+			worksheetP ['D' + str(10+row)] = dataA[i]
+		elif (row >= 36 and row < 54):
+			worksheetP ['D' + str(15+row)] = dataA[i]
+		else:
+			worksheetP ['D' + str(20+row)] = dataA[i]
+	elif col == 1:
+		if (row < 18):
+			worksheetP ['E' + str(5+row)] = dataA[i]
+		elif (row >= 18 and row < 36):
+			worksheetP ['E' + str(10+row)] = dataA[i]
+		elif (row >= 36 and row < 54):
+			worksheetP ['E' + str(15+row)] = dataA[i]
+		else:
+			worksheetP ['E' + str(20+row)] = dataA[i]
 
+	elif col == 2:
+		if (row < 18):
+			worksheetP ['F' + str(5+row)] = dataA[i]
+		elif (row >= 18 and row < 36):
+			worksheetP ['F' + str(10+row)] = dataA[i]
+		elif (row >= 36 and row < 54):
+			worksheetP ['F' + str(15+row)] = dataA[i]
+		else:
+			worksheetP ['F' + str(20+row)] = dataA[i]
+	elif col == 3:
+		if (row < 18):
+			worksheetP ['H' + str(5+row)] = dataA[i]
+		elif (row >= 18 and row < 36):
+			worksheetP ['H' + str(10+row)] = dataA[i]
+		elif (row >= 36 and row < 54):
+			worksheetP ['H' + str(15+row)] = dataA[i]
+		else:
+			worksheetP ['H' + str(20+row)] = dataA[i]
 
-worksheetP['D4'] = dataA[0]
-worksheetP['D5'] = dataA[1]
-worksheetP['D6'] = dataA[2]
-worksheetP['D7'] = dataA[3]
-worksheetP['D8'] = dataA[4]
-worksheetP['D9'] = dataA[5]
-worksheetP['E4'] = dataA[6]
-worksheetP['E5'] = dataA[7]
-worksheetP['E6'] = dataA[8]
-worksheetP['E7'] = dataA[9]
-worksheetP['E8'] = dataA[10]
-worksheetP['E9'] = dataA[11]
-worksheetP['F4'] = dataA[12]
-worksheetP['F5'] = dataA[13]
-worksheetP['F6'] = dataA[14]
-worksheetP['F7'] = dataA[15]
-worksheetP['F8'] = dataA[16]
-worksheetP['F9'] = dataA[17]
-worksheetP['H4'] = dataA[18]
-worksheetP['H5'] = dataA[19]
-worksheetP['H6'] = dataA[20]
-worksheetP['H7'] = dataA[21]
-worksheetP['H8'] = dataA[22]
-worksheetP['H9'] = dataA[23]
-worksheetP['I4'] = dataA[24]
-worksheetP['I5'] = dataA[25]
-worksheetP['I6'] = dataA[26]
-worksheetP['I7'] = dataA[27]
-worksheetP['I8'] = dataA[28]
-worksheetP['I9'] = dataA[29]
-worksheetP['J4'] = dataA[30]
-worksheetP['J5'] = dataA[31]
-worksheetP['J6'] = dataA[32]
-worksheetP['J7'] = dataA[33]
-worksheetP['J8'] = dataA[34]
-worksheetP['J9'] = dataA[35]
-worksheetP['L4'] = dataA[36]
-worksheetP['L5'] = dataA[37]
-worksheetP['L6'] = dataA[38]
-worksheetP['L7'] = dataA[39]
-worksheetP['L8'] = dataA[40]
-worksheetP['L9'] = dataA[41]
-worksheetP['M4'] = dataA[42]
-worksheetP['M5'] = dataA[43]
-worksheetP['M6'] = dataA[44]
-worksheetP['M7'] = dataA[45]
-worksheetP['M8'] = dataA[46]
-worksheetP['M9'] = dataA[47]
-worksheetP['N4'] = dataA[48]
-worksheetP['N5'] = dataA[49]
-worksheetP['N6'] = dataA[50]
-worksheetP['N7'] = dataA[51]
-worksheetP['N8'] = dataA[52]
-worksheetP['N9'] = dataA[53]
-worksheetP['L14'] = dataA[54]
-worksheetP['L15'] = dataA[55]
-worksheetP['L16'] = dataA[56]
-worksheetP['L17'] = dataA[57]
-worksheetP['L18'] = dataA[58]
-worksheetP['L19'] = dataA[59]
-worksheetP['M14'] = dataA[60]
-worksheetP['M15'] = dataA[61]
-worksheetP['M16'] = dataA[62]
-worksheetP['M17'] = dataA[63]
-worksheetP['M18'] = dataA[64]
-worksheetP['M19'] = dataA[65]
-worksheetP['N14'] = dataA[66]
-worksheetP['N15'] = dataA[67]
-worksheetP['N16'] = dataA[68]
-worksheetP['N17'] = dataA[69]
-worksheetP['N18'] = dataA[70]
-worksheetP['N19'] = dataA[71]
-
-worksheetV['D4'] = dataA[72]
-worksheetV['D5'] = dataA[73]
-worksheetV['D6'] = dataA[74]
-worksheetV['D7'] = dataA[75]
-worksheetV['D8'] = dataA[76]
-worksheetV['D9'] = dataA[77]
-worksheetV['E4'] = dataA[78]
-worksheetV['E5'] = dataA[79]
-worksheetV['E6'] = dataA[80]
-worksheetV['E7'] = dataA[81]
-worksheetV['E8'] = dataA[82]
-worksheetV['E9'] = dataA[83]
-worksheetV['F4'] = dataA[84]
-worksheetV['F5'] = dataA[85]
-worksheetV['F6'] = dataA[86]
-worksheetV['F7'] = dataA[87]
-worksheetV['F8'] = dataA[88]
-worksheetV['F9'] = dataA[89]
-worksheetV['H14'] = dataA[90]
-worksheetV['H15'] = dataA[91]
-worksheetV['H16'] = dataA[92]
-worksheetV['H17'] = dataA[93]
-worksheetV['H18'] = dataA[94]
-worksheetV['H19'] = dataA[95]
-worksheetV['I14'] = dataA[96]
-worksheetV['I15'] = dataA[97]
-worksheetV['I16'] = dataA[98]
-worksheetV['I17'] = dataA[99]
-worksheetV['I18'] = dataA[100]
-worksheetV['I19'] = dataA[101]
-worksheetV['J14'] = dataA[102]
-worksheetV['J15'] = dataA[103]
-worksheetV['J16'] = dataA[104]
-worksheetV['J17'] = dataA[105]
-worksheetV['J18'] = dataA[106]
-worksheetV['J19'] = dataA[107]
-worksheetV['L14'] = dataA[108]
-worksheetV['L15'] = dataA[109]
-worksheetV['L16'] = dataA[110]
-worksheetV['L17'] = dataA[111]
-worksheetV['L18'] = dataA[112]
-worksheetV['L19'] = dataA[113]
-worksheetV['M14'] = dataA[114]
-worksheetV['M15'] = dataA[115]
-worksheetV['M16'] = dataA[116]
-worksheetV['M17'] = dataA[117]
-worksheetV['M18'] = dataA[118]
-worksheetV['M19'] = dataA[119]
-worksheetV['N14'] = dataA[120]
-worksheetV['N15'] = dataA[121]
-worksheetV['N16'] = dataA[122]
-worksheetV['N17'] = dataA[123]
-worksheetV['N18'] = dataA[124]
-worksheetV['N19'] = dataA[125]
-
+	elif col == 4:
+		if (row < 18):
+			worksheetP ['I' + str(5+row)] = dataA[i]
+		elif (row >= 18 and row < 36):
+			worksheetP ['I' + str(10+row)] = dataA[i]
+		elif (row >= 36 and row < 54):
+			worksheetP ['I' + str(15+row)] = dataA[i]
+		else:
+			worksheetP ['I' + str(20+row)] = dataA[i]
+	elif col == 5:
+		if (row < 18):
+			worksheetP ['J' + str(5+row)] = dataA[i]
+		elif (row >= 18 and row < 36):
+			worksheetP ['J' + str(10+row)] = dataA[i]
+		elif (row >= 36 and row < 54):
+			worksheetP ['J' + str(15+row)] = dataA[i]
+		else:
+			worksheetP ['J' + str(20+row)] = dataA[i]
+	elif col == 6:
+		if (row < 18):
+			worksheetP ['L' + str(5+row)] = dataA[i]
+		elif (row >= 18 and row < 36):
+			worksheetP ['L' + str(10+row)] = dataA[i]
+		elif (row >= 36 and row < 54):
+			worksheetP ['L' + str(15+row)] = dataA[i]
+		else:
+			worksheetP ['L' + str(20+row)] = dataA[i]
+	elif col == 8:
+		if (row < 18):
+			worksheetP ['M' + str(5+row)] = dataA[i]
+		elif (row >= 18 and row < 36):
+			worksheetP ['M' + str(10+row)] = dataA[i]
+		elif (row >= 36 and row < 54):
+			worksheetP ['M' + str(15+row)] = dataA[i]
+		else:
+			worksheetP ['M' + str(20+row)] = dataA[i]
+	elif col == 9:
+		if (row < 18):
+			worksheetP ['N' + str(5+row)] = dataA[i]
+		elif (row >= 18 and row < 36):
+			worksheetP ['N' + str(10+row)] = dataA[i]
+		elif (row >= 36 and row < 54):
+			worksheetP ['N' + str(15+row)] = dataA[i]
+		else:
+			worksheetP ['N' + str(20+row)] = dataA[i]
 myworkbook.save(filename)
