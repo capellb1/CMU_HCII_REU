@@ -86,13 +86,9 @@ tf.app.flags.DEFINE_boolean('verbose', False, 'Determines how much information i
 tf.app.flags.DEFINE_string('refinement', "None", 'Determines which refinement process to use')
 tf.app.flags.DEFINE_integer('refinement_rate',0,'Determines the number of joints to include in the data')
 tf.app.flags.DEFINE_boolean('task', False, 'Determines if the task data is included when training')
-tf.app.flags.DEFINE_boolean('save', False, 'Determines wether the model is saved')
+tf.app.flags.DEFINE_boolean('save', False, 'Determines whether the model is saved')
 
 FLAGS = tf.app.flags.FLAGS
-
-TRAIN_PERCENT = 0.7
-VALIDATION_PERCENT = 0.2
-TEST_PERCENT = 0.1
 
 batchIndex = 0
 
@@ -147,12 +143,6 @@ file_names_super =[
 	'KneeLeft.csv',
 	'AnkleLeft.csv',     
 	'FootLeft.csv']
-
-if FLAGS.refinement == "Uniform":
-	file_names = uniformRefinement()
-
-elif FLAGS.refinement == "None":
-	file_names = file_names_super
 
 def writeFolderLabel():
 	'''
@@ -464,35 +454,35 @@ def multilayer_perception(x, weights, biases):
 	'''
 	activation = FLAGS.activation
 	if (arch == "method1" and activation == "Sigmoid"):
-		print('Activation Layer: sigmoid \nArchitecture Used: method2 \n')
+		print('Activation Layer: sigmoid \nArchitecture Used: method1 \n')
 		#Layers
 		layer1 = tf.nn.sigmoid(tf.add(tf.matmul(x, weights['h1']), biases['b1']))
 		layer2 = tf.nn.sigmoid(tf.add(tf.matmul(layer1, weights['h2']), biases['b2']))
 		outLayer = tf.add(tf.matmul(layer2, weights['out']), biases['out'])
 		return outLayer
 	elif (arch == "method1" and activation == "Tanh"):
-		print('Activation Layer: tanh \nArchitecture Used: method2 \n')
+		print('Activation Layer: tanh \nArchitecture Used: method1 \n')
 		#Layers
 		layer1 = tf.nn.tanh(tf.add(tf.matmul(x, weights['h1']), biases['b1']))
 		layer2 = tf.nn.tanh(tf.add(tf.matmul(layer1, weights['h2']), biases['b2']))
 		outLayer = tf.add(tf.matmul(layer2, weights['out']), biases['out'])
 		return outLayer
 	elif (arch == "method1" and activation == "Relu"):
-		print('Activation Layer: relu \nArchitecture Used: method2 \n')
+		print('Activation Layer: relu \nArchitecture Used: method1 \n')
 		#Layers
 		layer1 = tf.nn.relu(tf.add(tf.matmul(x, weights['h1']), biases['b1']))
 		layer2 = tf.nn.relu(tf.add(tf.matmul(layer1, weights['h2']), biases['b2']))
 		outLayer = tf.add(tf.matmul(layer2, weights['out']), biases['out'])
 		return outLayer
 	elif (arch == "method1" and activation == "Default"):
-		print('Activation Layer: none \nArchitecture Used: method2 \n')
+		print('Activation Layer: none \nArchitecture Used: method1 \n')
 		#Layers
 		layer1 = tf.add(tf.matmul(x, weights['h1']), biases['b1'])
 		layer2 = tf.add(tf.matmul(layer1, weights['h2']), biases['b2'])
 		outLayer = tf.add(tf.matmul(layer2, weights['out']), biases['out'])
 		return outLayer
 	elif (arch == "method2" and activation == "Sigmoid"):
-		print('Activation Layer: sigmoid \nArchitecture Used: method1 \n')
+		print('Activation Layer: sigmoid \nArchitecture Used: method2 \n')
 		#Layers
 		layer1 = tf.nn.sigmoid(tf.add(tf.matmul(x, weights['h1']), biases['b1']))
 		layer2 = tf.nn.sigmoid(tf.add(tf.matmul(layer1, weights['h2']), biases['b2']))
@@ -500,7 +490,7 @@ def multilayer_perception(x, weights, biases):
 		outLayer = tf.add(tf.matmul(layer3, weights['out']), biases['out'])
 		return outLayer
 	elif (arch == "method2" and activation == "Tanh"):
-		print('Activation Layer: tanh \nArchitecture Used: method1 \n ')
+		print('Activation Layer: tanh \nArchitecture Used: method2 \n ')
 		#Layers
 		layer1 = tf.nn.tanh(tf.add(tf.matmul(x, weights['h1']), biases['b1']))
 		layer2 = tf.nn.tanh(tf.add(tf.matmul(layer1, weights['h2']), biases['b2']))
@@ -508,7 +498,7 @@ def multilayer_perception(x, weights, biases):
 		outLayer = tf.add(tf.matmul(layer3, weights['out']), biases['out'])
 		return outLayer
 	elif (arch == "method2" and activation == "Relu"):
-		print('Activation Layer: relu \nArchitecture Used: method1 \n ')
+		print('Activation Layer: relu \nArchitecture Used: method2 \n ')
 		#Layers
 		layer1 = tf.nn.relu(tf.add(tf.matmul(x, weights['h1']), biases['b1']))
 		layer2 = tf.nn.relu(tf.add(tf.matmul(layer1, weights['h2']), biases['b2']))
@@ -516,7 +506,7 @@ def multilayer_perception(x, weights, biases):
 		outLayer = tf.add(tf.matmul(layer3, weights['out']), biases['out'])
 		return outLayer
 	elif (arch == "method2" and activation == "Default"):
-		print('Activation Layer: none \nArchitecture Used: method1 \n ')
+		print('Activation Layer: none \nArchitecture Used: method2 \n ')
 		#Layers
 		layer1 = tf.add(tf.matmul(x, weights['h1']), biases['b1'])
 		layer2 = tf.add(tf.matmul(layer1, weights['h2']), biases['b2'])
@@ -562,7 +552,7 @@ def multilayer_perception(x, weights, biases):
 		return outLayer
 	
 	elif (arch == "method4" and activation == "Sigmoid"):
-		print('Activation Layer: sigmoid \nArchitecture Used: method3 \n')
+		print('Activation Layer: sigmoid \nArchitecture Used: method4 \n')
 		#Layers
 		layer1 = tf.nn.sigmoid(tf.add(tf.matmul(x, weights['h1']), biases['b1']))
 		layer2 = tf.nn.sigmoid(tf.add(tf.matmul(layer1, weights['h2']), biases['b2']))
@@ -572,7 +562,7 @@ def multilayer_perception(x, weights, biases):
 		outLayer = tf.add(tf.matmul(layer5, weights['out']), biases['out'])
 		return outLayer
 	elif (arch == "method4" and activation == "Tanh"):
-		print('Activation Layer: tanh \nArchitecture Used: method3 \n')
+		print('Activation Layer: tanh \nArchitecture Used: method4 \n')
 		#Layers
 		layer1 = tf.nn.sigmoid(tf.add(tf.matmul(x, weights['h1']), biases['b1']))
 		layer2 = tf.nn.sigmoid(tf.add(tf.matmul(layer1, weights['h2']), biases['b2']))
@@ -582,7 +572,7 @@ def multilayer_perception(x, weights, biases):
 		outLayer = tf.add(tf.matmul(layer5, weights['out']), biases['out'])
 		return outLayer
 	elif (arch == "method4" and activation == "Relu"):
-		print('Activation Layer: relu \nArchitecture Used: method3 \n')
+		print('Activation Layer: relu \nArchitecture Used: method4 \n')
 		#Layers
 		layer1 = tf.nn.sigmoid(tf.add(tf.matmul(x, weights['h1']), biases['b1']))
 		layer2 = tf.nn.sigmoid(tf.add(tf.matmul(layer1, weights['h2']), biases['b2']))
@@ -592,7 +582,7 @@ def multilayer_perception(x, weights, biases):
 		outLayer = tf.add(tf.matmul(layer5, weights['out']), biases['out'])
 		return outLayer
 	elif (arch == "method4" and activation == "Default"):
-		print('Activation Layer: none \nArchitecture Used: method3 \n')
+		print('Activation Layer: none \nArchitecture Used: method4 \n')
 		#Layers
 		layer1 = tf.nn.sigmoid(tf.add(tf.matmul(x, weights['h1']), biases['b1']))
 		layer2 = tf.nn.sigmoid(tf.add(tf.matmul(layer1, weights['h2']), biases['b2']))
@@ -676,6 +666,12 @@ def extractData():
 
 	return data, labels
 
+if FLAGS.refinement == "Uniform":
+	file_names = uniformRefinement()
+
+elif FLAGS.refinement == "None":
+	file_names = file_names_super
+
 dirname = os.path.realpath('.')
 
 numSections = calcSections()
@@ -687,8 +683,6 @@ numberTests = calcNumTests()
 maxEntries, timeScores = calcMaxEntries()
 
 folderName = writeFolderLabel()
-
-
 
 #Open file used to store accuracy scores and any other printed data
 newDir = dirname + '\\Models&Results\\' + folderName
