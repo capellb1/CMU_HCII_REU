@@ -621,8 +621,8 @@ def extractData():
 		
 		Parameters: None
 		Returns:
-			nparray shuffledlabels
-			nparray shuffledData
+			nparray labels
+			nparray Data
 	'''
 	data =  np.empty((sum(timeScores), int(bodySize*3*numSections)))
 	dataTask = np.empty((sum(timeScores), int(bodySize*3)))
@@ -810,6 +810,7 @@ def draw(predictions, correctPredictions, dataTask):
 			
 	#y
 	if len(timeRecord[0]) > 1:
+		plt.subplot(211)
 		plt.bar(totalDataX, dataRecord[0][:], width, facecolor='green')
 		plt.xlabel("Frames")
 		plt.ylabel("Frequency of Hits")
@@ -817,11 +818,15 @@ def draw(predictions, correctPredictions, dataTask):
 		annotation = "Average Timespan: " + str(averageTs[0])
 		plt.annotate(annotation, xy = (averageTs[0], 5))
 		plt.grid(True)
+		
+		plt.subplot(212)
+		plt.bar(totalDataX, timeRecord[0], width, facecolor='cyan')
 		plt.savefig(newDir +"\\yTotalData.png")
 		plt.close()
 
 	#cat
 	if len(timeRecord[1]) > 1:
+		plt.subplot(211)
 		plt.bar(totalDataX, dataRecord[1][:], width, facecolor='green')
 		plt.xlabel("Frames")
 		plt.ylabel("Frequency of Hits")
@@ -829,11 +834,16 @@ def draw(predictions, correctPredictions, dataTask):
 		annotation = "Average Timespan: " + str(averageTs[1])
 		plt.annotate(annotation, xy = (averageTs[1], 5))
 		plt.grid(True)
+		
+		plt.subplot(212)
+		plt.bar(totalDataX, timeRecord[1], width, facecolor='cyan')
+
 		plt.savefig(newDir +"\\catTotalData.png")
 		plt.close()
 
 	#supine
 	if len(timeRecord[2]) > 1:
+		plt.subplot(211)
 		plt.bar(totalDataX, dataRecord[2][:], width, facecolor='green')
 		plt.xlabel("Frames")
 		plt.ylabel("Frequency of Hits")
@@ -841,11 +851,16 @@ def draw(predictions, correctPredictions, dataTask):
 		annotation = "Average Timespan: " + str(averageTs[2])
 		plt.annotate(annotation, xy = (averageTs[2], 5))
 		plt.grid(True)
+		
+		plt.subplot(212)
+		plt.bar(totalDataX, timeRecord[2], width, facecolor='cyan')
+
 		plt.savefig(newDir +"\\supineTotalData.png")
 		plt.close()
 
 	#Seated
 	if len(timeRecord[3]) > 1:
+		plt.subplot(211)
 		plt.bar(totalDataX, dataRecord[3][:], width, facecolor='green')
 		plt.xlabel("Frames")
 		plt.ylabel("Frequency of Hits")
@@ -853,11 +868,16 @@ def draw(predictions, correctPredictions, dataTask):
 		annotation = "Average Timespan: " + str(averageTs[3])
 		plt.annotate(annotation, xy = (averageTs[3], 5))
 		plt.grid(True)
+		
+		plt.subplot(212)
+		plt.bar(totalDataX, timeRecord[3], width, facecolor='cyan')
+
 		plt.savefig(newDir +"\\seatedTotalData.png")
 		plt.close()
 
 	#sumo
 	if len(timeRecord[4]) > 1:
+		plt.subplot(211)
 		plt.bar(totalDataX, dataRecord[4][:], width, facecolor='green')
 		plt.xlabel("Frames")
 		plt.ylabel("Frequency of Hits")
@@ -865,11 +885,16 @@ def draw(predictions, correctPredictions, dataTask):
 		annotation = "Average Timespan: " + str(averageTs[4])
 		plt.annotate(annotation, xy = (averageTs[4], 5))
 		plt.grid(True)
+		
+		plt.subplot(212)
+		plt.bar(totalDataX, timeRecord[4], width, facecolor='cyan')
+
 		plt.savefig(newDir +"\\sumoTotalData.png")
 		plt.close()
 
 	#mermaid
 	if len(timeRecord[5]) > 1:
+		plt.subplot(211)
 		plt.bar(totalDataX, dataRecord[5][:], width, facecolor='green')
 		plt.xlabel("Frames")
 		plt.ylabel("Frequency of Hits")
@@ -877,11 +902,16 @@ def draw(predictions, correctPredictions, dataTask):
 		annotation = "Average Timespan: " + str(averageTs[5])
 		plt.annotate(annotation, xy = (averageTs[5], 5))
 		plt.grid(True)
+		
+		plt.subplot(212)
+		plt.bar(totalDataX, timeRecord[5], width, facecolor='cyan')
+
 		plt.savefig(newDir +"\\mermaidTotalData.png")
 		plt.close()
 
 	#towel
 	if len(timeRecord[6]) > 1:
+		plt.subplot(211)
 		plt.bar(totalDataX, dataRecord[6][:], width, facecolor='green')
 		plt.xlabel("Frames")
 		plt.ylabel("Frequency of Hits")
@@ -889,10 +919,15 @@ def draw(predictions, correctPredictions, dataTask):
 		annotation = "Average Timespan: " + str(averageTs[6])
 		plt.annotate(annotation, xy = (averageTs[6], 5))
 		plt.grid(True)
+		
+		plt.subplot(212)
+		plt.bar(totalDataX, timeRecord[6], width, facecolor='cyan')
+
 		plt.savefig(newDir +"\\towelTotalData.png")
 		plt.close()
 	#trunk
 	if len(timeRecord[7]) > 1:
+		plt.subplot(211)
 		plt.bar(totalDataX, dataRecord[7][:], width, facecolor='green')
 		plt.xlabel("Frames")
 		plt.ylabel("Frequency of Hits")
@@ -900,11 +935,16 @@ def draw(predictions, correctPredictions, dataTask):
 		annotation = "Average Timespan: " + str(averageTs[7])
 		plt.annotate(annotation, xy = (averageTs[7], 5))
 		plt.grid(True)
+		
+		plt.subplot(212)
+		plt.bar(totalDataX, timeRecord[7], width, facecolor='cyan')
+
 		plt.savefig(newDir +"\\trunkTotalData.png")
 		plt.close()
 
 	#wall
 	if len(timeRecord[8]) > 1:
+		plt.subplot(211)
 		plt.bar(totalDataX, dataRecord[8][:], width, facecolor='green')
 		plt.xlabel("Frames")
 		plt.ylabel("Frequency of Hits")
@@ -912,11 +952,16 @@ def draw(predictions, correctPredictions, dataTask):
 		annotation = "Average Timespan: " + str(averageTs[8])
 		plt.annotate(annotation, xy = (averageTs[8], 5))
 		plt.grid(True)
+		
+		plt.subplot(212)
+		plt.bar(totalDataX, timeRecord[8], width, facecolor='cyan')
+
 		plt.savefig(newDir +"\\wallTotalData.png")
 		plt.close()
 
 	#Pretzel
 	if len(timeRecord[9]) > 1:
+		plt.subplot(211)
 		plt.bar(totalDataX, dataRecord[9][:], width, facecolor='green')
 		plt.xlabel("Frames")
 		plt.ylabel("Frequency of Hits")
@@ -924,11 +969,16 @@ def draw(predictions, correctPredictions, dataTask):
 		annotation = "Average Timespan: " + str(averageTs[9])
 		plt.annotate(annotation, xy = (averageTs[9], 5))
 		plt.grid(True)
+		
+		plt.subplot(212)
+		plt.bar(totalDataX, timeRecord[9], width, facecolor='cyan')
+
 		plt.savefig(newDir +"\\pretzelTotalData.png")
 		plt.close()
 
 	#oov
 	if len(timeRecord[10]) > 1:
+		plt.subplot(211)
 		plt.bar(totalDataX, dataRecord[10][:], width, facecolor='green')
 		plt.xlabel("Frames")
 		plt.ylabel("Frequency of Hits")
@@ -936,6 +986,10 @@ def draw(predictions, correctPredictions, dataTask):
 		annotation = "Average Timespan: " + str(averageTs[10])
 		plt.annotate(annotation, xy = (averageTs[10], 5))
 		plt.grid(True)
+		
+		plt.subplot(212)
+		plt.bar(totalDataX, timeRecord[10], width, facecolor='cyan')
+
 		plt.savefig(newDir +"\\oovTotalData.png")
 		plt.close()
 

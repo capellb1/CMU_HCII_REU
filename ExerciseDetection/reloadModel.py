@@ -613,6 +613,18 @@ def nextBatch(batchSize, trainNumber):
 	return start, end
 
 def extractData():
+	'''
+		Moves data from the text files into flattened arrays.
+		Each time stamp is a single row and has a corresponding event label
+			[Arm1xyz, Head1xyz, Foot1xyz, ...] EVENT 10
+			[Arm2xyz, Head2xyz, Foot2xyz, ...] EVENT 2
+		
+		Parameters: None
+		Returns:
+			nparray labels
+			nparray Data
+	'''
+	
 	data =  np.empty((int(numberTests), int(bodySize*maxEntries*3*numSections)))
 	
 	#enables downsampling by 50%

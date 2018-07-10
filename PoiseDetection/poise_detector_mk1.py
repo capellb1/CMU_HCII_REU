@@ -681,7 +681,7 @@ def extractData():
 	#shuffle the data
 	shuffledData = np.empty(data.shape, dtype=data.dtype)
 	shuffledLabels = labels
-	permutation = np.random.permutation(len(labels))
+	permutation = np.random.RandomState(seed=42).permutation(len(labels))
 	for old_index, new_index in enumerate(permutation):
 		shuffledData[new_index] = data[old_index]
 		shuffledLabels[new_index] = labels[old_index]
@@ -783,9 +783,8 @@ def main(argv = None):
 		'b1' : tf.Variable(tf.random_normal([hiddenLayer1], dtype=data.dtype, name = 'b1')),
 		'b2' : tf.Variable(tf.random_normal([hiddenLayer2], dtype=data.dtype, name = 'b2')),
 		'out' : tf.Variable(tf.random_normal([numberClasses], dtype=data.dtype, name = 'outb'))
-		}
+		}	
 
-	
 	elif (arch == "method2"):
 		weights = {
 		'h1' : tf.Variable(tf.random_normal([inputLayer, hiddenLayer1], dtype=data.dtype, name='h1')),
@@ -800,6 +799,7 @@ def main(argv = None):
 		'b3' : tf.Variable(tf.random_normal([hiddenLayer3], dtype=data.dtype, name = 'b3')),
 		'out' : tf.Variable(tf.random_normal([numberClasses], dtype=data.dtype, name = 'outb'))
 		}
+
 	elif (arch == "method3"):
 		weights = {
 		'h1' : tf.Variable(tf.random_normal([inputLayer, hiddenLayer1], dtype=data.dtype, name='h1')),
@@ -816,6 +816,7 @@ def main(argv = None):
 		'b4' : tf.Variable(tf.random_normal([hiddenLayer4], dtype=data.dtype, name = 'b4')),		
 		'out' : tf.Variable(tf.random_normal([numberClasses], dtype=data.dtype, name = 'bout'))
 		}
+
 	else:
 		weights = {
 		'h1' : tf.Variable(tf.random_normal([inputLayer, hiddenLayer1], dtype=data.dtype, name='h1')),
@@ -849,7 +850,6 @@ def main(argv = None):
 		trainedWeights = tf.trainable_variables() # all vars of your graph
 		regularization_penalty = tf.contrib.layers.apply_regularization(l1_regularizer, trainedWeights)
 		lossOp = lossOp + regularization_penalty
-
 	elif (regularization == "L2"):
 		print('Regularization: l2 \n')
 		l2_regularizer = tf.contrib.layers.l2_regularizer(scale=regularizationRate, scope=None)
@@ -888,8 +888,19 @@ def main(argv = None):
 				batchStart, batchEnd = nextBatch(batchSize, trainNumber)
 				batchData = trainData[batchStart:batchEnd]
 				batchLabels = trainLabels[batchStart:batchEnd]
+				
+				shuffledData = np.empty(batchData.shape, dtype=batchData.dtype)
+				shuffledLabels = batchLabels
+				
+				permutation = np.random.RandomState(seed=42).permutation(len(batchLabels))
+				
+				for old_index, new_index in enumerate(permutation):
+					shuffledData[new_index] = batchData[old_index]
+					shuffledLabels[new_index] = batchLabels[old_index]
 
-				_, c = sess.run([trainOp, lossOp], feed_dict={X: batchData, Y: batchLabels})
+				shuffledLabels = np.asarray(shuffledLabels)
+
+				_, c = sess.run([trainOp, lossOp], feed_dict={X: shuffledData, Y: shuffledLabels})
 				avgCost += c/totalBatch
 
 			if (epoch % 10 == 0):
