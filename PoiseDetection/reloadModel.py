@@ -90,10 +90,6 @@ tf.app.flags.DEFINE_boolean('save', False, 'Determines wether the model is saved
 
 FLAGS = tf.app.flags.FLAGS
 
-TRAIN_PERCENT = 0.7
-VALIDATION_PERCENT = 0.2
-TEST_PERCENT = 0.1
-
 batchIndex = 0
 
 arch = FLAGS.arch
@@ -147,12 +143,6 @@ file_names_super =[
 	'KneeLeft.csv',
 	'AnkleLeft.csv',     
 	'FootLeft.csv']
-
-if FLAGS.refinement == "Uniform":
-	file_names = uniformRefinement()
-
-elif FLAGS.refinement == "None":
-	file_names = file_names_super
 
 def writeFolderLabel():
 	'''
@@ -949,6 +939,13 @@ def draw(predictions, correctPredictions, dataTask):
 		plt.savefig(newDir +"\\oovTotalData.png")
 		plt.close()
 
+
+if FLAGS.refinement == "Uniform":
+	file_names = uniformRefinement()
+
+elif FLAGS.refinement == "None":
+	file_names = file_names_super
+	
 dirname = os.path.realpath('.')
 
 numSections = calcSections()

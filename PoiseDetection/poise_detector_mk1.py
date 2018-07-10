@@ -91,8 +91,7 @@ tf.app.flags.DEFINE_boolean('save', False, 'Determines wether the model is saved
 FLAGS = tf.app.flags.FLAGS
 
 TRAIN_PERCENT = 0.7
-VALIDATION_PERCENT = 0.2
-TEST_PERCENT = 0.1
+TEST_PERCENT = 0.3
 
 batchIndex = 0
 
@@ -147,12 +146,6 @@ file_names_super =[
 	'KneeLeft.csv',
 	'AnkleLeft.csv',     
 	'FootLeft.csv']
-
-if FLAGS.refinement == "Uniform":
-	file_names = uniformRefinement()
-
-elif FLAGS.refinement == "None":
-	file_names = file_names_super
 
 def writeFolderLabel():
 	'''
@@ -729,6 +722,12 @@ def partitionData(features, labels):
 		print("Test Lables (Randomized): ", testLabels)
 
 	return trainLabels, trainFeatures, train, testLabels, testFeatures, test
+
+if FLAGS.refinement == "Uniform":
+	file_names = uniformRefinement()
+
+elif FLAGS.refinement == "None":
+	file_names = file_names_super
 
 dirname = os.path.realpath('.')
 
