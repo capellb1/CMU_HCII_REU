@@ -1,85 +1,326 @@
-python3 poise_detector_mk1.py --learning_rate 0.001 --epochs 1000 --activation Tanh --regularization L1 --label test1 --arch method3 --position 
-python3 poise_detector_mk1.py --learning_rate 0.0001 --epochs 1000 --activation Tanh --regularization L1 --label test1 --arch method3 --position 
-python3 poise_detector_mk1.py --learning_rate 0.00001 --epochs 1000 --activation Tanh --regularization L1 --label test1 --arch method3 --position 
-python3 poise_detector_mk1.py --learning_rate 0.001 --epochs 1000 --activation Tanh --regularization L2 --label test1 --arch method3 --position 
-python3 poise_detector_mk1.py --learning_rate 0.0001 --epochs 1000 --activation Tanh --regularization L2 --label test1 --arch method3 --position 
-python3 poise_detector_mk1.py --learning_rate 0.00001 --epochs 1000 --activation Tanh --regularization L2 --label test1 --arch method3 --position 
-python3 poise_detector_mk1.py --learning_rate 0.001 --epochs 1000 --activation Tanh --label test1 --arch method3 --position 
-python3 poise_detector_mk1.py --learning_rate 0.0001 --epochs 1000 --activation Tanh --label test1 --arch method3 --position 
-python3 poise_detector_mk1.py --learning_rate 0.00001 --epochs 1000 --activation Tanh --label test1 --arch method3 --position 
-python3 poise_detector_mk1.py --learning_rate 0.001 --epochs 1000 --activation Tanh --regularization L1 --label test2 --arch method3 --position 
-python3 poise_detector_mk1.py --learning_rate 0.0001 --epochs 1000 --activation Tanh --regularization L1 --label test2 --arch method3 --position 
-python3 poise_detector_mk1.py --learning_rate 0.00001 --epochs 1000 --activation Tanh --regularization L1 --label test2 --arch method3 --position 
-python3 poise_detector_mk1.py --learning_rate 0.001 --epochs 1000 --activation Tanh --regularization L2 --label test2 --arch method3 --position 
-python3 poise_detector_mk1.py --learning_rate 0.0001 --epochs 1000 --activation Tanh --regularization L2 --label test2 --arch method3 --position 
-python3 poise_detector_mk1.py --learning_rate 0.00001 --epochs 1000 --activation Tanh --regularization L2 --label test2 --arch method3 --position 
-python3 poise_detector_mk1.py --learning_rate 0.001 --epochs 1000 --activation Tanh --label test2 --arch method3 --position 
-python3 poise_detector_mk1.py --learning_rate 0.0001 --epochs 1000 --activation Tanh --label test2 --arch method3 --position 
-python3 poise_detector_mk1.py --learning_rate 0.00001 --epochs 1000 --activation Tanh --label test2 --arch method3 --position 
-python3 poise_detector_mk1.py --learning_rate 0.001 --epochs 1000 --activation Tanh --regularization L1 --label test3 --arch method3 --position 
-python3 poise_detector_mk1.py --learning_rate 0.0001 --epochs 1000 --activation Tanh --regularization L1 --label test3 --arch method3 --position 
-python3 poise_detector_mk1.py --learning_rate 0.00001 --epochs 1000 --activation Tanh --regularization L1 --label test3 --arch method3 --position 
-python3 poise_detector_mk1.py --learning_rate 0.001 --epochs 1000 --activation Tanh --regularization L2 --label test3 --arch method3 --position 
-python3 poise_detector_mk1.py --learning_rate 0.0001 --epochs 1000 --activation Tanh --regularization L2 --label test3 --arch method3 --position 
-python3 poise_detector_mk1.py --learning_rate 0.00001 --epochs 1000 --activation Tanh --regularization L2 --label test3 --arch method3 --position 
-python3 poise_detector_mk1.py --learning_rate 0.001 --epochs 1000 --activation Tanh --label test3 --arch method3 --position 
-python3 poise_detector_mk1.py --learning_rate 0.0001 --epochs 1000 --activation Tanh --label test3 --arch method3 --position 
-python3 poise_detector_mk1.py --learning_rate 0.00001 --epochs 1000 --activation Tanh --label test3 --arch method3 --position 
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.01 --position --activation Tanh --label test1 --epochs 1000 --arch method1
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.001 --position --activation Tanh --label test1 --epochs 1000 --arch method1
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.0001 --position --activation Tanh --label test1 --epochs 1000 --arch method1
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.01 --position --activation Tanh --label test1 --epochs 1000 --arch method1
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.001 --position --activation Tanh --label test1 --epochs 1000 --arch method1
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.0001 --position --activation Tanh --label test1 --epochs 1000 --arch method1
+python3 poise_detector_mk1.py --learning_rate 0.01 --position --activation Tanh --label test1 --epochs 1000 --arch method1
+python3 poise_detector_mk1.py --learning_rate 0.001 --position --activation Tanh --label test1 --epochs 1000 --arch method1
+python3 poise_detector_mk1.py --learning_rate 0.0001 --position --activation Tanh --label test1 --epochs 1000 --arch method1
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.01 --position --activation Tanh --label test1 --epochs 1000 --arch method2
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.001 --position --activation Tanh --label test1 --epochs 1000 --arch method2
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.0001 --position --activation Tanh --label test1 --epochs 1000 --arch method2
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.01 --position --activation Tanh --label test1 --epochs 1000 --arch method2
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.001 --position --activation Tanh --label test1 --epochs 1000 --arch method2
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.0001 --position --activation Tanh --label test1 --epochs 1000 --arch method2
+python3 poise_detector_mk1.py --learning_rate 0.01 --position --activation Tanh --label test1 --epochs 1000 --arch method2
+python3 poise_detector_mk1.py --learning_rate 0.001 --position --activation Tanh --label test1 --epochs 1000 --arch method2
+python3 poise_detector_mk1.py --learning_rate 0.0001 --position --activation Tanh --label test1 --epochs 1000 --arch method2
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.01 --position --activation Tanh --label test1 --epochs 1000 --arch method3
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.001 --position --activation Tanh --label test1 --epochs 1000 --arch method3
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.0001 --position --activation Tanh --label test1 --epochs 1000 --arch method3
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.01 --position --activation Tanh --label test1 --epochs 1000 --arch method3
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.001 --position --activation Tanh --label test1 --epochs 1000 --arch method3
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.0001 --position --activation Tanh --label test1 --epochs 1000 --arch method3
+python3 poise_detector_mk1.py --learning_rate 0.01 --position --activation Tanh --label test1 --epochs 1000 --arch method3
+python3 poise_detector_mk1.py --learning_rate 0.001 --position --activation Tanh --label test1 --epochs 1000 --arch method3
+python3 poise_detector_mk1.py --learning_rate 0.0001 --position --activation Tanh --label test1 --epochs 1000 --arch method3
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.01 --position --activation Tanh --label test1 --epochs 1000 --arch method4
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.001 --position --activation Tanh --label test1 --epochs 1000 --arch method4
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.0001 --position --activation Tanh --label test1 --epochs 1000 --arch method4
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.01 --position --activation Tanh --label test1 --epochs 1000 --arch method4
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.001 --position --activation Tanh --label test1 --epochs 1000 --arch method4
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.0001 --position --activation Tanh --label test1 --epochs 1000 --arch method4
+python3 poise_detector_mk1.py --learning_rate 0.01 --position --activation Tanh --label test1 --epochs 1000 --arch method4
+python3 poise_detector_mk1.py --learning_rate 0.001 --position --activation Tanh --label test1 --epochs 1000 --arch method4
+python3 poise_detector_mk1.py --learning_rate 0.0001 --position --activation Tanh --label test1 --epochs 1000 --arch method4
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.01 --position --activation Tanh --label test2 --epochs 1000 --arch method1
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.001 --position --activation Tanh --label test2 --epochs 1000 --arch method1
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.0001 --position --activation Tanh --label test2 --epochs 1000 --arch method1
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.01 --position --activation Tanh --label test2 --epochs 1000 --arch method1
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.001 --position --activation Tanh --label test2 --epochs 1000 --arch method1
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.0001 --position --activation Tanh --label test2 --epochs 1000 --arch method1
+python3 poise_detector_mk1.py --learning_rate 0.01 --position --activation Tanh --label test2 --epochs 1000 --arch method1
+python3 poise_detector_mk1.py --learning_rate 0.001 --position --activation Tanh --label test2 --epochs 1000 --arch method1
+python3 poise_detector_mk1.py --learning_rate 0.0001 --position --activation Tanh --label test2 --epochs 1000 --arch method1
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.01 --position --activation Tanh --label test2 --epochs 1000 --arch method2
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.001 --position --activation Tanh --label test2 --epochs 1000 --arch method2
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.0001 --position --activation Tanh --label test2 --epochs 1000 --arch method2
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.01 --position --activation Tanh --label test2 --epochs 1000 --arch method2
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.001 --position --activation Tanh --label test2 --epochs 1000 --arch method2
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.0001 --position --activation Tanh --label test2 --epochs 1000 --arch method2
+python3 poise_detector_mk1.py --learning_rate 0.01 --position --activation Tanh --label test2 --epochs 1000 --arch method2
+python3 poise_detector_mk1.py --learning_rate 0.001 --position --activation Tanh --label test2 --epochs 1000 --arch method2
+python3 poise_detector_mk1.py --learning_rate 0.0001 --position --activation Tanh --label test2 --epochs 1000 --arch method2
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.01 --position --activation Tanh --label test2 --epochs 1000 --arch method3
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.001 --position --activation Tanh --label test2 --epochs 1000 --arch method3
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.0001 --position --activation Tanh --label test2 --epochs 1000 --arch method3
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.01 --position --activation Tanh --label test2 --epochs 1000 --arch method3
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.001 --position --activation Tanh --label test2 --epochs 1000 --arch method3
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.0001 --position --activation Tanh --label test2 --epochs 1000 --arch method3
+python3 poise_detector_mk1.py --learning_rate 0.01 --position --activation Tanh --label test2 --epochs 1000 --arch method3
+python3 poise_detector_mk1.py --learning_rate 0.001 --position --activation Tanh --label test2 --epochs 1000 --arch method3
+python3 poise_detector_mk1.py --learning_rate 0.0001 --position --activation Tanh --label test2 --epochs 1000 --arch method3
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.01 --position --activation Tanh --label test2 --epochs 1000 --arch method4
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.001 --position --activation Tanh --label test2 --epochs 1000 --arch method4
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.0001 --position --activation Tanh --label test2 --epochs 1000 --arch method4
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.01 --position --activation Tanh --label test2 --epochs 1000 --arch method4
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.001 --position --activation Tanh --label test2 --epochs 1000 --arch method4
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.0001 --position --activation Tanh --label test2 --epochs 1000 --arch method4
+python3 poise_detector_mk1.py --learning_rate 0.01 --position --activation Tanh --label test2 --epochs 1000 --arch method4
+python3 poise_detector_mk1.py --learning_rate 0.001 --position --activation Tanh --label test2 --epochs 1000 --arch method4
+python3 poise_detector_mk1.py --learning_rate 0.0001 --position --activation Tanh --label test2 --epochs 1000 --arch method4
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.01 --position --activation Tanh --label test3 --epochs 1000 --arch method1
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.001 --position --activation Tanh --label test3 --epochs 1000 --arch method1
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.0001 --position --activation Tanh --label test3 --epochs 1000 --arch method1
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.01 --position --activation Tanh --label test3 --epochs 1000 --arch method1
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.001 --position --activation Tanh --label test3 --epochs 1000 --arch method1
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.0001 --position --activation Tanh --label test3 --epochs 1000 --arch method1
+python3 poise_detector_mk1.py --learning_rate 0.01 --position --activation Tanh --label test3 --epochs 1000 --arch method1
+python3 poise_detector_mk1.py --learning_rate 0.001 --position --activation Tanh --label test3 --epochs 1000 --arch method1
+python3 poise_detector_mk1.py --learning_rate 0.0001 --position --activation Tanh --label test3 --epochs 1000 --arch method1
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.01 --position --activation Tanh --label test3 --epochs 1000 --arch method2
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.001 --position --activation Tanh --label test3 --epochs 1000 --arch method2
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.0001 --position --activation Tanh --label test3 --epochs 1000 --arch method2
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.01 --position --activation Tanh --label test3 --epochs 1000 --arch method2
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.001 --position --activation Tanh --label test3 --epochs 1000 --arch method2
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.0001 --position --activation Tanh --label test3 --epochs 1000 --arch method2
+python3 poise_detector_mk1.py --learning_rate 0.01 --position --activation Tanh --label test3 --epochs 1000 --arch method2
+python3 poise_detector_mk1.py --learning_rate 0.001 --position --activation Tanh --label test3 --epochs 1000 --arch method2
+python3 poise_detector_mk1.py --learning_rate 0.0001 --position --activation Tanh --label test3 --epochs 1000 --arch method2
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.01 --position --activation Tanh --label test3 --epochs 1000 --arch method3
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.001 --position --activation Tanh --label test3 --epochs 1000 --arch method3
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.0001 --position --activation Tanh --label test3 --epochs 1000 --arch method3
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.01 --position --activation Tanh --label test3 --epochs 1000 --arch method3
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.001 --position --activation Tanh --label test3 --epochs 1000 --arch method3
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.0001 --position --activation Tanh --label test3 --epochs 1000 --arch method3
+python3 poise_detector_mk1.py --learning_rate 0.01 --position --activation Tanh --label test3 --epochs 1000 --arch method3
+python3 poise_detector_mk1.py --learning_rate 0.001 --position --activation Tanh --label test3 --epochs 1000 --arch method3
+python3 poise_detector_mk1.py --learning_rate 0.0001 --position --activation Tanh --label test3 --epochs 1000 --arch method3
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.01 --position --activation Tanh --label test3 --epochs 1000 --arch method4
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.001 --position --activation Tanh --label test3 --epochs 1000 --arch method4
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.0001 --position --activation Tanh --label test3 --epochs 1000 --arch method4
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.01 --position --activation Tanh --label test3 --epochs 1000 --arch method4
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.001 --position --activation Tanh --label test3 --epochs 1000 --arch method4
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.0001 --position --activation Tanh --label test3 --epochs 1000 --arch method4
+python3 poise_detector_mk1.py --learning_rate 0.01 --position --activation Tanh --label test3 --epochs 1000 --arch method4
+python3 poise_detector_mk1.py --learning_rate 0.001 --position --activation Tanh --label test3 --epochs 1000 --arch method4
+python3 poise_detector_mk1.py --learning_rate 0.0001 --position --activation Tanh --label test3 --epochs 1000 --arch method4
 
-python3 poise_detector_mk1.py --learning_rate 0.001 --epochs 1000 --activation Relu --regularization L1 --label test1 --arch method3 --position 
-python3 poise_detector_mk1.py --learning_rate 0.0001 --epochs 1000 --activation Relu --regularization L1 --label test1 --arch method3 --position 
-python3 poise_detector_mk1.py --learning_rate 0.00001 --epochs 1000 --activation Relu --regularization L1 --label test1 --arch method3 --position 
-python3 poise_detector_mk1.py --learning_rate 0.001 --epochs 1000 --activation Relu --regularization L2 --label test1 --arch method3 --position 
-python3 poise_detector_mk1.py --learning_rate 0.0001 --epochs 1000 --activation Relu --regularization L2 --label test1 --arch method3 --position 
-python3 poise_detector_mk1.py --learning_rate 0.00001 --epochs 1000 --activation Relu --regularization L2 --label test1 --arch method3 --position 
-python3 poise_detector_mk1.py --learning_rate 0.001 --epochs 1000 --activation Relu --label test1 --arch method3 --position 
-python3 poise_detector_mk1.py --learning_rate 0.0001 --epochs 1000 --activation Relu --label test1 --arch method3 --position 
-python3 poise_detector_mk1.py --learning_rate 0.00001 --epochs 1000 --activation Relu --label test1 --arch method3 --position 
-python3 poise_detector_mk1.py --learning_rate 0.001 --epochs 1000 --activation Relu --regularization L1 --label test2 --arch method3 --position 
-python3 poise_detector_mk1.py --learning_rate 0.0001 --epochs 1000 --activation Relu --regularization L1 --label test2 --arch method3 --position 
-python3 poise_detector_mk1.py --learning_rate 0.00001 --epochs 1000 --activation Relu --regularization L1 --label test2 --arch method3 --position 
-python3 poise_detector_mk1.py --learning_rate 0.001 --epochs 1000 --activation Relu --regularization L2 --label test2 --arch method3 --position 
-python3 poise_detector_mk1.py --learning_rate 0.0001 --epochs 1000 --activation Relu --regularization L2 --label test2 --arch method3 --position 
-python3 poise_detector_mk1.py --learning_rate 0.00001 --epochs 1000 --activation Relu --regularization L2 --label test2 --arch method3 --position 
-python3 poise_detector_mk1.py --learning_rate 0.001 --epochs 1000 --activation Relu --label test2 --arch method3 --position 
-python3 poise_detector_mk1.py --learning_rate 0.0001 --epochs 1000 --activation Relu --label test2 --arch method3 --position 
-python3 poise_detector_mk1.py --learning_rate 0.00001 --epochs 1000 --activation Relu --label test2 --arch method3 --position 
-python3 poise_detector_mk1.py --learning_rate 0.001 --epochs 1000 --activation Relu --regularization L1 --label test3 --arch method3 --position 
-python3 poise_detector_mk1.py --learning_rate 0.0001 --epochs 1000 --activation Relu --regularization L1 --label test3 --arch method3 --position 
-python3 poise_detector_mk1.py --learning_rate 0.00001 --epochs 1000 --activation Relu --regularization L1 --label test3 --arch method3 --position 
-python3 poise_detector_mk1.py --learning_rate 0.001 --epochs 1000 --activation Relu --regularization L2 --label test3 --arch method3 --position 
-python3 poise_detector_mk1.py --learning_rate 0.0001 --epochs 1000 --activation Relu --regularization L2 --label test3 --arch method3 --position 
-python3 poise_detector_mk1.py --learning_rate 0.00001 --epochs 1000 --activation Relu --regularization L2 --label test3 --arch method3 --position 
-python3 poise_detector_mk1.py --learning_rate 0.001 --epochs 1000 --activation Relu --label test3 --arch method3 --position 
-python3 poise_detector_mk1.py --learning_rate 0.0001 --epochs 1000 --activation Relu --label test3 --arch method3 --position 
-python3 poise_detector_mk1.py --learning_rate 0.00001 --epochs 1000 --activation Relu --label test3 --arch method3 --position 
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.01 --position --activation Relu --label test1 --epochs 1000 --arch method1
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.001 --position --activation Relu --label test1 --epochs 1000 --arch method1
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.0001 --position --activation Relu --label test1 --epochs 1000 --arch method1
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.01 --position --activation Relu --label test1 --epochs 1000 --arch method1
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.001 --position --activation Relu --label test1 --epochs 1000 --arch method1
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.0001 --position --activation Relu --label test1 --epochs 1000 --arch method1
+python3 poise_detector_mk1.py --learning_rate 0.01 --position --activation Relu --label test1 --epochs 1000 --arch method1
+python3 poise_detector_mk1.py --learning_rate 0.001 --position --activation Relu --label test1 --epochs 1000 --arch method1
+python3 poise_detector_mk1.py --learning_rate 0.0001 --position --activation Relu --label test1 --epochs 1000 --arch method1
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.01 --position --activation Relu --label test1 --epochs 1000 --arch method2
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.001 --position --activation Relu --label test1 --epochs 1000 --arch method2
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.0001 --position --activation Relu --label test1 --epochs 1000 --arch method2
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.01 --position --activation Relu --label test1 --epochs 1000 --arch method2
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.001 --position --activation Relu --label test1 --epochs 1000 --arch method2
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.0001 --position --activation Relu --label test1 --epochs 1000 --arch method2
+python3 poise_detector_mk1.py --learning_rate 0.01 --position --activation Relu --label test1 --epochs 1000 --arch method2
+python3 poise_detector_mk1.py --learning_rate 0.001 --position --activation Relu --label test1 --epochs 1000 --arch method2
+python3 poise_detector_mk1.py --learning_rate 0.0001 --position --activation Relu --label test1 --epochs 1000 --arch method2
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.01 --position --activation Relu --label test1 --epochs 1000 --arch method3
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.001 --position --activation Relu --label test1 --epochs 1000 --arch method3
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.0001 --position --activation Relu --label test1 --epochs 1000 --arch method3
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.01 --position --activation Relu --label test1 --epochs 1000 --arch method3
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.001 --position --activation Relu --label test1 --epochs 1000 --arch method3
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.0001 --position --activation Relu --label test1 --epochs 1000 --arch method3
+python3 poise_detector_mk1.py --learning_rate 0.01 --position --activation Relu --label test1 --epochs 1000 --arch method3
+python3 poise_detector_mk1.py --learning_rate 0.001 --position --activation Relu --label test1 --epochs 1000 --arch method3
+python3 poise_detector_mk1.py --learning_rate 0.0001 --position --activation Relu --label test1 --epochs 1000 --arch method3
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.01 --position --activation Relu --label test1 --epochs 1000 --arch method4
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.001 --position --activation Relu --label test1 --epochs 1000 --arch method4
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.0001 --position --activation Relu --label test1 --epochs 1000 --arch method4
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.01 --position --activation Relu --label test1 --epochs 1000 --arch method4
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.001 --position --activation Relu --label test1 --epochs 1000 --arch method4
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.0001 --position --activation Relu --label test1 --epochs 1000 --arch method4
+python3 poise_detector_mk1.py --learning_rate 0.01 --position --activation Relu --label test1 --epochs 1000 --arch method4
+python3 poise_detector_mk1.py --learning_rate 0.001 --position --activation Relu --label test1 --epochs 1000 --arch method4
+python3 poise_detector_mk1.py --learning_rate 0.0001 --position --activation Relu --label test1 --epochs 1000 --arch method4
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.01 --position --activation Relu --label test2 --epochs 1000 --arch method1
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.001 --position --activation Relu --label test2 --epochs 1000 --arch method1
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.0001 --position --activation Relu --label test2 --epochs 1000 --arch method1
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.01 --position --activation Relu --label test2 --epochs 1000 --arch method1
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.001 --position --activation Relu --label test2 --epochs 1000 --arch method1
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.0001 --position --activation Relu --label test2 --epochs 1000 --arch method1
+python3 poise_detector_mk1.py --learning_rate 0.01 --position --activation Relu --label test2 --epochs 1000 --arch method1
+python3 poise_detector_mk1.py --learning_rate 0.001 --position --activation Relu --label test2 --epochs 1000 --arch method1
+python3 poise_detector_mk1.py --learning_rate 0.0001 --position --activation Relu --label test2 --epochs 1000 --arch method1
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.01 --position --activation Relu --label test2 --epochs 1000 --arch method2
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.001 --position --activation Relu --label test2 --epochs 1000 --arch method2
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.0001 --position --activation Relu --label test2 --epochs 1000 --arch method2
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.01 --position --activation Relu --label test2 --epochs 1000 --arch method2
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.001 --position --activation Relu --label test2 --epochs 1000 --arch method2
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.0001 --position --activation Relu --label test2 --epochs 1000 --arch method2
+python3 poise_detector_mk1.py --learning_rate 0.01 --position --activation Relu --label test2 --epochs 1000 --arch method2
+python3 poise_detector_mk1.py --learning_rate 0.001 --position --activation Relu --label test2 --epochs 1000 --arch method2
+python3 poise_detector_mk1.py --learning_rate 0.0001 --position --activation Relu --label test2 --epochs 1000 --arch method2
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.01 --position --activation Relu --label test2 --epochs 1000 --arch method3
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.001 --position --activation Relu --label test2 --epochs 1000 --arch method3
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.0001 --position --activation Relu --label test2 --epochs 1000 --arch method3
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.01 --position --activation Relu --label test2 --epochs 1000 --arch method3
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.001 --position --activation Relu --label test2 --epochs 1000 --arch method3
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.0001 --position --activation Relu --label test2 --epochs 1000 --arch method3
+python3 poise_detector_mk1.py --learning_rate 0.01 --position --activation Relu --label test2 --epochs 1000 --arch method3
+python3 poise_detector_mk1.py --learning_rate 0.001 --position --activation Relu --label test2 --epochs 1000 --arch method3
+python3 poise_detector_mk1.py --learning_rate 0.0001 --position --activation Relu --label test2 --epochs 1000 --arch method3
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.01 --position --activation Relu --label test2 --epochs 1000 --arch method4
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.001 --position --activation Relu --label test2 --epochs 1000 --arch method4
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.0001 --position --activation Relu --label test2 --epochs 1000 --arch method4
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.01 --position --activation Relu --label test2 --epochs 1000 --arch method4
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.001 --position --activation Relu --label test2 --epochs 1000 --arch method4
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.0001 --position --activation Relu --label test2 --epochs 1000 --arch method4
+python3 poise_detector_mk1.py --learning_rate 0.01 --position --activation Relu --label test2 --epochs 1000 --arch method4
+python3 poise_detector_mk1.py --learning_rate 0.001 --position --activation Relu --label test2 --epochs 1000 --arch method4
+python3 poise_detector_mk1.py --learning_rate 0.0001 --position --activation Relu --label test2 --epochs 1000 --arch method4
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.01 --position --activation Relu --label test3 --epochs 1000 --arch method1
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.001 --position --activation Relu --label test3 --epochs 1000 --arch method1
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.0001 --position --activation Relu --label test3 --epochs 1000 --arch method1
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.01 --position --activation Relu --label test3 --epochs 1000 --arch method1
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.001 --position --activation Relu --label test3 --epochs 1000 --arch method1
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.0001 --position --activation Relu --label test3 --epochs 1000 --arch method1
+python3 poise_detector_mk1.py --learning_rate 0.01 --position --activation Relu --label test3 --epochs 1000 --arch method1
+python3 poise_detector_mk1.py --learning_rate 0.001 --position --activation Relu --label test3 --epochs 1000 --arch method1
+python3 poise_detector_mk1.py --learning_rate 0.0001 --position --activation Relu --label test3 --epochs 1000 --arch method1
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.01 --position --activation Relu --label test3 --epochs 1000 --arch method2
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.001 --position --activation Relu --label test3 --epochs 1000 --arch method2
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.0001 --position --activation Relu --label test3 --epochs 1000 --arch method2
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.01 --position --activation Relu --label test3 --epochs 1000 --arch method2
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.001 --position --activation Relu --label test3 --epochs 1000 --arch method2
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.0001 --position --activation Relu --label test3 --epochs 1000 --arch method2
+python3 poise_detector_mk1.py --learning_rate 0.01 --position --activation Relu --label test3 --epochs 1000 --arch method2
+python3 poise_detector_mk1.py --learning_rate 0.001 --position --activation Relu --label test3 --epochs 1000 --arch method2
+python3 poise_detector_mk1.py --learning_rate 0.0001 --position --activation Relu --label test3 --epochs 1000 --arch method2
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.01 --position --activation Relu --label test3 --epochs 1000 --arch method3
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.001 --position --activation Relu --label test3 --epochs 1000 --arch method3
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.0001 --position --activation Relu --label test3 --epochs 1000 --arch method3
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.01 --position --activation Relu --label test3 --epochs 1000 --arch method3
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.001 --position --activation Relu --label test3 --epochs 1000 --arch method3
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.0001 --position --activation Relu --label test3 --epochs 1000 --arch method3
+python3 poise_detector_mk1.py --learning_rate 0.01 --position --activation Relu --label test3 --epochs 1000 --arch method3
+python3 poise_detector_mk1.py --learning_rate 0.001 --position --activation Relu --label test3 --epochs 1000 --arch method3
+python3 poise_detector_mk1.py --learning_rate 0.0001 --position --activation Relu --label test3 --epochs 1000 --arch method3
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.01 --position --activation Relu --label test3 --epochs 1000 --arch method4
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.001 --position --activation Relu --label test3 --epochs 1000 --arch method4
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.0001 --position --activation Relu --label test3 --epochs 1000 --arch method4
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.01 --position --activation Relu --label test3 --epochs 1000 --arch method4
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.001 --position --activation Relu --label test3 --epochs 1000 --arch method4
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.0001 --position --activation Relu --label test3 --epochs 1000 --arch method4
+python3 poise_detector_mk1.py --learning_rate 0.01 --position --activation Relu --label test3 --epochs 1000 --arch method4
+python3 poise_detector_mk1.py --learning_rate 0.001 --position --activation Relu --label test3 --epochs 1000 --arch method4
+python3 poise_detector_mk1.py --learning_rate 0.0001 --position --activation Relu --label test3 --epochs 1000 --arch method4
 
-python3 poise_detector_mk1.py --learning_rate 0.001 --epochs 1000 --activation Sigmoid --regularization L1 --label test1 --arch method3 --position 
-python3 poise_detector_mk1.py --learning_rate 0.0001 --epochs 1000 --activation Sigmoid --regularization L1 --label test1 --arch method3 --position 
-python3 poise_detector_mk1.py --learning_rate 0.00001 --epochs 1000 --activation Sigmoid --regularization L1 --label test1 --arch method3 --position 
-python3 poise_detector_mk1.py --learning_rate 0.001 --epochs 1000 --activation Sigmoid --regularization L2 --label test1 --arch method3 --position 
-python3 poise_detector_mk1.py --learning_rate 0.0001 --epochs 1000 --activation Sigmoid --regularization L2 --label test1 --arch method3 --position 
-python3 poise_detector_mk1.py --learning_rate 0.00001 --epochs 1000 --activation Sigmoid --regularization L2 --label test1 --arch method3 --position 
-python3 poise_detector_mk1.py --learning_rate 0.001 --epochs 1000 --activation Sigmoid --label test1 --arch method3 --position 
-python3 poise_detector_mk1.py --learning_rate 0.0001 --epochs 1000 --activation Sigmoid --label test1 --arch method3 --position 
-python3 poise_detector_mk1.py --learning_rate 0.00001 --epochs 1000 --activation Sigmoid --label test1 --arch method3 --position 
-python3 poise_detector_mk1.py --learning_rate 0.001 --epochs 1000 --activation Sigmoid --regularization L1 --label test2 --arch method3 --position 
-python3 poise_detector_mk1.py --learning_rate 0.0001 --epochs 1000 --activation Sigmoid --regularization L1 --label test2 --arch method3 --position 
-python3 poise_detector_mk1.py --learning_rate 0.00001 --epochs 1000 --activation Sigmoid --regularization L1 --label test2 --arch method3 --position 
-python3 poise_detector_mk1.py --learning_rate 0.001 --epochs 1000 --activation Sigmoid --regularization L2 --label test2 --arch method3 --position 
-python3 poise_detector_mk1.py --learning_rate 0.0001 --epochs 1000 --activation Sigmoid --regularization L2 --label test2 --arch method3 --position 
-python3 poise_detector_mk1.py --learning_rate 0.00001 --epochs 1000 --activation Sigmoid --regularization L2 --label test2 --arch method3 --position 
-python3 poise_detector_mk1.py --learning_rate 0.001 --epochs 1000 --activation Sigmoid --label test2 --arch method3 --position 
-python3 poise_detector_mk1.py --learning_rate 0.0001 --epochs 1000 --activation Sigmoid --label test2 --arch method3 --position 
-python3 poise_detector_mk1.py --learning_rate 0.00001 --epochs 1000 --activation Sigmoid --label test2 --arch method3 --position 
-python3 poise_detector_mk1.py --learning_rate 0.001 --epochs 1000 --activation Sigmoid --regularization L1 --label test3 --arch method3 --position 
-python3 poise_detector_mk1.py --learning_rate 0.0001 --epochs 1000 --activation Sigmoid --regularization L1 --label test3 --arch method3 --position 
-python3 poise_detector_mk1.py --learning_rate 0.00001 --epochs 1000 --activation Sigmoid --regularization L1 --label test3 --arch method3 --position 
-python3 poise_detector_mk1.py --learning_rate 0.001 --epochs 1000 --activation Sigmoid --regularization L2 --label test3 --arch method3 --position 
-python3 poise_detector_mk1.py --learning_rate 0.0001 --epochs 1000 --activation Sigmoid --regularization L2 --label test3 --arch method3 --position 
-python3 poise_detector_mk1.py --learning_rate 0.00001 --epochs 1000 --activation Sigmoid --regularization L2 --label test3 --arch method3 --position 
-python3 poise_detector_mk1.py --learning_rate 0.001 --epochs 1000 --activation Sigmoid --label test3 --arch method3 --position 
-python3 poise_detector_mk1.py --learning_rate 0.0001 --epochs 1000 --activation Sigmoid --label test3 --arch method3 --position 
-python3 poise_detector_mk1.py --learning_rate 0.00001 --epochs 1000 --activation Sigmoid --label test3 --arch method3 --position 
-
-python3 PoiseStep1Excel.py
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.01 --position --activation Sigmoid --label test1 --epochs 1000 --arch method1
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.001 --position --activation Sigmoid --label test1 --epochs 1000 --arch method1
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.0001 --position --activation Sigmoid --label test1 --epochs 1000 --arch method1
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.01 --position --activation Sigmoid --label test1 --epochs 1000 --arch method1
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.001 --position --activation Sigmoid --label test1 --epochs 1000 --arch method1
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.0001 --position --activation Sigmoid --label test1 --epochs 1000 --arch method1
+python3 poise_detector_mk1.py --learning_rate 0.01 --position --activation Sigmoid --label test1 --epochs 1000 --arch method1
+python3 poise_detector_mk1.py --learning_rate 0.001 --position --activation Sigmoid --label test1 --epochs 1000 --arch method1
+python3 poise_detector_mk1.py --learning_rate 0.0001 --position --activation Sigmoid --label test1 --epochs 1000 --arch method1
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.01 --position --activation Sigmoid --label test1 --epochs 1000 --arch method2
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.001 --position --activation Sigmoid --label test1 --epochs 1000 --arch method2
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.0001 --position --activation Sigmoid --label test1 --epochs 1000 --arch method2
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.01 --position --activation Sigmoid --label test1 --epochs 1000 --arch method2
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.001 --position --activation Sigmoid --label test1 --epochs 1000 --arch method2
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.0001 --position --activation Sigmoid --label test1 --epochs 1000 --arch method2
+python3 poise_detector_mk1.py --learning_rate 0.01 --position --activation Sigmoid --label test1 --epochs 1000 --arch method2
+python3 poise_detector_mk1.py --learning_rate 0.001 --position --activation Sigmoid --label test1 --epochs 1000 --arch method2
+python3 poise_detector_mk1.py --learning_rate 0.0001 --position --activation Sigmoid --label test1 --epochs 1000 --arch method2
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.01 --position --activation Sigmoid --label test1 --epochs 1000 --arch method3
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.001 --position --activation Sigmoid --label test1 --epochs 1000 --arch method3
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.0001 --position --activation Sigmoid --label test1 --epochs 1000 --arch method3
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.01 --position --activation Sigmoid --label test1 --epochs 1000 --arch method3
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.001 --position --activation Sigmoid --label test1 --epochs 1000 --arch method3
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.0001 --position --activation Sigmoid --label test1 --epochs 1000 --arch method3
+python3 poise_detector_mk1.py --learning_rate 0.01 --position --activation Sigmoid --label test1 --epochs 1000 --arch method3
+python3 poise_detector_mk1.py --learning_rate 0.001 --position --activation Sigmoid --label test1 --epochs 1000 --arch method3
+python3 poise_detector_mk1.py --learning_rate 0.0001 --position --activation Sigmoid --label test1 --epochs 1000 --arch method3
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.01 --position --activation Sigmoid --label test1 --epochs 1000 --arch method4
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.001 --position --activation Sigmoid --label test1 --epochs 1000 --arch method4
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.0001 --position --activation Sigmoid --label test1 --epochs 1000 --arch method4
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.01 --position --activation Sigmoid --label test1 --epochs 1000 --arch method4
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.001 --position --activation Sigmoid --label test1 --epochs 1000 --arch method4
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.0001 --position --activation Sigmoid --label test1 --epochs 1000 --arch method4
+python3 poise_detector_mk1.py --learning_rate 0.01 --position --activation Sigmoid --label test1 --epochs 1000 --arch method4
+python3 poise_detector_mk1.py --learning_rate 0.001 --position --activation Sigmoid --label test1 --epochs 1000 --arch method4
+python3 poise_detector_mk1.py --learning_rate 0.0001 --position --activation Sigmoid --label test1 --epochs 1000 --arch method4
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.01 --position --activation Sigmoid --label test2 --epochs 1000 --arch method1
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.001 --position --activation Sigmoid --label test2 --epochs 1000 --arch method1
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.0001 --position --activation Sigmoid --label test2 --epochs 1000 --arch method1
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.01 --position --activation Sigmoid --label test2 --epochs 1000 --arch method1
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.001 --position --activation Sigmoid --label test2 --epochs 1000 --arch method1
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.0001 --position --activation Sigmoid --label test2 --epochs 1000 --arch method1
+python3 poise_detector_mk1.py --learning_rate 0.01 --position --activation Sigmoid --label test2 --epochs 1000 --arch method1
+python3 poise_detector_mk1.py --learning_rate 0.001 --position --activation Sigmoid --label test2 --epochs 1000 --arch method1
+python3 poise_detector_mk1.py --learning_rate 0.0001 --position --activation Sigmoid --label test2 --epochs 1000 --arch method1
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.01 --position --activation Sigmoid --label test2 --epochs 1000 --arch method2
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.001 --position --activation Sigmoid --label test2 --epochs 1000 --arch method2
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.0001 --position --activation Sigmoid --label test2 --epochs 1000 --arch method2
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.01 --position --activation Sigmoid --label test2 --epochs 1000 --arch method2
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.001 --position --activation Sigmoid --label test2 --epochs 1000 --arch method2
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.0001 --position --activation Sigmoid --label test2 --epochs 1000 --arch method2
+python3 poise_detector_mk1.py --learning_rate 0.01 --position --activation Sigmoid --label test2 --epochs 1000 --arch method2
+python3 poise_detector_mk1.py --learning_rate 0.001 --position --activation Sigmoid --label test2 --epochs 1000 --arch method2
+python3 poise_detector_mk1.py --learning_rate 0.0001 --position --activation Sigmoid --label test2 --epochs 1000 --arch method2
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.01 --position --activation Sigmoid --label test2 --epochs 1000 --arch method3
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.001 --position --activation Sigmoid --label test2 --epochs 1000 --arch method3
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.0001 --position --activation Sigmoid --label test2 --epochs 1000 --arch method3
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.01 --position --activation Sigmoid --label test2 --epochs 1000 --arch method3
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.001 --position --activation Sigmoid --label test2 --epochs 1000 --arch method3
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.0001 --position --activation Sigmoid --label test2 --epochs 1000 --arch method3
+python3 poise_detector_mk1.py --learning_rate 0.01 --position --activation Sigmoid --label test2 --epochs 1000 --arch method3
+python3 poise_detector_mk1.py --learning_rate 0.001 --position --activation Sigmoid --label test2 --epochs 1000 --arch method3
+python3 poise_detector_mk1.py --learning_rate 0.0001 --position --activation Sigmoid --label test2 --epochs 1000 --arch method3
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.01 --position --activation Sigmoid --label test2 --epochs 1000 --arch method4
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.001 --position --activation Sigmoid --label test2 --epochs 1000 --arch method4
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.0001 --position --activation Sigmoid --label test2 --epochs 1000 --arch method4
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.01 --position --activation Sigmoid --label test2 --epochs 1000 --arch method4
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.001 --position --activation Sigmoid --label test2 --epochs 1000 --arch method4
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.0001 --position --activation Sigmoid --label test2 --epochs 1000 --arch method4
+python3 poise_detector_mk1.py --learning_rate 0.01 --position --activation Sigmoid --label test2 --epochs 1000 --arch method4
+python3 poise_detector_mk1.py --learning_rate 0.001 --position --activation Sigmoid --label test2 --epochs 1000 --arch method4
+python3 poise_detector_mk1.py --learning_rate 0.0001 --position --activation Sigmoid --label test2 --epochs 1000 --arch method4
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.01 --position --activation Sigmoid --label test3 --epochs 1000 --arch method1
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.001 --position --activation Sigmoid --label test3 --epochs 1000 --arch method1
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.0001 --position --activation Sigmoid --label test3 --epochs 1000 --arch method1
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.01 --position --activation Sigmoid --label test3 --epochs 1000 --arch method1
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.001 --position --activation Sigmoid --label test3 --epochs 1000 --arch method1
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.0001 --position --activation Sigmoid --label test3 --epochs 1000 --arch method1
+python3 poise_detector_mk1.py --learning_rate 0.01 --position --activation Sigmoid --label test3 --epochs 1000 --arch method1
+python3 poise_detector_mk1.py --learning_rate 0.001 --position --activation Sigmoid --label test3 --epochs 1000 --arch method1
+python3 poise_detector_mk1.py --learning_rate 0.0001 --position --activation Sigmoid --label test3 --epochs 1000 --arch method1
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.01 --position --activation Sigmoid --label test3 --epochs 1000 --arch method2
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.001 --position --activation Sigmoid --label test3 --epochs 1000 --arch method2
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.0001 --position --activation Sigmoid --label test3 --epochs 1000 --arch method2
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.01 --position --activation Sigmoid --label test3 --epochs 1000 --arch method2
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.001 --position --activation Sigmoid --label test3 --epochs 1000 --arch method2
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.0001 --position --activation Sigmoid --label test3 --epochs 1000 --arch method2
+python3 poise_detector_mk1.py --learning_rate 0.01 --position --activation Sigmoid --label test3 --epochs 1000 --arch method2
+python3 poise_detector_mk1.py --learning_rate 0.001 --position --activation Sigmoid --label test3 --epochs 1000 --arch method2
+python3 poise_detector_mk1.py --learning_rate 0.0001 --position --activation Sigmoid --label test3 --epochs 1000 --arch method2
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.01 --position --activation Sigmoid --label test3 --epochs 1000 --arch method3
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.001 --position --activation Sigmoid --label test3 --epochs 1000 --arch method3
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.0001 --position --activation Sigmoid --label test3 --epochs 1000 --arch method3
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.01 --position --activation Sigmoid --label test3 --epochs 1000 --arch method3
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.001 --position --activation Sigmoid --label test3 --epochs 1000 --arch method3
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.0001 --position --activation Sigmoid --label test3 --epochs 1000 --arch method3
+python3 poise_detector_mk1.py --learning_rate 0.01 --position --activation Sigmoid --label test3 --epochs 1000 --arch method3
+python3 poise_detector_mk1.py --learning_rate 0.001 --position --activation Sigmoid --label test3 --epochs 1000 --arch method3
+python3 poise_detector_mk1.py --learning_rate 0.0001 --position --activation Sigmoid --label test3 --epochs 1000 --arch method3
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.01 --position --activation Sigmoid --label test3 --epochs 1000 --arch method4
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.001 --position --activation Sigmoid --label test3 --epochs 1000 --arch method4
+python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.0001 --position --activation Sigmoid --label test3 --epochs 1000 --arch method4
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.01 --position --activation Sigmoid --label test3 --epochs 1000 --arch method4
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.001 --position --activation Sigmoid --label test3 --epochs 1000 --arch method4
+python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.0001 --position --activation Sigmoid --label test3 --epochs 1000 --arch method4
+python3 poise_detector_mk1.py --learning_rate 0.01 --position --activation Sigmoid --label test3 --epochs 1000 --arch method4
+python3 poise_detector_mk1.py --learning_rate 0.001 --position --activation Sigmoid --label test3 --epochs 1000 --arch method4
+python3 poise_detector_mk1.py --learning_rate 0.0001 --position --activation Sigmoid --label test3 --epochs 1000 --arch method4
