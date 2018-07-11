@@ -8,17 +8,65 @@
 
 ### Assisting Professors: Dr. Asim Smailagic & Dr. Roberta Klatzky
 
-Includes code related to the creation of a cognitive assistant using the Microsoft Kinect 2 through real time data processing and machine learning.
+This project includes code related to the creation of a cognitive assistant using the Microsoft Kinect 2 through real time data processing and machine learning.
 
-The source of the data being used to train the fully connected neural net can be toggled between the natural data (Position) and synthetic/calculated features (Position or Task). This is controlled by the --source flag.
+The source of the data being used to train the fully connected neural net is the X, Y, and Z position of 25 different joints:
 
-Many flags might not be used in everu file, they were included for consistency between the multiple training files:
+	Head   
+	Neck    
+	SpineShoulder 
+	SpineMid
+	SpineBase    
+	ShoulderRight 
+	ShoulderLeft  
+	HipRight
+	HipLeft 
+	ElbowRight    
+	WristRight    
+	HandRigh     
+	HandTipRight  
+	ThumbRight   
+	ElbowLeft     
+	WristLeft     
+	HandLeft    
+	HandTipLeft  
+	ThumbLeft    
+	KneeRight    
+	AnkleRight   
+	FootRigh     
+	KneeLeft
+	AnkleLeft     
+	FootLeft
+
+
+
+ In the experiment, the team specifically explored the use of several tools in order to determine the best possible performance 
+ for a task detector and classifier:
+ 	
+ Uniformed Refinement: Predefining the joints to include
+ 
+ Tailored Refinement: Dynamically choosing the joints to use by examining the activity of each joint
+ 
+ Transformed Features: The input data can be toggled between the natural data (Position) and any combination of synthetic						 calculated features (Position, Task, Velocity) for each joint.
+ 
+ Downsampling (50%)
+ 
+ Dynamic Scope Definition: Change what portion of the activity the model is evaluating based on characterestics taken from
+ 							the frame by frame analysis
+
+Many flags might not be used in every file, they were included for consistency between the multiple training files:
 
 	poise_detector_mk*.py
-	poise_detector_batch_mk*.py
 	exercise_detection_mk*.py
 
 Unless otherwise stated, assume highest number to be the most current/advanced file
+
+The other files included in the github are for various different utilities. The most important of these being:
+
+	reloadModel.py
+
+This file restores a saved model and uses it to predict/test on new data. The poise variant of this file also provides a histogram
+that illustrates the cumulative frame by frame accuracy on each exercise. In order to reload a model, add the same flags you used to train the model to the command line input for reloadModel.py
 
 You must have at least 5 files in order to train a model
 
