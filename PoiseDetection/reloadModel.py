@@ -691,6 +691,69 @@ def extractData():
 	
 	return data, labels, dataTask
 
+def calcLableDist():
+	y_count = 0.1
+	cat_count = 0.1
+	supine_count = 0.1
+	seated_count = 0.1
+	sumo_count = 0.1
+	mermaid_count = 0.1
+	towel_count = 0.1
+	trunk_count = 0.1
+	wall_count = 0.1
+	pretzel_count = 0.1
+	oov_count = 0.1
+
+	labelDist = []
+	labels = []
+
+			#seperate the label from the name and event number stored within the label.csv file(s)
+	for i in range(0, int(numberTests)):
+		for line in open(dirname + "\\Data\\test" + str(i)+ "\\label.csv"):
+			temporaryLabel = line.split()
+			labels.append(str(temporaryLabel[0]))
+
+	for i in range(0, len(labels)):
+		
+		print("i: ", i, " ", labels[i])
+
+		if (labels[i] == "y"):
+			y_count = y_count + 1
+		elif (labels[i] == "cat"):
+			cat_count = cat_count + 1
+		elif (labels[i] == "supine"):
+			supine_count = supine_count + 1
+		elif (labels[i] == "seated"):
+			seated_count = seated_count + 1
+		elif (labels[i] == "sumo"):
+			sumo_count = sumo_count + 1
+		elif (labels[i] == "mermaid"):
+			mermaid_count = mermaid_count + 1
+		elif (labels[i] == "towel"):
+			towel_count = towel_count + 1
+		elif (labels[i] == "trunk"):
+			trunk_count = trunk_count + 1
+		elif (labels[i] == "wall"):
+			wall_count = wall_count + 1
+		elif (labels[i] == "pretzel"):
+			pretzel_count = pretzel_count + 1
+		else:
+			oov_count = oov_count + 1
+
+	labelDist.append(y_count)
+	labelDist.append(cat_count)
+	labelDist.append(supine_count)
+	labelDist.append(seated_count)
+	labelDist.append(sumo_count)
+	labelDist.append(mermaid_count)
+	labelDist.append(towel_count)
+	labelDist.append(trunk_count)
+	labelDist.append(wall_count)
+	labelDist.append(pretzel_count)
+	labelDist.append(oov_count)
+
+	return labelDist 
+
 def draw(predictions, correctPredictions, dataTask):	
 	'''
 		Creates graphs that plot the accuracy of predictions for every frame in an action (Blue). Below, on 
@@ -701,9 +764,9 @@ def draw(predictions, correctPredictions, dataTask):
 		than one example (Green). This cumulative histogram overlays the accuracy of every example of a given
 		exercise.
 	'''
-
 	start = 0	
 	dataRecord = np.zeros((11,maxEntries))
+	probRecord = np.zeros((11,maxEntries))
 	taskRecord = np.zeros((11,maxEntries))
 	offset = 0
 	#range from 0-10
@@ -750,6 +813,11 @@ def draw(predictions, correctPredictions, dataTask):
 				
 			graphDataX.append(j)
 
+			#calculate probability rather than raw numbers
+			for k in range(0,11):
+				probRecord[k][j] = dataRecord[k][j]/labelDist[k]
+
+
 		offset = timeScores[i]
 				
 		if (correctPredictions[start] == "y"):
@@ -781,7 +849,7 @@ def draw(predictions, correctPredictions, dataTask):
 			print ("Correct predictions", correctPredictions[start])
 			print("Length of single test time scores: ", graphDataX[-1])
 			print(graphData)
-				
+
 		width = .99
 		plt.subplot(211)
 		plt.bar(graphDataX, graphData, width, facecolor='blue')
@@ -806,189 +874,150 @@ def draw(predictions, correctPredictions, dataTask):
 		current_avg = sum(timeRecord[i])/float(len(timeRecord[i]))
 		averageTs.append(int(current_avg))
 
+
 	width = .99
-			
+
 	#y
 	if len(timeRecord[0]) > 1:
-		plt.subplot(211)
-		plt.bar(totalDataX, dataRecord[0][:], width, facecolor='green')
+		plt.bar(totalDataX, probRecord[0][:], width, facecolor='green')
 		plt.xlabel("Frames")
-		plt.ylabel("Frequency of Hits")
-		plt.title("Y")
+		plt.ylabel("Probability of an Accurate Prediction")
+		plt.title("Cumulative Y Exercise Data")
 		annotation = "Average Timespan: " + str(averageTs[0])
-		plt.annotate(annotation, xy = (averageTs[0], 5))
+		plt.annotate(annotation, xy = (averageTs[0], 0.5))
 		plt.grid(True)
 		
-		plt.subplot(212)
-		plt.bar(totalDataX, timeRecord[0], width, facecolor='cyan')
 		plt.savefig(newDir +"\\yTotalData.png")
 		plt.close()
 
 	#cat
 	if len(timeRecord[1]) > 1:
-		plt.subplot(211)
-		plt.bar(totalDataX, dataRecord[1][:], width, facecolor='green')
+		plt.bar(totalDataX, probRecord[1][:], width, facecolor='green')
 		plt.xlabel("Frames")
-		plt.ylabel("Frequency of Hits")
-		plt.title("Cat")
+		plt.ylabel("Probability of an Accurate Prediction")
+		plt.title("Cumulative Cat Exercise Data")
 		annotation = "Average Timespan: " + str(averageTs[1])
-		plt.annotate(annotation, xy = (averageTs[1], 5))
+		plt.annotate(annotation, xy = (averageTs[1], 0.5))
 		plt.grid(True)
 		
-		plt.subplot(212)
-		plt.bar(totalDataX, timeRecord[1], width, facecolor='cyan')
-
 		plt.savefig(newDir +"\\catTotalData.png")
 		plt.close()
 
 	#supine
 	if len(timeRecord[2]) > 1:
-		plt.subplot(211)
-		plt.bar(totalDataX, dataRecord[2][:], width, facecolor='green')
+		plt.bar(totalDataX, probRecord[2][:], width, facecolor='green')
 		plt.xlabel("Frames")
-		plt.ylabel("Frequency of Hits")
-		plt.title("Supine")
+		plt.ylabel("Probability of an Accurate Prediction")
+		plt.title("Cumulative Supine Exercise Data")
 		annotation = "Average Timespan: " + str(averageTs[2])
-		plt.annotate(annotation, xy = (averageTs[2], 5))
+		plt.annotate(annotation, xy = (averageTs[2], 0.5))
 		plt.grid(True)
 		
-		plt.subplot(212)
-		plt.bar(totalDataX, timeRecord[2], width, facecolor='cyan')
-
 		plt.savefig(newDir +"\\supineTotalData.png")
 		plt.close()
 
 	#Seated
 	if len(timeRecord[3]) > 1:
-		plt.subplot(211)
-		plt.bar(totalDataX, dataRecord[3][:], width, facecolor='green')
+		plt.bar(totalDataX, probRecord[3][:], width, facecolor='green')
 		plt.xlabel("Frames")
-		plt.ylabel("Frequency of Hits")
-		plt.title("Seated")
+		plt.ylabel("Probability of an Accurate Prediction")
+		plt.title("Cumulative Seated Exercise Data")
 		annotation = "Average Timespan: " + str(averageTs[3])
-		plt.annotate(annotation, xy = (averageTs[3], 5))
+		plt.annotate(annotation, xy = (averageTs[3], 0.5))
 		plt.grid(True)
 		
-		plt.subplot(212)
-		plt.bar(totalDataX, timeRecord[3], width, facecolor='cyan')
 
 		plt.savefig(newDir +"\\seatedTotalData.png")
 		plt.close()
 
 	#sumo
 	if len(timeRecord[4]) > 1:
-		plt.subplot(211)
-		plt.bar(totalDataX, dataRecord[4][:], width, facecolor='green')
+		plt.bar(totalDataX, probRecord[4][:], width, facecolor='green')
 		plt.xlabel("Frames")
-		plt.ylabel("Frequency of Hits")
-		plt.title("Sumo")
+		plt.ylabel("Probability of an Accurate Prediction")
+		plt.title("Cumulative Sumo Exercise Data")
 		annotation = "Average Timespan: " + str(averageTs[4])
-		plt.annotate(annotation, xy = (averageTs[4], 5))
+		plt.annotate(annotation, xy = (averageTs[4], 0.5))
 		plt.grid(True)
 		
-		plt.subplot(212)
-		plt.bar(totalDataX, timeRecord[4], width, facecolor='cyan')
-
 		plt.savefig(newDir +"\\sumoTotalData.png")
 		plt.close()
 
 	#mermaid
 	if len(timeRecord[5]) > 1:
-		plt.subplot(211)
-		plt.bar(totalDataX, dataRecord[5][:], width, facecolor='green')
+		plt.bar(totalDataX, probRecord[5][:], width, facecolor='green')
 		plt.xlabel("Frames")
-		plt.ylabel("Frequency of Hits")
-		plt.title("Mermaid")
+		plt.ylabel("Probability of an Accurate Prediction")
+		plt.title("Cumulative Mermaid Exercise Data")
 		annotation = "Average Timespan: " + str(averageTs[5])
-		plt.annotate(annotation, xy = (averageTs[5], 5))
+		plt.annotate(annotation, xy = (averageTs[5], 0.5))
 		plt.grid(True)
 		
-		plt.subplot(212)
-		plt.bar(totalDataX, timeRecord[5], width, facecolor='cyan')
-
 		plt.savefig(newDir +"\\mermaidTotalData.png")
 		plt.close()
 
 	#towel
 	if len(timeRecord[6]) > 1:
-		plt.subplot(211)
-		plt.bar(totalDataX, dataRecord[6][:], width, facecolor='green')
+		plt.bar(totalDataX, probRecord[6][:], width, facecolor='green')
 		plt.xlabel("Frames")
-		plt.ylabel("Frequency of Hits")
-		plt.title("Towel")
+		plt.ylabel("Probability of an Accurate Prediction")
+		plt.title("Cumulative Towel Exercise Data")
 		annotation = "Average Timespan: " + str(averageTs[6])
-		plt.annotate(annotation, xy = (averageTs[6], 5))
+		plt.annotate(annotation, xy = (averageTs[6], 0.5))
 		plt.grid(True)
 		
-		plt.subplot(212)
-		plt.bar(totalDataX, timeRecord[6], width, facecolor='cyan')
 
 		plt.savefig(newDir +"\\towelTotalData.png")
 		plt.close()
 	#trunk
 	if len(timeRecord[7]) > 1:
-		plt.subplot(211)
-		plt.bar(totalDataX, dataRecord[7][:], width, facecolor='green')
+		plt.bar(totalDataX, probRecord[7][:], width, facecolor='green')
 		plt.xlabel("Frames")
-		plt.ylabel("Frequency of Hits")
-		plt.title("Trunk")
+		plt.ylabel("Probability of an Accurate Prediction")
+		plt.title("Cumulative Trunk Exercise Data")
 		annotation = "Average Timespan: " + str(averageTs[7])
-		plt.annotate(annotation, xy = (averageTs[7], 5))
+		plt.annotate(annotation, xy = (averageTs[7], 0.5))
 		plt.grid(True)
 		
-		plt.subplot(212)
-		plt.bar(totalDataX, timeRecord[7], width, facecolor='cyan')
 
 		plt.savefig(newDir +"\\trunkTotalData.png")
 		plt.close()
 
 	#wall
 	if len(timeRecord[8]) > 1:
-		plt.subplot(211)
-		plt.bar(totalDataX, dataRecord[8][:], width, facecolor='green')
+		plt.bar(totalDataX, probRecord[8][:], width, facecolor='green')
 		plt.xlabel("Frames")
-		plt.ylabel("Frequency of Hits")
-		plt.title("Wall")
+		plt.ylabel("Probability of an Accurate Prediction")
+		plt.title("Cumulative Wall Exercise Data")
 		annotation = "Average Timespan: " + str(averageTs[8])
-		plt.annotate(annotation, xy = (averageTs[8], 5))
+		plt.annotate(annotation, xy = (averageTs[8], 0.5))
 		plt.grid(True)
 		
-		plt.subplot(212)
-		plt.bar(totalDataX, timeRecord[8], width, facecolor='cyan')
-
 		plt.savefig(newDir +"\\wallTotalData.png")
 		plt.close()
 
 	#Pretzel
 	if len(timeRecord[9]) > 1:
-		plt.subplot(211)
-		plt.bar(totalDataX, dataRecord[9][:], width, facecolor='green')
+		plt.bar(totalDataX, probRecord[9][:], width, facecolor='green')
 		plt.xlabel("Frames")
-		plt.ylabel("Frequency of Hits")
-		plt.title("Pretzel")
+		plt.ylabel("Probability of an Accurate Prediction")
+		plt.title("Cumulative Pretzel Exercise Data")
 		annotation = "Average Timespan: " + str(averageTs[9])
-		plt.annotate(annotation, xy = (averageTs[9], 5))
+		plt.annotate(annotation, xy = (averageTs[9], 0.5))
 		plt.grid(True)
 		
-		plt.subplot(212)
-		plt.bar(totalDataX, timeRecord[9], width, facecolor='cyan')
-
 		plt.savefig(newDir +"\\pretzelTotalData.png")
 		plt.close()
 
 	#oov
 	if len(timeRecord[10]) > 1:
-		plt.subplot(211)
-		plt.bar(totalDataX, dataRecord[10][:], width, facecolor='green')
+		plt.bar(totalDataX, probRecord[10][:], width, facecolor='green')
 		plt.xlabel("Frames")
-		plt.ylabel("Frequency of Hits")
-		plt.title("OOV")
+		plt.ylabel("Probability of an Accurate Prediction")
+		plt.title("Cumulative OOV Data")
 		annotation = "Average Timespan: " + str(averageTs[10])
-		plt.annotate(annotation, xy = (averageTs[10], 5))
+		plt.annotate(annotation, xy = (averageTs[10], 0.5))
 		plt.grid(True)
-		
-		plt.subplot(212)
-		plt.bar(totalDataX, timeRecord[10], width, facecolor='cyan')
 
 		plt.savefig(newDir +"\\oovTotalData.png")
 		plt.close()
@@ -1017,6 +1046,8 @@ bodySize = calcBodySize()
 numberTests = calcNumTests()
 
 maxEntries, timeScores = calcMaxEntries()
+
+labelDist = calcLableDist()
 
 def main(argv = None):
 	'''
