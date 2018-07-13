@@ -640,7 +640,7 @@ def extractData():
 
 		for j in range(0,bodySize):
 			if FLAGS.position:
-				for line in open(dirname + "\\DataCollectionSample\\test" + str(i)+ "\\Position_" + file_names[j]):
+				for line in open(dirname + "\\stdData\\test" + str(i)+ "\\Position_" + file_names[j]):
 					if sample:
 						row = line.split(',')
 						for l in range(0,3):
@@ -651,7 +651,7 @@ def extractData():
 						sample = True
 
 			if FLAGS.velocity:
-				for line in open(dirname + "\\DataCollectionSample\\test" + str(i)+ "\\Velocity_" + file_names[j]):
+				for line in open(dirname + "\\stdData\\test" + str(i)+ "\\Velocity_" + file_names[j]):
 					if sample:
 						row = line.split(',')
 						for l in range(0,3):

@@ -27,11 +27,9 @@ file_names =[
 'HandLeft.csv',     
 'HandTipLeft.csv',  
 'ThumbLeft.csv',    
-'HipRight.csv',
 'KneeRight.csv',    
 'AnkleRight.csv',   
 'FootRight.csv',     
-'HipLeft.csv', 
 'KneeLeft.csv',
 'AnkleLeft.csv',     
 'FootLeft.csv']
@@ -76,7 +74,7 @@ def foundTaskZ(dz,i):
 
 def main(argv = None):
 	for i in range(0, int(numberTests)):
-			for j in range(0,27):
+			for j in range(0,25):
 				
 				x=[]
 				y=[]
