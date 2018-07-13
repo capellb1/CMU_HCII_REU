@@ -180,7 +180,7 @@ def writeFolderLabel():
 
 def calcNumTests():
 	dirname = os.path.realpath('.')
-	filename = dirname + '\\Data\\TestNumber.txt'
+	filename = dirname + '\\DataCollectionSample\\TestNumber.txt'
 	numberTestFiles = open(filename,"r")
 	numberTests = numberTestFiles.read()
 	if FLAGS.verbose:
@@ -194,7 +194,7 @@ def calcMaxEntries():
 	timeScores = []
 	for i in range(0,int(numberTests)):
 		numEntries = 0
-		for line in open(dirname + "\\Data\\test" + str(i) + "\\" + FLAGS.source + "_" + file_names_super[0]):
+		for line in open(dirname + "\\DataCollectionSample\\test" + str(i) + "\\" + FLAGS.source + "_" + file_names_super[0]):
 			numEntries = numEntries + 1
 		if numEntries > maxEntries:
 			maxEntries = numEntries	
@@ -409,7 +409,7 @@ def tailor(i, refinement_rate):
 	jointActivity = []
 	for j in range(0,24):
 		activitySum = 0
-		for line in open(dirname + "\\Data\\test" + str(i)+ "\\Task_" + file_names_super[j]):
+		for line in open(dirname + "\\DataCollectionSample\\test" + str(i)+ "\\Task_" + file_names_super[j]):
 			row = line.split(',')
 			for l in range(0,3):
 				activitySum = activitySum + int(row[l])
@@ -640,7 +640,7 @@ def extractData():
 
 		for j in range(0,bodySize):
 			if FLAGS.position:
-				for line in open(dirname + "\\Data\\test" + str(i)+ "\\Position_" + file_names[j]):
+				for line in open(dirname + "\\DataCollectionSample\\test" + str(i)+ "\\Position_" + file_names[j]):
 					if sample:
 						row = line.split(',')
 						for l in range(0,3):
@@ -651,7 +651,7 @@ def extractData():
 						sample = True
 
 			if FLAGS.velocity:
-				for line in open(dirname + "\\Data\\test" + str(i)+ "\\Velocity_" + file_names[j]):
+				for line in open(dirname + "\\DataCollectionSample\\test" + str(i)+ "\\Velocity_" + file_names[j]):
 					if sample:
 						row = line.split(',')
 						for l in range(0,3):
@@ -662,7 +662,7 @@ def extractData():
 						sample = True
 
 			if FLAGS.task:
-				for line in open(dirname + "\\Data\\test" + str(i)+ "\\Task_" + file_names[j]):
+				for line in open(dirname + "\\DataCollectionSample\\test" + str(i)+ "\\Task_" + file_names[j]):
 					if sample:
 						row = line.split(',')
 						for l in range(0,3):
@@ -673,7 +673,7 @@ def extractData():
 						sample = True
 		
 		#seperate the label from the name and event number stored within the label.csv file(s)
-		for line in open(dirname + "\\Data\\test" + str(i)+ "\\label.csv"):
+		for line in open(dirname + "\\DataCollectionSample\\test" + str(i)+ "\\label.csv"):
 			temporaryLabel = line.split()
 			labels.append(str(temporaryLabel[0]))
 
