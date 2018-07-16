@@ -4,10 +4,10 @@ import math
 
 dirname = os.path.realpath('.')
 filename = dirname + '\\Summary of Poise Final.xlsx'
-data = dirname + '\\Models&Results\\totalResults.txt'
+data = dirname + '\\Models&Results\\totalResultsFinalStep1.txt'
 myworkbook = openpyxl.load_workbook(filename)
 
-worksheetP = myworkbook['Step 1']
+worksheetP = myworkbook['Step 1 Normalized']
 
 f=open(data)
 lines=f.readlines()
@@ -18,86 +18,99 @@ for line in lines:
 	newLine = newLine[1].split('\n')
 	dataA.append(float((newLine[0])))
 
-for j in range (0, len(dataA)):
-	col = math.floor(j / 24)
-	row = j%2 + 4
-	i = j % 24
+for i in range (0, len(dataA)):
+	if ( i < 72):
+		section = 0
+		col = math.floor(i/24)
+		row = i % 24
 
+	elif (i >= 72 and i < 144):
+		section = 1
+		col = math.floor((i-72)/24)
+		row = i % 24
+
+	else:
+		section = 2
+		col = math.floor((i-144)/24)
+		row = i % 24
+	
+	offset = i % 2
+	offset = offset + 2*section
 	if col == 0:
-		if (i < 2):
-			worksheetP ['D' + str(5+row)] = dataA[i]
-		elif (i >= 2 and i< 4):
-			worksheetP ['D' + str(11+row)] = dataA[i]
-		elif (i >= 4 and i < 6):
-			worksheetP ['D' + str(17+row)] = dataA[i]
-		elif (i>= 6 and i < 8):
-			worksheetP ['D' + str(28+row)] = dataA[i]
-		elif (i >= 8 and i < 10):
-			worksheetP ['D' + str(34+row)] = dataA[i]
-		elif (i >= 10 and i < 12):
-			worksheetP ['D' + str(40+row)] = dataA[i]
-		elif (i >= 12 and i < 14):
-			worksheetP ['D' + str(51+row)] = dataA[i]
-		elif (i >= 14 and i < 16):
-			worksheetP ['D' + str(57+row)] = dataA[i]
-		elif (i>= 16 and i < 18):
-			worksheetP ['D' + str(63+row)] = dataA[i]
-		elif (i >= 18 and i < 20):
-			worksheetP ['D' + str(74+row)] = dataA[i]
-		elif (i >= 20 and i < 22):
-			worksheetP ['D' + str(80+row)] = dataA[i]
-		elif (i >= 22 and i < 24):
-			worksheetP ['D' + str(86+row)] = dataA[i]
+		if (row < 2):
+			worksheetP ['D' + str(5+offset)] = dataA[i]
+		elif (row >= 2 and row< 4):
+			worksheetP ['D' + str(11+offset)] = dataA[i]
+		elif (row >= 4 and row < 6):
+			worksheetP ['D' + str(17+offset)] = dataA[i]
+		elif (row >= 6 and row < 8):
+			worksheetP ['D' + str(28+offset)] = dataA[i]
+		elif (row >= 8 and row < 10):
+			worksheetP ['D' + str(34+offset)] = dataA[i]
+		elif (row >= 10 and row < 12):
+			worksheetP ['D' + str(40+offset)] = dataA[i]
+		elif (row >= 12 and row < 14):
+			worksheetP ['D' + str(51+offset)] = dataA[i]
+		elif (row >= 14 and row < 16):
+			worksheetP ['D' + str(57+offset)] = dataA[i]
+		elif (row>= 16 and row < 18):
+			worksheetP ['D' + str(63+offset)] = dataA[i]
+		elif (row >= 18 and row < 20):
+			worksheetP ['D' + str(74+offset)] = dataA[i]
+		elif (row >= 20 and row < 22):
+			worksheetP ['D' + str(80+offset)] = dataA[i]
+		elif (row >= 22 and row < 24):
+			worksheetP ['D' + str(86+offset)] = dataA[i]
 	elif col == 1:
-		if (i < 2):
-			worksheetP ['H' + str(5+row)] = dataA[i]
-		elif (i >= 2 and i< 4):
-			worksheetP ['H' + str(11+row)] = dataA[i]
-		elif (i >= 4 and i < 6):
-			worksheetP ['H' + str(17+row)] = dataA[i]
-		elif (i>= 6 and i < 8):
-			worksheetP ['H' + str(28+row)] = dataA[i]
-		elif (i >= 8 and i < 10):
-			worksheetP ['H' + str(34+row)] = dataA[i]
-		elif (i >= 10 and i < 12):
-			worksheetP ['H' + str(40+row)] = dataA[i]
-		elif (i >= 12 and i < 14):
-			worksheetP ['H' + str(51+row)] = dataA[i]
-		elif (i >= 14 and i < 16):
-			worksheetP ['H' + str(57+row)] = dataA[i]
-		elif (i>= 16 and i < 18):
-			worksheetP ['H' + str(63+row)] = dataA[i]
-		elif (i >= 18 and i < 20):
-			worksheetP ['H' + str(74+row)] = dataA[i]
-		elif (i >= 20 and i < 22):
-			worksheetP ['H' + str(80+row)] = dataA[i]
-		elif (i >= 22 and i < 24):
-			worksheetP ['H' + str(86+row)] = dataA[i]
+		if (row < 2):
+			worksheetP ['H' + str(5+offset)] = dataA[i]
+		elif (row >= 2 and row< 4):
+			worksheetP ['H' + str(11+offset)] = dataA[i]
+		elif (row >= 4 and row < 6):
+			worksheetP ['H' + str(17+offset)] = dataA[i]
+		elif (row >= 6 and row < 8):
+			worksheetP ['H' + str(28+offset)] = dataA[i]
+		elif (row >= 8 and row < 10):
+			worksheetP ['H' + str(34+offset)] = dataA[i]
+		elif (row >= 10 and row < 12):
+			worksheetP ['H' + str(40+offset)] = dataA[i]
+		elif (row >= 12 and row < 14):
+			worksheetP ['H' + str(51+offset)] = dataA[i]
+		elif (row >= 14 and row < 16):
+			worksheetP ['H' + str(57+offset)] = dataA[i]
+		elif (row>= 16 and row < 18):
+			worksheetP ['H' + str(63+offset)] = dataA[i]
+		elif (row >= 18 and row < 20):
+			worksheetP ['H' + str(74+offset)] = dataA[i]
+		elif (row >= 20 and row < 22):
+			worksheetP ['H' + str(80+offset)] = dataA[i]
+		elif (row >= 22 and row < 24):
+			worksheetP ['H' + str(86+offset)] = dataA[i]
 
 	elif col == 2:
-		if (i < 2):
-			worksheetP ['L' + str(5+row)] = dataA[i]
-		elif (i >= 2 and i< 4):
-			worksheetP ['L' + str(11+row)] = dataA[i]
-		elif (i >= 4 and i < 6):
-			worksheetP ['L' + str(17+row)] = dataA[i]
-		elif (i>= 6 and i < 8):
-			worksheetP ['L' + str(28+row)] = dataA[i]
-		elif (i >= 8 and i < 10):
-			worksheetP ['L' + str(34+row)] = dataA[i]
-		elif (i >= 10 and i < 12):
-			worksheetP ['L' + str(40+row)] = dataA[i]
-		elif (i >= 12 and i < 14):
-			worksheetP ['L' + str(51+row)] = dataA[i]
-		elif (i >= 14 and i < 16):
-			worksheetP ['L' + str(57+row)] = dataA[i]
-		elif (i>= 16 and i < 18):
-			worksheetP ['L' + str(63+row)] = dataA[i]
-		elif (i >= 18 and i < 20):
-			worksheetP ['L' + str(74+row)] = dataA[i]
-		elif (i >= 20 and i < 22):
-			worksheetP ['L' + str(80+row)] = dataA[i]
-		elif (i >= 22 and i < 24):
-			worksheetP ['L' + str(86+row)] = dataA[i]
+		if (row < 2):
+			worksheetP ['L' + str(5+offset)] = dataA[i]
+		elif (row >= 2 and row< 4):
+			worksheetP ['L' + str(11+offset)] = dataA[i]
+		elif (row >= 4 and row < 6):
+			worksheetP ['L' + str(17+offset)] = dataA[i]
+		elif (row >= 6 and row < 8):
+			worksheetP ['L' + str(28+offset)] = dataA[i]
+		elif (row >= 8 and row < 10):
+			worksheetP ['L' + str(34+offset)] = dataA[i]
+		elif (row >= 10 and row < 12):
+			worksheetP ['L' + str(40+offset)] = dataA[i]
+		elif (row >= 12 and row < 14):
+			worksheetP ['L' + str(51+offset)] = dataA[i]
+		elif (row >= 14 and row < 16):
+			worksheetP ['L' + str(57+offset)] = dataA[i]
+		elif (row>= 16 and row < 18):
+			worksheetP ['L' + str(63+offset)] = dataA[i]
+		elif (row >= 18 and row < 20):
+			worksheetP ['L' + str(74+offset)] = dataA[i]
+		elif (row >= 20 and row < 22):
+			worksheetP ['L' + str(80+offset)] = dataA[i]
+		elif (row >= 22 and row < 24):
+			worksheetP ['L' + str(86+offset)] = dataA[i]
 	
 myworkbook.save(filename)

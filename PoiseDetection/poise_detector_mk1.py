@@ -180,7 +180,7 @@ def writeFolderLabel():
 
 def calcNumTests():
 	dirname = os.path.realpath('.')
-	filename = dirname + '\\Data\\TestNumber.txt'
+	filename = dirname + '\\DataCollectionSample\\TestNumber.txt'
 	numberTestFiles = open(filename,"r")
 	numberTests = numberTestFiles.read()
 	if FLAGS.verbose:
@@ -194,7 +194,7 @@ def calcMaxEntries():
 	timeScores = []
 	for i in range(0,int(numberTests)):
 		numEntries = 0
-		for line in open(dirname + "\\Data\\test" + str(i) + "\\" + FLAGS.source + "_" + file_names_super[0]):
+		for line in open(dirname + "\\DataCollectionSample\\test" + str(i) + "\\" + FLAGS.source + "_" + file_names_super[0]):
 			numEntries = numEntries + 1
 		if numEntries > maxEntries:
 			maxEntries = numEntries	
@@ -409,7 +409,7 @@ def tailor(i, refinement_rate):
 	jointActivity = []
 	for j in range(0,24):
 		activitySum = 0
-		for line in open(dirname + "\\Data\\test" + str(i)+ "\\Task_" + file_names_super[j]):
+		for line in open(dirname + "\\DataCollectionSample\\test" + str(i)+ "\\Task_" + file_names_super[j]):
 			row = line.split(',')
 			for l in range(0,3):
 				activitySum = activitySum + int(row[l])
@@ -645,7 +645,7 @@ def extractData():
 			k=0
 			for j in range(0, bodySize):
 				if FLAGS.position:
-					fp = open(dirname + "\\Data\\test" + str(i)+ "\\Position_" + file_names[j])
+					fp = open(dirname + "\\stdData\\test" + str(i)+ "\\Position_" + file_names[j])
 					for n, line in enumerate(fp):
 						if n == w:
 							row = line.split(',')
@@ -654,7 +654,7 @@ def extractData():
 								k = k + 1
 			
 				if FLAGS.velocity:
-					fp = open(dirname + "\\Data\\test" + str(i)+ "\\Velocity_" + file_names[j])
+					fp = open(dirname + "\\stdData\\test" + str(i)+ "\\Velocity_" + file_names[j])
 					for n, line in enumerate(fp):
 						if n == w:
 							row = line.split(',')
@@ -662,7 +662,7 @@ def extractData():
 								data[l][k]= row[m]
 								k = k + 1
 				if FLAGS.task:
-					fp = open(dirname + "\\Data\\test" + str(i)+ "\\Task_" + file_names[j])
+					fp = open(dirname + "\\DataCollectionSample\\test" + str(i)+ "\\Task_" + file_names[j])
 					for n, line in enumerate(fp):
 						if n == w:
 							row = line.split(',')
@@ -670,7 +670,7 @@ def extractData():
 								data[l][k]= row[m]
 								k = k + 1
 
-			for line in open(dirname + "\\Data\\test" + str(i)+ "\\label.csv"):
+			for line in open(dirname + "\\DataCollectionSample\\test" + str(i)+ "\\label.csv"):
 				temporaryLabel = line.split()
 				labels.append(str(temporaryLabel[0]))
 			
