@@ -1,6 +1,0 @@
- 
-<<<<<<< HEAD
- Training Accuracy:0.78846157
-=======
- Training Accuracy:0.86538464
->>>>>>> 860d2b3339a70f537fdf569b3189430cb6dcb4bf
