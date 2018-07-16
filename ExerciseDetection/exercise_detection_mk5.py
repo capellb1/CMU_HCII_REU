@@ -59,6 +59,7 @@ from tensorflow.python.data import Dataset
 import numpy as np
 import pandas as pd
 import math 
+import statistics as stat
 
 #Display libraries for visualization
 from IPython import display
@@ -92,6 +93,7 @@ FLAGS = tf.app.flags.FLAGS
 
 TRAIN_PERCENT = 0.7
 TEST_PERCENT = 0.3
+DATA_FOLDER = "DataCollectionSample"
 
 batchIndex = 0
 
@@ -180,7 +182,7 @@ def writeFolderLabel():
 
 def calcNumTests():
 	dirname = os.path.realpath('.')
-	filename = dirname + '\\DataCollectionSample\\TestNumber.txt'
+	filename = dirname + "\\"+ DATA_FOLDER +"\\" + 'TestNumber.txt'
 	numberTestFiles = open(filename,"r")
 	numberTests = numberTestFiles.read()
 	if FLAGS.verbose:
@@ -194,7 +196,7 @@ def calcMaxEntries():
 	timeScores = []
 	for i in range(0,int(numberTests)):
 		numEntries = 0
-		for line in open(dirname + "\\DataCollectionSample\\test" + str(i) + "\\" + FLAGS.source + "_" + file_names_super[0]):
+		for line in open(dirname + "\\"+ DATA_FOLDER +"\\test" + str(i) + "\\" + FLAGS.source + "_" + file_names_super[0]):
 			numEntries = numEntries + 1
 		if numEntries > maxEntries:
 			maxEntries = numEntries	
@@ -409,7 +411,7 @@ def tailor(i, refinement_rate):
 	jointActivity = []
 	for j in range(0,24):
 		activitySum = 0
-		for line in open(dirname + "\\DataCollectionSample\\test" + str(i)+ "\\Task_" + file_names_super[j]):
+		for line in open(dirname + "\\"+ DATA_FOLDER +"\\test" + str(i)+ "\\Task_" + file_names_super[j]):
 			row = line.split(',')
 			for l in range(0,3):
 				activitySum = activitySum + int(row[l])
@@ -640,7 +642,7 @@ def extractData():
 
 		for j in range(0,bodySize):
 			if FLAGS.position:
-				for line in open(dirname + "\\stdData\\test" + str(i)+ "\\Position_" + file_names[j]):
+				for line in open(dirname + "\\"+ DATA_FOLDER +"\\test" + str(i)+ "\\Position_" + file_names[j]):
 					if sample:
 						row = line.split(',')
 						for l in range(0,3):
@@ -651,7 +653,7 @@ def extractData():
 						sample = True
 
 			if FLAGS.velocity:
-				for line in open(dirname + "\\stdData\\test" + str(i)+ "\\Velocity_" + file_names[j]):
+				for line in open(dirname + "\\"+ DATA_FOLDER +"\\test" + str(i)+ "\\Velocity_" + file_names[j]):
 					if sample:
 						row = line.split(',')
 						for l in range(0,3):
@@ -662,7 +664,7 @@ def extractData():
 						sample = True
 
 			if FLAGS.task:
-				for line in open(dirname + "\\DataCollectionSample\\test" + str(i)+ "\\Task_" + file_names[j]):
+				for line in open(dirname + "\\"+ DATA_FOLDER +"\\test" + str(i)+ "\\Task_" + file_names[j]):
 					if sample:
 						row = line.split(',')
 						for l in range(0,3):
@@ -673,7 +675,7 @@ def extractData():
 						sample = True
 		
 		#seperate the label from the name and event number stored within the label.csv file(s)
-		for line in open(dirname + "\\DataCollectionSample\\test" + str(i)+ "\\label.csv"):
+		for line in open(dirname + "\\"+ DATA_FOLDER +"\\test" + str(i)+ "\\label.csv"):
 			temporaryLabel = line.split()
 			labels.append(str(temporaryLabel[0]))
 
@@ -719,6 +721,51 @@ def partitionData(features, labels):
 
 	return trainLabels, trainFeatures, train, testLabels, testFeatures, test
 
+def std(data, numberTests):
+	dataByBody = []
+	means = []
+	stdevs = []
+
+	mean = 0
+	stdev = 0
+	for k in range(0,75):
+		bodypartData = []
+		for l in range(0,int(numberTests)):
+			bodypartData.append(data[l][k])
+
+		mean = stat.mean(bodypartData)
+		stdev = stat.stdev(bodypartData)
+		dataByBody.append(bodypartData)
+		means.append(mean)
+		stdevs.append(stdev)
+
+		for j in range(0, len(bodypartData)):
+			dataByBody[k][j] = (dataByBody[k][j] - mean)/stdev
+
+	for l in range(0,int(numberTests)):
+		for k in range(0,75):
+			data[l][k] = dataByBody[k][l]
+
+	return data, means, stdevs
+
+def stdTest(data, numberTests, mean, stdev):
+	dataByBody = []
+	for k in range(0,75):
+		bodypartData = []
+		for l in range(0,int(numberTests)):
+			bodypartData.append(data[l][k])
+
+		dataByBody.append(bodypartData)
+
+		for j in range(0, len(bodypartData)):
+			dataByBody[k][j] = (dataByBody[k][j] - mean[k])/stdev[k]
+
+	for l in range(0,int(numberTests)):
+		for k in range(0,75):
+			data[l][k] = dataByBody[k][l]
+
+	return data
+
 if FLAGS.refinement == "Uniform":
 	file_names = uniformRefinement()
 
@@ -759,6 +806,9 @@ def main(argv = None):
 	data, labels = extractData()
 	labels = oneHot(labels)
 	trainLabels, trainData, trainNumber, testLabels, testData, testNumber = partitionData(data, labels)
+
+	trainData, means, stdevs = std(trainData, trainNumber)
+	testData = stdTest(testData, testNumber, means, stdevs)
 
 	inputLayer = bodySize*maxEntries*3*numSections
 

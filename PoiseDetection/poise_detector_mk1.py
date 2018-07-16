@@ -68,9 +68,10 @@ from matplotlib import pyplot as plt
 from sklearn import metrics
 import seaborn as sns
 import glob
+import statistics as stat
 
 #Define Flags to change the Hyperperameters and other variables
-tf.app.flags.DEFINE_integer('batch_size',1000,'number of randomly sampled images from the training set')
+tf.app.flags.DEFINE_integer('batch_size',100,'number of randomly sampled images from the training set')
 tf.app.flags.DEFINE_float('learning_rate',0.001,'how quickly the model progresses along the loss curve during optimization')
 tf.app.flags.DEFINE_integer('epochs',10,'number of passes over the training data')
 tf.app.flags.DEFINE_float('regularization_rate',0.01,'Strength of regularization')
@@ -92,6 +93,7 @@ FLAGS = tf.app.flags.FLAGS
 
 TRAIN_PERCENT = 0.7
 TEST_PERCENT = 0.3
+DATA_FOLDER = "DataCollectionSample"
 
 batchIndex = 0
 
@@ -147,6 +149,9 @@ file_names_super =[
 	'AnkleLeft.csv',     
 	'FootLeft.csv']
 
+#Open file used to store accuracy scores and any other printed data
+dirname = os.path.realpath('.')
+
 def writeFolderLabel():
 	'''
 		Creating a unuiqe folder name to save the results
@@ -180,7 +185,11 @@ def writeFolderLabel():
 
 def calcNumTests():
 	dirname = os.path.realpath('.')
+<<<<<<< HEAD
 	filename = dirname + '\\DataCollectionSample\\TestNumber.txt'
+=======
+	filename = dirname + '\\' + DATA_FOLDER + '\\TestNumber.txt'
+>>>>>>> 860d2b3339a70f537fdf569b3189430cb6dcb4bf
 	numberTestFiles = open(filename,"r")
 	numberTests = numberTestFiles.read()
 	if FLAGS.verbose:
@@ -194,7 +203,11 @@ def calcMaxEntries():
 	timeScores = []
 	for i in range(0,int(numberTests)):
 		numEntries = 0
+<<<<<<< HEAD
 		for line in open(dirname + "\\DataCollectionSample\\test" + str(i) + "\\" + FLAGS.source + "_" + file_names_super[0]):
+=======
+		for line in open(dirname + "\\" + DATA_FOLDER + "\\test" + str(i) + "\\" + FLAGS.source + "_" + file_names_super[0]):
+>>>>>>> 860d2b3339a70f537fdf569b3189430cb6dcb4bf
 			numEntries = numEntries + 1
 		if numEntries > maxEntries:
 			maxEntries = numEntries	
@@ -408,8 +421,13 @@ def tailor(i, refinement_rate):
 
 	jointActivity = []
 	for j in range(0,24):
+<<<<<<< HEAD
 		activitySum = 0
 		for line in open(dirname + "\\DataCollectionSample\\test" + str(i)+ "\\Task_" + file_names_super[j]):
+=======
+		activitySum = 0 
+		for line in open(dirname + "\\" + DATA_FOLDER + "\\test" + str(i)+ "\\Task_" + file_names_super[j]):
+>>>>>>> 860d2b3339a70f537fdf569b3189430cb6dcb4bf
 			row = line.split(',')
 			for l in range(0,3):
 				activitySum = activitySum + int(row[l])
@@ -619,7 +637,7 @@ def extractData():
 	'''
 		Moves data from the text files into flattened arrays.
 		Each time stamp is a single row and has a corresponding event label
-			[Arm1xyz, Head1xyz, Foot1xyz, ...] EVENT 10
+			[Arm1xyz, Head1xyz, Foot1xyz, ...] EVENT 1
 			[Arm2xyz, Head2xyz, Foot2xyz, ...] EVENT 2
 		
 		Parameters: None
@@ -645,7 +663,11 @@ def extractData():
 			k=0
 			for j in range(0, bodySize):
 				if FLAGS.position:
+<<<<<<< HEAD
 					fp = open(dirname + "\\stdData\\test" + str(i)+ "\\Position_" + file_names[j])
+=======
+					fp = open(dirname + "\\"+ DATA_FOLDER +"\\test" + str(i)+ "\\Position_" + file_names[j])
+>>>>>>> 860d2b3339a70f537fdf569b3189430cb6dcb4bf
 					for n, line in enumerate(fp):
 						if n == w:
 							row = line.split(',')
@@ -654,7 +676,11 @@ def extractData():
 								k = k + 1
 			
 				if FLAGS.velocity:
+<<<<<<< HEAD
 					fp = open(dirname + "\\stdData\\test" + str(i)+ "\\Velocity_" + file_names[j])
+=======
+					fp = open(dirname + "\\"+ DATA_FOLDER +"\\test"+ str(i)+ "\\Velocity_" + file_names[j])
+>>>>>>> 860d2b3339a70f537fdf569b3189430cb6dcb4bf
 					for n, line in enumerate(fp):
 						if n == w:
 							row = line.split(',')
@@ -662,7 +688,11 @@ def extractData():
 								data[l][k]= row[m]
 								k = k + 1
 				if FLAGS.task:
+<<<<<<< HEAD
 					fp = open(dirname + "\\DataCollectionSample\\test" + str(i)+ "\\Task_" + file_names[j])
+=======
+					fp = open(dirname + "\\"+ DATA_FOLDER +"\\test"+ str(i)+ "\\Task_" + file_names[j])
+>>>>>>> 860d2b3339a70f537fdf569b3189430cb6dcb4bf
 					for n, line in enumerate(fp):
 						if n == w:
 							row = line.split(',')
@@ -670,7 +700,11 @@ def extractData():
 								data[l][k]= row[m]
 								k = k + 1
 
+<<<<<<< HEAD
 			for line in open(dirname + "\\DataCollectionSample\\test" + str(i)+ "\\label.csv"):
+=======
+			for line in open(dirname + "\\"+ DATA_FOLDER +"\\test" + str(i)+ "\\label.csv"):
+>>>>>>> 860d2b3339a70f537fdf569b3189430cb6dcb4bf
 				temporaryLabel = line.split()
 				labels.append(str(temporaryLabel[0]))
 			
@@ -723,13 +757,64 @@ def partitionData(features, labels):
 
 	return trainLabels, trainFeatures, train, testLabels, testFeatures, test
 
+def std(data, numberTests):
+	dataByBody = []
+	means = []
+	stdevs = []
+
+	mean = 0
+	stdev = 0
+	for k in range(0,75):
+		bodypartData = []
+		for l in range(0,int(numberTests)):
+			bodypartData.append(data[l][k])
+
+		mean = stat.mean(bodypartData)
+		stdev = stat.stdev(bodypartData)
+		dataByBody.append(bodypartData)
+		means.append(mean)
+		stdevs.append(stdev)
+
+		for j in range(0, len(bodypartData)):
+			dataByBody[k][j] = (dataByBody[k][j] - mean)/stdev
+
+	for l in range(0,int(numberTests)):
+		for k in range(0,75):
+			data[l][k] = dataByBody[k][l]
+
+	return data, means, stdevs
+
+def stdTest(data, numberTests, mean, stdev):
+	dataByBody = []
+	for k in range(0,75):
+		bodypartData = []
+		for l in range(0,int(numberTests)):
+			bodypartData.append(data[l][k])
+
+		dataByBody.append(bodypartData)
+
+		for j in range(0, len(bodypartData)):
+			dataByBody[k][j] = (dataByBody[k][j] - mean[k])/stdev[k]
+
+	for l in range(0,int(numberTests)):
+		for k in range(0,75):
+			data[l][k] = dataByBody[k][l]
+
+	return data
+
 if FLAGS.refinement == "Uniform":
 	file_names = uniformRefinement()
 
 elif FLAGS.refinement == "None":
 	file_names = file_names_super
 
-dirname = os.path.realpath('.')
+folderName = writeFolderLabel()
+
+newDir = dirname + '\\Models&Results\\' + folderName
+if not (os.path.exists(newDir)):
+	os.makedirs(newDir)
+resultsFile = open(newDir + '\\Results.txt',"w+")
+results2File = open(dirname + '\\Models&Results\\totalResults.txt',"a")
 
 numSections = calcSections()
 
@@ -739,15 +824,8 @@ numberTests = calcNumTests()
 
 maxEntries, timeScores = calcMaxEntries()
 
-folderName = writeFolderLabel()
 
 
-#Open file used to store accuracy scores and any other printed data
-newDir = dirname + '\\Models&Results\\' + folderName
-if not (os.path.exists(newDir)):
-	os.makedirs(newDir)
-resultsFile = open(newDir + '\\Results.txt',"w+")
-results2File = open(dirname + '\\Models&Results\\totalResults.txt',"a")
 
 def main(argv = None):
 	'''
@@ -765,6 +843,9 @@ def main(argv = None):
 	data, labels = extractData()
 	labels = oneHot(labels)
 	trainLabels, trainData, trainNumber, testLabels, testData, testNumber = partitionData(data, labels)
+
+	trainData, means, stdevs = std(trainData, trainNumber)
+	testData = stdTest(testData, testNumber, means, stdevs)
 
 	inputLayer = bodySize*3*numSections
 
