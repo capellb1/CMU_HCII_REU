@@ -721,49 +721,67 @@ def partitionData(features, labels):
 
 	return trainLabels, trainFeatures, train, testLabels, testFeatures, test
 
-def std(data, numberTests):
+def std(data, numberTests, timeScores):
 	dataByBody = []
 	means = []
 	stdevs = []
 
 	mean = 0
 	stdev = 0
-	for k in range(0,75):
+	off = 0
+	for j in range(0,25):
 		bodypartData = []
 		for l in range(0,int(numberTests)):
-			bodypartData.append(data[l][k])
+			for k in range(off, off+timeScores[l]//2):
+				bodypartData.append(data[l][k])
+		off = off + timeScores[l]//2
 
+		
+		
 		mean = stat.mean(bodypartData)
 		stdev = stat.stdev(bodypartData)
 		dataByBody.append(bodypartData)
 		means.append(mean)
 		stdevs.append(stdev)
 
-		for j in range(0, len(bodypartData)):
-			dataByBody[k][j] = (dataByBody[k][j] - mean)/stdev
+		for m in range(0, len(bodypartData)):
+			dataByBody[j][m] = (dataByBody[j][m] - mean)/stdev
 
+	off = 0
 	for l in range(0,int(numberTests)):
-		for k in range(0,75):
-			data[l][k] = dataByBody[k][l]
+		for j in range(0,25):
+			p=0
+			for k in range(off,timeScores[l]//2):
+				data[l][k] = dataByBody[j][p]
+				p= p+1
+			off = off + timeScores[l]//2
 
 	return data, means, stdevs
 
-def stdTest(data, numberTests, mean, stdev):
+def stdTest(data, numberTests, mean, stdev, timeScores):
 	dataByBody = []
-	for k in range(0,75):
+	off = 0
+	for j in range(0,25):
 		bodypartData = []
 		for l in range(0,int(numberTests)):
-			bodypartData.append(data[l][k])
+			for k in range(off, off+timeScores[l]//2):
+				bodypartData.append(data[l][k])
+		off = off + timeScores[l]//2
 
 		dataByBody.append(bodypartData)
 
-		for j in range(0, len(bodypartData)):
-			dataByBody[k][j] = (dataByBody[k][j] - mean[k])/stdev[k]
+		for m in range(0, len(bodypartData)):
+			dataByBody[j][m] = (dataByBody[j][m] - mean[j])/stdev[j]
 
+	off = 0
 	for l in range(0,int(numberTests)):
-		for k in range(0,75):
-			data[l][k] = dataByBody[k][l]
-
+		for j in range(0,25):
+			p=0
+			for k in range(off,timeScores[l]//2):
+				data[l][k] = dataByBody[j][p]
+				p= p+1
+			off = off + timeScores[l]//2
+			
 	return data
 
 if FLAGS.refinement == "Uniform":
@@ -801,15 +819,17 @@ def main(argv = None):
 	epochsTrained = FLAGS.epochs
 	batchSize = FLAGS.batch_size
 
-	print(bodySize)
 
 	data, labels = extractData()
 	labels = oneHot(labels)
 	trainLabels, trainData, trainNumber, testLabels, testData, testNumber = partitionData(data, labels)
 
-	trainData, means, stdevs = std(trainData, trainNumber)
-	testData = stdTest(testData, testNumber, means, stdevs)
-
+	print(len(trainData))
+	print(len(testData))
+	trainData, means, stdevs = std(trainData, trainNumber, timeScores)
+	testData = stdTest(testData, testNumber, means, stdevs, timeScores)
+	print(len(trainData))
+	print(len(testData))
 	inputLayer = bodySize*maxEntries*3*numSections
 
 	#tf Graph input
