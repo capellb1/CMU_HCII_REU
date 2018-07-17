@@ -7,7 +7,7 @@ filename = dirname + '\\Summary of Poise Final.xlsx'
 data = dirname + '\\Models&Results\\totalResults.txt'
 myworkbook = openpyxl.load_workbook(filename)
 
-worksheetP = myworkbook['Step 1 Normalized New']
+worksheetP = myworkbook['Step 1']
 
 f=open(data)
 lines=f.readlines()

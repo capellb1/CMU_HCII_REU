@@ -48,6 +48,7 @@ Otherwise, organize code as you see fit
 #Import Libraries
 import math
 import io
+import time
 
 #to get rid of warning
 import os
@@ -93,7 +94,7 @@ FLAGS = tf.app.flags.FLAGS
 
 TRAIN_PERCENT = 0.7
 TEST_PERCENT = 0.3
-DATA_FOLDER = "DataCollectionSample"
+DATA_FOLDER = "selectedData"
 
 batchIndex = 0
 
@@ -783,7 +784,7 @@ def stdTest(data, numberTests, mean, stdev, timeScores):
 			off = off + timeScores[l]//2
 			
 	return data
-
+time1 = time.time()
 if FLAGS.refinement == "Uniform":
 	file_names = uniformRefinement()
 
@@ -1000,7 +1001,12 @@ def main(argv = None):
 		resultsFile.write(" \n Training Accuracy:" + str(accuracy2.eval({X: trainData, Y: trainLabels})) + '\n')	
 		results2File.write("Training Accuracy:" + str(accuracy2.eval({X: trainData, Y: trainLabels})) + '\n')	
 		results2File.write("Testing Accuracy:" + str(accuracy2.eval({X: testData, Y: testLabels})) + '\n')	
-
+		evaluationAccuracy = accuracy2.eval({X: testData, Y: testLabels})
+	time2 = time.time()
+	totalTime = (time2 - time1)/60
+	print("TotalTime:" , totalTime)
+	n = ((200* evaluationAccuracy)/totalTime)
+	print("N:", n)
 
 
 #needed in order to call main

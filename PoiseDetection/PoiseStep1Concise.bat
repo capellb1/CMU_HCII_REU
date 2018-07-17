@@ -114,3 +114,5 @@ python3 poise_detector_mk1.py --learning_rate 0.0001 --position --activation Sig
 python3 poise_detector_mk1.py --regularization L1 --learning_rate 0.0001 --position --activation Sigmoid --label test1 --epochs 1000 --arch method4
 python3 poise_detector_mk1.py --regularization L2 --learning_rate 0.0001 --position --activation Sigmoid --label test1 --epochs 1000 --arch method4
 python3 poise_detector_mk1.py --learning_rate 0.0001 --position --activation Sigmoid --label test1 --epochs 1000 --arch method4
+
+python3 PoiseStep1ExcelConcise.py

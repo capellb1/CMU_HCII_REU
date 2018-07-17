@@ -59,6 +59,7 @@ from tensorflow.python.data import Dataset
 import numpy as np
 import pandas as pd
 import math 
+import time
 
 #Display libraries for visualization
 from IPython import display
@@ -185,10 +186,7 @@ def writeFolderLabel():
 
 def calcNumTests():
 	dirname = os.path.realpath('.')
-<<<<<<< HEAD
 
-=======
->>>>>>> d5128964983f33d5ff7ebd31b4c3d7a3a7b8ea2b
 	filename = dirname + '\\' + DATA_FOLDER + '\\TestNumber.txt'
 
 	numberTestFiles = open(filename,"r")
@@ -204,10 +202,7 @@ def calcMaxEntries():
 	timeScores = []
 	for i in range(0,int(numberTests)):
 		numEntries = 0
-<<<<<<< HEAD
 
-=======
->>>>>>> d5128964983f33d5ff7ebd31b4c3d7a3a7b8ea2b
 		for line in open(dirname + "\\" + DATA_FOLDER + "\\test" + str(i) + "\\" + FLAGS.source + "_" + file_names_super[0]):
 
 			numEntries = numEntries + 1
@@ -423,10 +418,7 @@ def tailor(i, refinement_rate):
 
 	jointActivity = []
 	for j in range(0,24):
-<<<<<<< HEAD
-=======
 
->>>>>>> d5128964983f33d5ff7ebd31b4c3d7a3a7b8ea2b
 		activitySum = 0 
 		for line in open(dirname + "\\" + DATA_FOLDER + "\\test" + str(i)+ "\\Task_" + file_names_super[j]):
 
@@ -677,10 +669,7 @@ def extractData():
 			
 				if FLAGS.velocity:
 					fp = open(dirname + "\\"+ DATA_FOLDER +"\\test"+ str(i)+ "\\Velocity_" + file_names[j])
-<<<<<<< HEAD
 
-=======
->>>>>>> d5128964983f33d5ff7ebd31b4c3d7a3a7b8ea2b
 					for n, line in enumerate(fp):
 						if n == w:
 							row = line.split(',')
@@ -688,13 +677,8 @@ def extractData():
 								data[l][k]= row[m]
 								k = k + 1
 				if FLAGS.task:
-<<<<<<< HEAD
 					fp = open(dirname + "\\"+ DATA_FOLDER +"\\test"+ str(i)+ "\\Task_" + file_names[j])
 
-=======
-
-					fp = open(dirname + "\\"+ DATA_FOLDER +"\\test"+ str(i)+ "\\Task_" + file_names[j])
->>>>>>> d5128964983f33d5ff7ebd31b4c3d7a3a7b8ea2b
 					for n, line in enumerate(fp):
 						if n == w:
 							row = line.split(',')
@@ -704,10 +688,7 @@ def extractData():
 
 
 			for line in open(dirname + "\\"+ DATA_FOLDER +"\\test" + str(i)+ "\\label.csv"):
-<<<<<<< HEAD
-=======
 
->>>>>>> d5128964983f33d5ff7ebd31b4c3d7a3a7b8ea2b
 				temporaryLabel = line.split()
 				labels.append(str(temporaryLabel[0]))
 			
@@ -804,6 +785,8 @@ def stdTest(data, numberTests, mean, stdev):
 			data[l][k] = dataByBody[k][l]
 
 	return data
+
+time1 = time.time()
 
 if FLAGS.refinement == "Uniform":
 	file_names = uniformRefinement()
@@ -1024,6 +1007,12 @@ def main(argv = None):
 		resultsFile.write("Training Accuracy:" + str(accuracy.eval({X: trainData, Y: trainLabels})) + '\n')	
 		results2File.write("Training Accuracy:" + str(accuracy.eval({X: trainData, Y: trainLabels})) + '\n')
 		results2File.write("Testing Accuracy:" + str(accuracy.eval({X: testData, Y: testLabels})) + '\n')
+		evaluationAccuracy = accuracy2.eval({X: testData, Y: testLabels})
+	time2 = time.time()
+	totalTime = (time2 - time1)/60
+	print("TotalTime:" , totalTime)
+	n = ((200* evaluationAccuracy)/totalTime)
+	print("N:", n)
 
 #needed in order to call main
 if __name__ == '__main__':
