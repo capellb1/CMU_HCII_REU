@@ -1,2 +1,6 @@
 Optimization Finished 
+<<<<<<< HEAD
+Training Accuracy:0.5179116
+=======
 Training Accuracy:0.43151176
+>>>>>>> 860d2b3339a70f537fdf569b3189430cb6dcb4bf
