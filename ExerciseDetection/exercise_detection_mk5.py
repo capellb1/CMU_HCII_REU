@@ -729,7 +729,7 @@ def std(data, numberTests, timeScores):
 	mean = 0
 	stdev = 0
 	off = 0
-	for j in range(0,25):
+	for j in range(0,bodySize):
 		bodypartData = []
 		for l in range(0,int(numberTests)):
 			for k in range(off, off+timeScores[l]//2):
@@ -749,7 +749,7 @@ def std(data, numberTests, timeScores):
 
 	off = 0
 	for l in range(0,int(numberTests)):
-		for j in range(0,25):
+		for j in range(0,bodySize):
 			p=0
 			for k in range(off,timeScores[l]//2):
 				data[l][k] = dataByBody[j][p]
@@ -761,7 +761,7 @@ def std(data, numberTests, timeScores):
 def stdTest(data, numberTests, mean, stdev, timeScores):
 	dataByBody = []
 	off = 0
-	for j in range(0,25):
+	for j in range(0,bodySize):
 		bodypartData = []
 		for l in range(0,int(numberTests)):
 			for k in range(off, off+timeScores[l]//2):
@@ -775,7 +775,7 @@ def stdTest(data, numberTests, mean, stdev, timeScores):
 
 	off = 0
 	for l in range(0,int(numberTests)):
-		for j in range(0,25):
+		for j in range(0,bodySize):
 			p=0
 			for k in range(off,timeScores[l]//2):
 				data[l][k] = dataByBody[j][p]

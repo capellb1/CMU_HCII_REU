@@ -115,6 +115,4 @@ python3 exercise_detection_mk5.py --regularization L1 --learning_rate 0.0001 --p
 python3 exercise_detection_mk5.py --regularization L2 --learning_rate 0.0001 --position --activation Sigmoid --label test1 --epochs 1000 --arch method4
 python3 exercise_detection_mk5.py --learning_rate 0.0001 --position --activation Sigmoid --label test1 --epochs 1000 --arch method4
 
-cd ..
-cd PoiseDetection
-PoiseStep1Concise.bat			
+python3 ExerciseStep1Concise.py	

@@ -185,11 +185,9 @@ def writeFolderLabel():
 
 def calcNumTests():
 	dirname = os.path.realpath('.')
-<<<<<<< HEAD
-	filename = dirname + '\\DataCollectionSample\\TestNumber.txt'
-=======
+
 	filename = dirname + '\\' + DATA_FOLDER + '\\TestNumber.txt'
->>>>>>> 860d2b3339a70f537fdf569b3189430cb6dcb4bf
+
 	numberTestFiles = open(filename,"r")
 	numberTests = numberTestFiles.read()
 	if FLAGS.verbose:
@@ -203,11 +201,9 @@ def calcMaxEntries():
 	timeScores = []
 	for i in range(0,int(numberTests)):
 		numEntries = 0
-<<<<<<< HEAD
-		for line in open(dirname + "\\DataCollectionSample\\test" + str(i) + "\\" + FLAGS.source + "_" + file_names_super[0]):
-=======
+
 		for line in open(dirname + "\\" + DATA_FOLDER + "\\test" + str(i) + "\\" + FLAGS.source + "_" + file_names_super[0]):
->>>>>>> 860d2b3339a70f537fdf569b3189430cb6dcb4bf
+
 			numEntries = numEntries + 1
 		if numEntries > maxEntries:
 			maxEntries = numEntries	
@@ -421,13 +417,9 @@ def tailor(i, refinement_rate):
 
 	jointActivity = []
 	for j in range(0,24):
-<<<<<<< HEAD
-		activitySum = 0
-		for line in open(dirname + "\\DataCollectionSample\\test" + str(i)+ "\\Task_" + file_names_super[j]):
-=======
 		activitySum = 0 
 		for line in open(dirname + "\\" + DATA_FOLDER + "\\test" + str(i)+ "\\Task_" + file_names_super[j]):
->>>>>>> 860d2b3339a70f537fdf569b3189430cb6dcb4bf
+
 			row = line.split(',')
 			for l in range(0,3):
 				activitySum = activitySum + int(row[l])
@@ -663,11 +655,9 @@ def extractData():
 			k=0
 			for j in range(0, bodySize):
 				if FLAGS.position:
-<<<<<<< HEAD
-					fp = open(dirname + "\\stdData\\test" + str(i)+ "\\Position_" + file_names[j])
-=======
+
 					fp = open(dirname + "\\"+ DATA_FOLDER +"\\test" + str(i)+ "\\Position_" + file_names[j])
->>>>>>> 860d2b3339a70f537fdf569b3189430cb6dcb4bf
+
 					for n, line in enumerate(fp):
 						if n == w:
 							row = line.split(',')
@@ -676,11 +666,8 @@ def extractData():
 								k = k + 1
 			
 				if FLAGS.velocity:
-<<<<<<< HEAD
-					fp = open(dirname + "\\stdData\\test" + str(i)+ "\\Velocity_" + file_names[j])
-=======
 					fp = open(dirname + "\\"+ DATA_FOLDER +"\\test"+ str(i)+ "\\Velocity_" + file_names[j])
->>>>>>> 860d2b3339a70f537fdf569b3189430cb6dcb4bf
+
 					for n, line in enumerate(fp):
 						if n == w:
 							row = line.split(',')
@@ -688,11 +675,8 @@ def extractData():
 								data[l][k]= row[m]
 								k = k + 1
 				if FLAGS.task:
-<<<<<<< HEAD
-					fp = open(dirname + "\\DataCollectionSample\\test" + str(i)+ "\\Task_" + file_names[j])
-=======
 					fp = open(dirname + "\\"+ DATA_FOLDER +"\\test"+ str(i)+ "\\Task_" + file_names[j])
->>>>>>> 860d2b3339a70f537fdf569b3189430cb6dcb4bf
+
 					for n, line in enumerate(fp):
 						if n == w:
 							row = line.split(',')
@@ -700,11 +684,8 @@ def extractData():
 								data[l][k]= row[m]
 								k = k + 1
 
-<<<<<<< HEAD
-			for line in open(dirname + "\\DataCollectionSample\\test" + str(i)+ "\\label.csv"):
-=======
+
 			for line in open(dirname + "\\"+ DATA_FOLDER +"\\test" + str(i)+ "\\label.csv"):
->>>>>>> 860d2b3339a70f537fdf569b3189430cb6dcb4bf
 				temporaryLabel = line.split()
 				labels.append(str(temporaryLabel[0]))
 			
@@ -764,7 +745,7 @@ def std(data, numberTests):
 
 	mean = 0
 	stdev = 0
-	for k in range(0,75):
+	for k in range(0,bodySize):
 		bodypartData = []
 		for l in range(0,int(numberTests)):
 			bodypartData.append(data[l][k])
@@ -779,14 +760,14 @@ def std(data, numberTests):
 			dataByBody[k][j] = (dataByBody[k][j] - mean)/stdev
 
 	for l in range(0,int(numberTests)):
-		for k in range(0,75):
+		for k in range(0,bodySize):
 			data[l][k] = dataByBody[k][l]
 
 	return data, means, stdevs
 
 def stdTest(data, numberTests, mean, stdev):
 	dataByBody = []
-	for k in range(0,75):
+	for k in range(0,bodySize):
 		bodypartData = []
 		for l in range(0,int(numberTests)):
 			bodypartData.append(data[l][k])
@@ -797,7 +778,7 @@ def stdTest(data, numberTests, mean, stdev):
 			dataByBody[k][j] = (dataByBody[k][j] - mean[k])/stdev[k]
 
 	for l in range(0,int(numberTests)):
-		for k in range(0,75):
+		for k in range(0,bodySize):
 			data[l][k] = dataByBody[k][l]
 
 	return data

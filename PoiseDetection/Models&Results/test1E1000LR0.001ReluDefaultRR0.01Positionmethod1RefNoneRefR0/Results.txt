@@ -1,2 +1,2 @@
 Optimization Finished 
-Training Accuracy:0.5148628
+Training Accuracy:0.5220492
