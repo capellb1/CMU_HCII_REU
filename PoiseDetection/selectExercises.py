@@ -52,9 +52,9 @@ def main(argv = None):
 			temporaryLabel = line.split()
 			labels.append((str(temporaryLabel[0]),i))
 
-	print(numberTests)
+	print("Labels:", labels)
 	#parse list for desired examples
-	removeIndex = [label[1] for label in labels if (label[0] == "Cat" or label[0] == "Trunk" or label[0] == "Supine" or label[0] == "Y"  or label[0] == "Wall" or label[0] == "Pretzel" or label[0] == "Seated" or label[0] == "Towel" or label[0] == "Sumo") ]
+	removeIndex = [label[1] for label in labels if (label[0] == "Cat" or label[0] == "Supine" or label[0] == "Trunk" or  label[0] == "Pretzel")]
 	LabelsIndex = [label[1] for label in labels]
 	print("Remove Index:", removeIndex)
 	print("Labels Index:", LabelsIndex)

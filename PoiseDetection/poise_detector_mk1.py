@@ -93,7 +93,7 @@ FLAGS = tf.app.flags.FLAGS
 
 TRAIN_PERCENT = 0.7
 TEST_PERCENT = 0.3
-DATA_FOLDER = "DataCollectionSample"
+DATA_FOLDER = "selectedData"
 
 batchIndex = 0
 
@@ -185,7 +185,10 @@ def writeFolderLabel():
 
 def calcNumTests():
 	dirname = os.path.realpath('.')
+<<<<<<< HEAD
 
+=======
+>>>>>>> d5128964983f33d5ff7ebd31b4c3d7a3a7b8ea2b
 	filename = dirname + '\\' + DATA_FOLDER + '\\TestNumber.txt'
 
 	numberTestFiles = open(filename,"r")
@@ -201,7 +204,10 @@ def calcMaxEntries():
 	timeScores = []
 	for i in range(0,int(numberTests)):
 		numEntries = 0
+<<<<<<< HEAD
 
+=======
+>>>>>>> d5128964983f33d5ff7ebd31b4c3d7a3a7b8ea2b
 		for line in open(dirname + "\\" + DATA_FOLDER + "\\test" + str(i) + "\\" + FLAGS.source + "_" + file_names_super[0]):
 
 			numEntries = numEntries + 1
@@ -417,6 +423,10 @@ def tailor(i, refinement_rate):
 
 	jointActivity = []
 	for j in range(0,24):
+<<<<<<< HEAD
+=======
+
+>>>>>>> d5128964983f33d5ff7ebd31b4c3d7a3a7b8ea2b
 		activitySum = 0 
 		for line in open(dirname + "\\" + DATA_FOLDER + "\\test" + str(i)+ "\\Task_" + file_names_super[j]):
 
@@ -667,7 +677,10 @@ def extractData():
 			
 				if FLAGS.velocity:
 					fp = open(dirname + "\\"+ DATA_FOLDER +"\\test"+ str(i)+ "\\Velocity_" + file_names[j])
+<<<<<<< HEAD
 
+=======
+>>>>>>> d5128964983f33d5ff7ebd31b4c3d7a3a7b8ea2b
 					for n, line in enumerate(fp):
 						if n == w:
 							row = line.split(',')
@@ -675,8 +688,13 @@ def extractData():
 								data[l][k]= row[m]
 								k = k + 1
 				if FLAGS.task:
+<<<<<<< HEAD
 					fp = open(dirname + "\\"+ DATA_FOLDER +"\\test"+ str(i)+ "\\Task_" + file_names[j])
 
+=======
+
+					fp = open(dirname + "\\"+ DATA_FOLDER +"\\test"+ str(i)+ "\\Task_" + file_names[j])
+>>>>>>> d5128964983f33d5ff7ebd31b4c3d7a3a7b8ea2b
 					for n, line in enumerate(fp):
 						if n == w:
 							row = line.split(',')
@@ -686,6 +704,10 @@ def extractData():
 
 
 			for line in open(dirname + "\\"+ DATA_FOLDER +"\\test" + str(i)+ "\\label.csv"):
+<<<<<<< HEAD
+=======
+
+>>>>>>> d5128964983f33d5ff7ebd31b4c3d7a3a7b8ea2b
 				temporaryLabel = line.split()
 				labels.append(str(temporaryLabel[0]))
 			
