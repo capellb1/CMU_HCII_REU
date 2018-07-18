@@ -1007,7 +1007,7 @@ def main(argv = None):
 		resultsFile.write("Training Accuracy:" + str(accuracy.eval({X: trainData, Y: trainLabels})) + '\n')	
 		results2File.write("Training Accuracy:" + str(accuracy.eval({X: trainData, Y: trainLabels})) + '\n')
 		results2File.write("Testing Accuracy:" + str(accuracy.eval({X: testData, Y: testLabels})) + '\n')
-		evaluationAccuracy = accuracy2.eval({X: testData, Y: testLabels})
+		evaluationAccuracy = accuracy.eval({X: testData, Y: testLabels})
 	time2 = time.time()
 	totalTime = (time2 - time1)/60
 	print("TotalTime:" , totalTime)
