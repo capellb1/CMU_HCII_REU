@@ -4,10 +4,10 @@ import math
 
 dirname = os.path.realpath('.')
 filename = dirname + '\\Summary of Poise Final.xlsx'
-data = dirname + '\\Models&Results\\totalResultsFinalStep1.txt'
+data = dirname + '\\Models&Results\\totalResults.txt'
 myworkbook = openpyxl.load_workbook(filename)
 
-worksheetP = myworkbook['Step 1 Normalized']
+worksheetP = myworkbook['Step 1']
 
 f=open(data)
 lines=f.readlines()

@@ -59,6 +59,7 @@ from tensorflow.python.data import Dataset
 import numpy as np
 import pandas as pd
 import math 
+import time
 
 #Display libraries for visualization
 from IPython import display
@@ -185,6 +186,7 @@ def writeFolderLabel():
 
 def calcNumTests():
 	dirname = os.path.realpath('.')
+
 	filename = dirname + '\\' + DATA_FOLDER + '\\TestNumber.txt'
 
 	numberTestFiles = open(filename,"r")
@@ -200,6 +202,7 @@ def calcMaxEntries():
 	timeScores = []
 	for i in range(0,int(numberTests)):
 		numEntries = 0
+
 		for line in open(dirname + "\\" + DATA_FOLDER + "\\test" + str(i) + "\\" + FLAGS.source + "_" + file_names_super[0]):
 
 			numEntries = numEntries + 1
@@ -666,6 +669,7 @@ def extractData():
 			
 				if FLAGS.velocity:
 					fp = open(dirname + "\\"+ DATA_FOLDER +"\\test"+ str(i)+ "\\Velocity_" + file_names[j])
+
 					for n, line in enumerate(fp):
 						if n == w:
 							row = line.split(',')
@@ -673,8 +677,8 @@ def extractData():
 								data[l][k]= row[m]
 								k = k + 1
 				if FLAGS.task:
-
 					fp = open(dirname + "\\"+ DATA_FOLDER +"\\test"+ str(i)+ "\\Task_" + file_names[j])
+
 					for n, line in enumerate(fp):
 						if n == w:
 							row = line.split(',')
@@ -744,7 +748,7 @@ def std(data, numberTests):
 
 	mean = 0
 	stdev = 0
-	for k in range(0,75):
+	for k in range(0,bodySize):
 		bodypartData = []
 		for l in range(0,int(numberTests)):
 			bodypartData.append(data[l][k])
@@ -759,14 +763,14 @@ def std(data, numberTests):
 			dataByBody[k][j] = (dataByBody[k][j] - mean)/stdev
 
 	for l in range(0,int(numberTests)):
-		for k in range(0,75):
+		for k in range(0,bodySize):
 			data[l][k] = dataByBody[k][l]
 
 	return data, means, stdevs
 
 def stdTest(data, numberTests, mean, stdev):
 	dataByBody = []
-	for k in range(0,75):
+	for k in range(0,bodySize):
 		bodypartData = []
 		for l in range(0,int(numberTests)):
 			bodypartData.append(data[l][k])
@@ -777,10 +781,12 @@ def stdTest(data, numberTests, mean, stdev):
 			dataByBody[k][j] = (dataByBody[k][j] - mean[k])/stdev[k]
 
 	for l in range(0,int(numberTests)):
-		for k in range(0,75):
+		for k in range(0,bodySize):
 			data[l][k] = dataByBody[k][l]
 
 	return data
+
+time1 = time.time()
 
 if FLAGS.refinement == "Uniform":
 	file_names = uniformRefinement()
@@ -1001,6 +1007,12 @@ def main(argv = None):
 		resultsFile.write("Training Accuracy:" + str(accuracy.eval({X: trainData, Y: trainLabels})) + '\n')	
 		results2File.write("Training Accuracy:" + str(accuracy.eval({X: trainData, Y: trainLabels})) + '\n')
 		results2File.write("Testing Accuracy:" + str(accuracy.eval({X: testData, Y: testLabels})) + '\n')
+		evaluationAccuracy = accuracy.eval({X: testData, Y: testLabels})
+	time2 = time.time()
+	totalTime = (time2 - time1)/60
+	print("TotalTime:" , totalTime)
+	n = ((200* evaluationAccuracy)/totalTime)
+	print("N:", n)
 
 #needed in order to call main
 if __name__ == '__main__':
