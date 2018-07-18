@@ -1,0 +1,2 @@
+Training Accuracy:0.47412914
+Testing Accuracy:0.47671002
