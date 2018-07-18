@@ -99,7 +99,7 @@ DATA_FOLDER = "selectedData"
 batchIndex = 0
 
 arch = FLAGS.arch
-numberClasses = 11
+numberClasses = 7
 if (arch == 'method1'):
 	hiddenLayer1 = 60
 	hiddenLayer2 = 60
@@ -330,27 +330,19 @@ def oneHot(labels):
 	one_hot_labels = []
 	for i in range(0,len(labels)):
 		if labels[i].lower() == "y":
-			one_hot_labels.append([1,0,0,0,0,0,0,0,0,0,0])
-		elif labels[i].lower() == "cat":
-			one_hot_labels.append([0,1,0,0,0,0,0,0,0,0,0])
-		elif labels[i].lower() == "supine":
-			one_hot_labels.append([0,0,1,0,0,0,0,0,0,0,0])
+			one_hot_labels.append([1,0,0,0,0,0,0])
 		elif labels[i].lower() == "seated":
-			one_hot_labels.append([0,0,0,1,0,0,0,0,0,0,0])
+			one_hot_labels.append([0,1,0,0,0,0,0])
 		elif labels[i].lower() == "sumo":
-			one_hot_labels.append([0,0,0,0,1,0,0,0,0,0,0])
+			one_hot_labels.append([0,0,1,0,0,0,0])
 		elif labels[i].lower() == "mermaid":
-			one_hot_labels.append([0,0,0,0,0,1,0,0,0,0,0])
+			one_hot_labels.append([0,0,0,1,0,0,0])
 		elif labels[i].lower() == "towel":
-			one_hot_labels.append([0,0,0,0,0,0,1,0,0,0,0])
-		elif labels[i].lower() == "trunk":
-			one_hot_labels.append([0,0,0,0,0,0,0,1,0,0,0])
+			one_hot_labels.append([0,0,0,0,1,0,0])
 		elif labels[i].lower() == "wall":
-			one_hot_labels.append([0,0,0,0,0,0,0,0,1,0,0])
-		elif labels[i].lower() == "pretzel":
-			one_hot_labels.append([0,0,0,0,0,0,0,0,0,1,0])
+			one_hot_labels.append([0,0,0,0,0,1,0])
 		else: #OOV
-			one_hot_labels.append([0,0,0,0,0,0,0,0,0,0,1])
+			one_hot_labels.append([0,0,0,0,0,0,1])
 	one_hot_labels = np.asarray(one_hot_labels)
 	print("Lable Encoding Complete")
 	return one_hot_labels
@@ -371,23 +363,15 @@ def findExercise (predictions):
 		if predictions[i] == 0:
 			one_hot_labels.append("y")
 		elif predictions[i] == 1:
-			one_hot_labels.append("cat")
-		elif predictions[i] == 2:
-			one_hot_labels.append("supine")
-		elif predictions[i] == 3:
 			one_hot_labels.append("seated")
-		elif predictions[i] == 4:
+		elif predictions[i] == 2:
 			one_hot_labels.append("sumo")
-		elif predictions[i] == 5:
+		elif predictions[i] == 3:
 			one_hot_labels.append("mermaid")
-		elif predictions[i] == 6:
+		elif predictions[i] == 4:
 			one_hot_labels.append("towel")
-		elif predictions[i] == 7:
-			one_hot_labels.append("trunk")
-		elif predictions[i] == 8:
+		elif predictions[i] == 5:
 			one_hot_labels.append("wall")
-		elif predictions[i] == 9:
-			one_hot_labels.append("pretzel")
 		else: #OOV
 			one_hot_labels.append("oov")
 	one_hot_labels = np.asarray(one_hot_labels)
@@ -825,9 +809,9 @@ def main(argv = None):
 	labels = oneHot(labels)
 	trainLabels, trainData, trainNumber, testLabels, testData, testNumber = partitionData(data, labels)
 
-
 	trainData, means, stdevs = std(trainData, trainNumber, timeScores)
 	testData = stdTest(testData, testNumber, means, stdevs, timeScores)
+
 	inputLayer = bodySize*maxEntries*3*numSections
 
 	#tf Graph input
@@ -899,9 +883,10 @@ def main(argv = None):
 		'out' : tf.Variable(tf.random_normal([numberClasses], dtype=data.dtype, name = 'bout'))
 		}
 
+	
 	#construct model
 	logits = multilayer_perception(X, weights, biases)
-	print(logits)
+	
 	#define loss and optimizer
 	regularization = FLAGS.regularization
 	regularizationRate = FLAGS.regularization_rate
@@ -941,7 +926,7 @@ def main(argv = None):
 	with tf.Session() as sess:
 		sess.run(init)
 		#training cycle
-		print(trainNumber, batchSize)
+		
 		for epoch in range(epochsTrained):
 			global batchIndex 
 			batchIndex = 0
