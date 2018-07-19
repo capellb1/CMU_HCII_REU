@@ -415,7 +415,7 @@ def tailor(i, refinement_rate):
 		for line in open(dirname + "\\"+ DATA_FOLDER +"\\test" + str(i)+ "\\Task_" + file_names_super[j]):
 			row = line.split(',')
 			for l in range(0,3):
-				activitySum = activitySum + int(row[l])
+				activitySum = activitySum + float(row[l])
 
 		jointActivity.append((activitySum,j))
 
@@ -424,7 +424,7 @@ def tailor(i, refinement_rate):
 	jointIndexActivity = [x[1] for x in jointActivity]
 
 	if refinement_rate == 0:
-		return
+		return uniformRefinement()
 	
 	elif refinement_rate == 25:
 		selectedJoints = jointIndexActivity[-20:-1]
@@ -784,12 +784,16 @@ def stdTest(data, numberTests, mean, stdev, timeScores):
 			off = off + timeScores[l]//2
 			
 	return data
+
 time1 = time.time()
+
 if FLAGS.refinement == "Uniform":
 	file_names = uniformRefinement()
+	
 
 elif FLAGS.refinement == "None":
 	file_names = file_names_super
+
 
 dirname = os.path.realpath('.')
 
@@ -825,12 +829,9 @@ def main(argv = None):
 	labels = oneHot(labels)
 	trainLabels, trainData, trainNumber, testLabels, testData, testNumber = partitionData(data, labels)
 
-	print(len(trainData))
-	print(len(testData))
 	trainData, means, stdevs = std(trainData, trainNumber, timeScores)
 	testData = stdTest(testData, testNumber, means, stdevs, timeScores)
-	print(len(trainData))
-	print(len(testData))
+
 	inputLayer = bodySize*maxEntries*3*numSections
 
 	#tf Graph input
@@ -944,7 +945,6 @@ def main(argv = None):
 	with tf.Session() as sess:
 		sess.run(init)
 		#training cycle
-		print(trainNumber, batchSize)
 		for epoch in range(epochsTrained):
 			global batchIndex 
 			batchIndex = 0
@@ -1007,6 +1007,8 @@ def main(argv = None):
 	print("TotalTime:" , totalTime)
 	n = ((200* evaluationAccuracy)/totalTime)
 	print("N:", n)
+	results2File.write("Evaluation Metric: " + str(n) + '\n')	
+
 
 
 #needed in order to call main
