@@ -48,7 +48,6 @@ Otherwise, organize code as you see fit
 #Import Libraries
 import math
 import io
-import time
 
 #to get rid of warning
 import os
@@ -95,6 +94,7 @@ FLAGS = tf.app.flags.FLAGS
 TRAIN_PERCENT = 0.7
 TEST_PERCENT = 0.3
 DATA_FOLDER = "selectedData"
+THRESHOLD = 0.30
 
 batchIndex = 0
 
@@ -395,11 +395,13 @@ def tailor(i, refinement_rate):
 
 	jointActivity = []
 	for j in range(0,24):
-		activitySum = 0
-		for line in open(dirname + "\\"+ DATA_FOLDER +"\\test" + str(i)+ "\\Task_" + file_names_super[j]):
+
+		activitySum = 0 
+		for line in open(dirname + "\\" + DATA_FOLDER + "\\test" + str(i)+ "\\Task_" + file_names_super[j]):
+
 			row = line.split(',')
 			for l in range(0,3):
-				activitySum = activitySum + int(row[l])
+				activitySum = activitySum + float(row[l])
 
 		jointActivity.append((activitySum,j))
 
@@ -408,7 +410,7 @@ def tailor(i, refinement_rate):
 	jointIndexActivity = [x[1] for x in jointActivity]
 
 	if refinement_rate == 0:
-		return
+		return uniformRefinement()
 	
 	elif refinement_rate == 25:
 		selectedJoints = jointIndexActivity[-20:-1]
@@ -706,69 +708,51 @@ def partitionData(features, labels):
 
 	return trainLabels, trainFeatures, train, testLabels, testFeatures, test
 
-def std(data, numberTests, timeScores):
+def std(data, numberTests):
 	dataByBody = []
 	means = []
 	stdevs = []
 
 	mean = 0
 	stdev = 0
-	off = 0
-	for j in range(0,bodySize):
+	for k in range(0,bodySize*3*numSections):
 		bodypartData = []
-		for l in range(0,int(numberTests)):
-			for k in range(off, off+timeScores[l]//2):
-				bodypartData.append(data[l][k])
-		off = off + timeScores[l]//2
+		for l in range(0,len(data)):
+			bodypartData.append(data[l][k])
 
-		
-		
 		mean = stat.mean(bodypartData)
 		stdev = stat.stdev(bodypartData)
 		dataByBody.append(bodypartData)
 		means.append(mean)
 		stdevs.append(stdev)
 
-		for m in range(0, len(bodypartData)):
-			dataByBody[j][m] = (dataByBody[j][m] - mean)/stdev
+		for j in range(0, len(bodypartData)):
+			dataByBody[k][j] = (dataByBody[k][j] - mean)/stdev
 
-	off = 0
-	for l in range(0,int(numberTests)):
-		for j in range(0,bodySize):
-			p=0
-			for k in range(off,timeScores[l]//2):
-				data[l][k] = dataByBody[j][p]
-				p= p+1
-			off = off + timeScores[l]//2
+	for l in range(0,len(data)):
+		for k in range(0,bodySize*3*numSections):
+			data[l][k] = dataByBody[k][l]
 
 	return data, means, stdevs
 
-def stdTest(data, numberTests, mean, stdev, timeScores):
+def stdTest(data, numberTests, mean, stdev):
 	dataByBody = []
-	off = 0
-	for j in range(0,bodySize):
+	for k in range(0,bodySize*3*numSections):
 		bodypartData = []
-		for l in range(0,int(numberTests)):
-			for k in range(off, off+timeScores[l]//2):
-				bodypartData.append(data[l][k])
-		off = off + timeScores[l]//2
+		for l in range(0,len(data[:])):
+			bodypartData.append(data[l][k])
 
 		dataByBody.append(bodypartData)
 
-		for m in range(0, len(bodypartData)):
-			dataByBody[j][m] = (dataByBody[j][m] - mean[j])/stdev[j]
+		for j in range(0, len(bodypartData)):
+			dataByBody[k][j] = (dataByBody[k][j] - mean[k])/stdev[k]
 
-	off = 0
-	for l in range(0,int(numberTests)):
-		for j in range(0,bodySize):
-			p=0
-			for k in range(off,timeScores[l]//2):
-				data[l][k] = dataByBody[j][p]
-				p= p+1
-			off = off + timeScores[l]//2
-			
+	for l in range(0,len(data[:])):
+		for k in range(0,bodySize*3*numSections):
+			data[l][k] = dataByBody[k][l]
+
 	return data
-time1 = time.time()
+
 if FLAGS.refinement == "Uniform":
 	file_names = uniformRefinement()
 
@@ -918,6 +902,8 @@ def main(argv = None):
 
 	#initialize arrays for losses
 	trainingLoss = []
+	predicList = []
+
 	# 'Saver' op to save and restore all the variables
 	if FLAGS.save:
 		saver = tf.train.Saver()
@@ -970,9 +956,37 @@ def main(argv = None):
 		print("Model Saved")
 		print("Optimization Finished")
 
-
-	    #test model 
 		pred2 = tf.nn.softmax(logits)
+		
+	    #test model 
+		probs = tf.reduce_max(pred, 1)
+		probsIndex = tf.argmax(pred, 1)
+		labelsIndex = tf.argmax(Y,1)
+		probIndexRes = probsIndex.eval({X: testData})
+		labelIndexRes = labelsIndex.eval({Y: testLabels})
+		probabilityResults = probs.eval({X: testData})
+		
+		for i in range(0, len(probabilityResults)):
+			if  probabilityResults[i] >= THRESHOLD:
+				predicList.append((probabilityResults[i], probIndexRes[i], labelIndexRes[i]))
+			else:
+				predicList.append((-1,-1,-1))
+
+		Right = 0.0
+		Total = 0.0
+		for i in range(0, len(predicList)):
+			if predicList[i][0] == predicList[i][2]:
+				Right = Right + 1.0
+				Total = Total + 1.0
+			elif predicList[i][0] == -1:
+				print("No Conclusion for ", labelsIndex[i])
+			else:
+				Total = Total + 1.0
+
+		truePos = Right/Total
+		print(predicList)
+		print("True Positives: ", truePos)
+
 		correctPrediction2 = tf.equal(tf.argmax(pred2,1), tf.argmax(Y,1))
 
 	    #calculate accuracy
@@ -984,11 +998,6 @@ def main(argv = None):
 		results2File.write("Training Accuracy:" + str(accuracy2.eval({X: trainData, Y: trainLabels})) + '\n')	
 		results2File.write("Testing Accuracy:" + str(accuracy2.eval({X: testData, Y: testLabels})) + '\n')	
 		evaluationAccuracy = accuracy2.eval({X: testData, Y: testLabels})
-	time2 = time.time()
-	totalTime = (time2 - time1)/60
-	print("TotalTime:" , totalTime)
-	n = ((200* evaluationAccuracy)/totalTime)
-	print("N:", n)
 
 
 #needed in order to call main

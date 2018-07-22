@@ -94,12 +94,13 @@ FLAGS = tf.app.flags.FLAGS
 
 TRAIN_PERCENT = 0.7
 TEST_PERCENT = 0.3
-DATA_FOLDER = "selectedData"
+DATA_FOLDER = "Data"
+THRESHOLD = 0.30
 
 batchIndex = 0
 
 arch = FLAGS.arch
-numberClasses = 11
+numberClasses = 7
 if (arch == 'method1'):
 	hiddenLayer1 = 60
 	hiddenLayer2 = 60
@@ -337,27 +338,19 @@ def oneHot(labels):
 	one_hot_labels = []
 	for i in range(0,len(labels)):
 		if labels[i].lower() == "y":
-			one_hot_labels.append([1,0,0,0,0,0,0,0,0,0,0])
-		elif labels[i].lower() == "cat":
-			one_hot_labels.append([0,1,0,0,0,0,0,0,0,0,0])
-		elif labels[i].lower() == "supine":
-			one_hot_labels.append([0,0,1,0,0,0,0,0,0,0,0])
+			one_hot_labels.append([1,0,0,0,0,0,0])
 		elif labels[i].lower() == "seated":
-			one_hot_labels.append([0,0,0,1,0,0,0,0,0,0,0])
+			one_hot_labels.append([0,1,0,0,0,0,0])
 		elif labels[i].lower() == "sumo":
-			one_hot_labels.append([0,0,0,0,1,0,0,0,0,0,0])
+			one_hot_labels.append([0,0,1,0,0,0,0])
 		elif labels[i].lower() == "mermaid":
-			one_hot_labels.append([0,0,0,0,0,1,0,0,0,0,0])
+			one_hot_labels.append([0,0,0,1,0,0,0])
 		elif labels[i].lower() == "towel":
-			one_hot_labels.append([0,0,0,0,0,0,1,0,0,0,0])
-		elif labels[i].lower() == "trunk":
-			one_hot_labels.append([0,0,0,0,0,0,0,1,0,0,0])
+			one_hot_labels.append([0,0,0,0,1,0,0])
 		elif labels[i].lower() == "wall":
-			one_hot_labels.append([0,0,0,0,0,0,0,0,1,0,0])
-		elif labels[i].lower() == "pretzel":
-			one_hot_labels.append([0,0,0,0,0,0,0,0,0,1,0])
+			one_hot_labels.append([0,0,0,0,0,1,0])
 		else: #OOV
-			one_hot_labels.append([0,0,0,0,0,0,0,0,0,0,1])
+			one_hot_labels.append([0,0,0,0,0,0,1])
 	one_hot_labels = np.asarray(one_hot_labels)
 	print("Lable Encoding Complete")
 	return one_hot_labels
@@ -378,23 +371,15 @@ def findExercise (predictions):
 		if predictions[i] == 0:
 			one_hot_labels.append("y")
 		elif predictions[i] == 1:
-			one_hot_labels.append("cat")
-		elif predictions[i] == 2:
-			one_hot_labels.append("supine")
-		elif predictions[i] == 3:
 			one_hot_labels.append("seated")
-		elif predictions[i] == 4:
+		elif predictions[i] == 2:
 			one_hot_labels.append("sumo")
-		elif predictions[i] == 5:
+		elif predictions[i] == 3:
 			one_hot_labels.append("mermaid")
-		elif predictions[i] == 6:
+		elif predictions[i] == 4:
 			one_hot_labels.append("towel")
-		elif predictions[i] == 7:
-			one_hot_labels.append("trunk")
-		elif predictions[i] == 8:
+		elif predictions[i] == 5:
 			one_hot_labels.append("wall")
-		elif predictions[i] == 9:
-			one_hot_labels.append("pretzel")
 		else: #OOV
 			one_hot_labels.append("oov")
 	one_hot_labels = np.asarray(one_hot_labels)
@@ -424,7 +409,7 @@ def tailor(i, refinement_rate):
 
 			row = line.split(',')
 			for l in range(0,3):
-				activitySum = activitySum + int(row[l])
+				activitySum = activitySum + float(row[l])
 
 		jointActivity.append((activitySum,j))
 
@@ -433,7 +418,7 @@ def tailor(i, refinement_rate):
 	jointIndexActivity = [x[1] for x in jointActivity]
 
 	if refinement_rate == 0:
-		return
+		return uniformRefinement()
 	
 	elif refinement_rate == 25:
 		selectedJoints = jointIndexActivity[-20:-1]
@@ -639,11 +624,17 @@ def extractData():
 			nparray shuffledlabels
 			nparray shuffledData
 	'''
-	data =  np.empty((sum(timeScores), int(bodySize*3*numSections)))
+	#average
+	timeScores2 = []
+	for i in range(0, len(timeScores)):
+		timeScores2.append(timeScores[i]//2)
+
+	data =  np.empty((sum(timeScores2), int(bodySize*3*numSections)))
 	sample = True
 
 	numTimeStamps = 0
 	labels = []
+	edges = []
 	c=0
 	for i in range(0, int(numberTests)):
 		#Determine the number of time stamps in this event
@@ -653,13 +644,12 @@ def extractData():
 			global file_names 
 			file_names = tailor(i, FLAGS.refinement_rate)
 
-		for l in range(numTimeStamps,numTimeStamps+timeScores[i]):
+		for l in range(numTimeStamps,numTimeStamps+(timeScores[i]//2)):
 			k=0
 			for j in range(0, bodySize):
 				if FLAGS.position:
 
 					fp = open(dirname + "\\"+ DATA_FOLDER +"\\test" + str(i)+ "\\Position_" + file_names[j])
-
 					for n, line in enumerate(fp):
 						if n == w:
 							row = line.split(',')
@@ -685,17 +675,24 @@ def extractData():
 							for m in range(0,3):
 								data[l][k]= row[m]
 								k = k + 1
-
-
+				
 			for line in open(dirname + "\\"+ DATA_FOLDER +"\\test" + str(i)+ "\\label.csv"):
-
 				temporaryLabel = line.split()
 				labels.append(str(temporaryLabel[0]))
-			
-			w=w+2					
-		numTimeStamps = timeScores[i] + numTimeStamps
 
-	fp.close()		
+			w=w+2	
+		
+		edges.append(numTimeStamps)
+		
+		numTimeStamps = (timeScores[i]//2) + numTimeStamps
+	
+	print(len(data))
+	print(len(labels))
+
+	for i in range(0, len(edges)):
+		print(labels[edges[i]])
+	dgsg
+	fp.close()
 	#shuffle the data
 	shuffledData = np.empty(data.shape, dtype=data.dtype)
 	shuffledLabels = labels
@@ -720,8 +717,8 @@ def partitionData(features, labels):
 			nparray trainLabels, trainFeatures, testLabels, testFeatures
 			int train, test
 	'''
-	train = math.floor(float(sum(timeScores)) * TRAIN_PERCENT)
-	test = math.ceil(float(sum(timeScores)) * TEST_PERCENT)
+	train = math.floor(float(len(features)) * TRAIN_PERCENT)
+	test = math.ceil(float(len(features)) * TEST_PERCENT)
 
 	trainLabels = labels[:train]
 	trainFeatures = features[:train]
@@ -748,9 +745,9 @@ def std(data, numberTests):
 
 	mean = 0
 	stdev = 0
-	for k in range(0,bodySize):
+	for k in range(0,bodySize*3*numSections):
 		bodypartData = []
-		for l in range(0,int(numberTests)):
+		for l in range(0,len(data)):
 			bodypartData.append(data[l][k])
 
 		mean = stat.mean(bodypartData)
@@ -762,17 +759,17 @@ def std(data, numberTests):
 		for j in range(0, len(bodypartData)):
 			dataByBody[k][j] = (dataByBody[k][j] - mean)/stdev
 
-	for l in range(0,int(numberTests)):
-		for k in range(0,bodySize):
+	for l in range(0,len(data)):
+		for k in range(0,bodySize*3*numSections):
 			data[l][k] = dataByBody[k][l]
 
 	return data, means, stdevs
 
 def stdTest(data, numberTests, mean, stdev):
 	dataByBody = []
-	for k in range(0,bodySize):
+	for k in range(0,bodySize*3*numSections):
 		bodypartData = []
-		for l in range(0,int(numberTests)):
+		for l in range(0,len(data[:])):
 			bodypartData.append(data[l][k])
 
 		dataByBody.append(bodypartData)
@@ -780,13 +777,11 @@ def stdTest(data, numberTests, mean, stdev):
 		for j in range(0, len(bodypartData)):
 			dataByBody[k][j] = (dataByBody[k][j] - mean[k])/stdev[k]
 
-	for l in range(0,int(numberTests)):
-		for k in range(0,bodySize):
+	for l in range(0,len(data[:])):
+		for k in range(0,bodySize*3*numSections):
 			data[l][k] = dataByBody[k][l]
 
 	return data
-
-time1 = time.time()
 
 if FLAGS.refinement == "Uniform":
 	file_names = uniformRefinement()
@@ -824,10 +819,9 @@ def main(argv = None):
 	batchSize = FLAGS.batch_size
 	#display step
 
-	print(bodySize)
-
 	data, labels = extractData()
 	labels = oneHot(labels)
+
 	trainLabels, trainData, trainNumber, testLabels, testData, testNumber = partitionData(data, labels)
 
 	trainData, means, stdevs = std(trainData, trainNumber)
@@ -935,6 +929,7 @@ def main(argv = None):
 
 	#initialize arrays for losses
 	trainingLoss = []
+	predicList = []
 	
 	# 'Saver' op to save and restore all the variables
 	if FLAGS.save:
@@ -998,8 +993,36 @@ def main(argv = None):
 
 	    #test model 
 		pred = tf.nn.softmax(logits)
-		correctPrediction = tf.equal(tf.argmax(pred,1), tf.argmax(Y,1))
+		#takes probabilities and picks one
+		probs = tf.reduce_max(pred, 1)
+		probsIndex = tf.argmax(pred, 1)
+		labelsIndex = tf.argmax(Y,1)
+		probIndexRes = probsIndex.eval({X: testData})
+		labelIndexRes = labelsIndex.eval({Y: testLabels})
+		probabilityResults = probs.eval({X: testData})
+		
+		for i in range(0, len(probabilityResults)):
+			if  probabilityResults[i] >= THRESHOLD:
+				predicList.append((probabilityResults[i], probIndexRes[i], labelIndexRes[i]))
+			else:
+				predicList.append((-1,-1,-1))
 
+		Right = 0.0
+		Total = 0.0
+		for i in range(0, len(predicList)):
+			if predicList[i][0] == predicList[i][2]:
+				Right = Right + 1.0
+				Total = Total + 1.0
+			elif predicList[i][0] == -1:
+				print("No Conclusion for ", labelsIndex[i])
+			else:
+				Total = Total + 1.0
+
+		truePos = Right/Total
+		print(predicList)
+
+		correctPrediction = tf.equal(tf.argmax(pred,1), tf.argmax(Y,1))
+		
 	    #calculate accuracy
 		accuracy = tf.reduce_mean(tf.cast(correctPrediction, "float"))
 		print("Final Training Accuracy:", "{0:.2%}".format(accuracy.eval({X: trainData, Y: trainLabels})))
@@ -1008,11 +1031,6 @@ def main(argv = None):
 		results2File.write("Training Accuracy:" + str(accuracy.eval({X: trainData, Y: trainLabels})) + '\n')
 		results2File.write("Testing Accuracy:" + str(accuracy.eval({X: testData, Y: testLabels})) + '\n')
 		evaluationAccuracy = accuracy.eval({X: testData, Y: testLabels})
-	time2 = time.time()
-	totalTime = (time2 - time1)/60
-	print("TotalTime:" , totalTime)
-	n = ((200* evaluationAccuracy)/totalTime)
-	print("N:", n)
 
 #needed in order to call main
 if __name__ == '__main__':
