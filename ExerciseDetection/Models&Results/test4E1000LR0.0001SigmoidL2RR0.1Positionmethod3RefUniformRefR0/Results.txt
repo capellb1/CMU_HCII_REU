@@ -1,2 +1,2 @@
  
- Training Accuracy:0.3877551
+ Training Accuracy:0.3469388

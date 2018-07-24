@@ -1,194 +1,122 @@
+
+
 Training Accuracy:0.47382936
 Testing Accuracy:0.47587076
+Evaluation Metric: 9.511105648697463
 Training Accuracy:0.47382936
 Testing Accuracy:0.47587076
-Training Accuracy:0.4737694
-Testing Accuracy:0.47657016
+Evaluation Metric: 9.752379458244947
 Training Accuracy:0.47382936
 Testing Accuracy:0.47587076
+Evaluation Metric: 9.799327160826627
 Training Accuracy:0.47382936
 Testing Accuracy:0.47587076
+Evaluation Metric: 9.788253479220401
 Training Accuracy:0.47382936
 Testing Accuracy:0.47587076
-Training Accuracy:0.47394928
-Testing Accuracy:0.4761505
+Evaluation Metric: 9.777758797437864
 Training Accuracy:0.47382936
 Testing Accuracy:0.47587076
-Training Accuracy:0.47394928
-Testing Accuracy:0.47657016
-Training Accuracy:0.47275016
-Testing Accuracy:0.47740942
+Evaluation Metric: 10.526656571937224
 Training Accuracy:0.47382936
 Testing Accuracy:0.47587076
-Training Accuracy:0.47334972
-Testing Accuracy:0.47712967
+Evaluation Metric: 10.577951712871183
 Training Accuracy:0.47382936
 Testing Accuracy:0.47587076
+Evaluation Metric: 10.519269929107875
 Training Accuracy:0.47382936
 Testing Accuracy:0.47587076
-Training Accuracy:0.47382936
-Testing Accuracy:0.47573087
-Training Accuracy:0.47382936
-Testing Accuracy:0.47573087
+Evaluation Metric: 10.606395886558218
 Training Accuracy:0.47382936
 Testing Accuracy:0.47587076
+Evaluation Metric: 10.530938473678255
 Training Accuracy:0.47382936
 Testing Accuracy:0.47587076
-Training Accuracy:0.4737694
-Testing Accuracy:0.47740942
+Evaluation Metric: 11.433573782237959
 Training Accuracy:0.47382936
 Testing Accuracy:0.47587076
-Training Accuracy:0.47400925
-Testing Accuracy:0.4761505
-Training Accuracy:0.47388932
-Testing Accuracy:0.4761505
+Evaluation Metric: 11.392018803026042
 Training Accuracy:0.47382936
 Testing Accuracy:0.47587076
+Evaluation Metric: 11.424557714886928
 Training Accuracy:0.47382936
 Testing Accuracy:0.47587076
-Training Accuracy:0.47436896
-Testing Accuracy:0.47573087
+Evaluation Metric: 11.43340658419681
 Training Accuracy:0.47382936
 Testing Accuracy:0.47587076
-Training Accuracy:0.47442892
-Testing Accuracy:0.4754511
-Training Accuracy:0.47406918
-Testing Accuracy:0.47643027
+Evaluation Metric: 11.406803599068123
 Training Accuracy:0.47382936
 Testing Accuracy:0.47587076
-Training Accuracy:0.47424906
-Testing Accuracy:0.47601062
-Training Accuracy:0.47370946
-Testing Accuracy:0.4768499
+Evaluation Metric: 12.65513888334095
 Training Accuracy:0.47382936
 Testing Accuracy:0.47587076
-Training Accuracy:0.474309
-Testing Accuracy:0.4761505
+Evaluation Metric: 12.691968171368027
 Training Accuracy:0.47382936
 Testing Accuracy:0.47587076
+Evaluation Metric: 12.709667132101336
 Training Accuracy:0.47382936
 Testing Accuracy:0.47587076
+Evaluation Metric: 12.660572358266986
 Training Accuracy:0.47382936
 Testing Accuracy:0.47587076
-Training Accuracy:0.47574794
-Testing Accuracy:0.47447196
+Evaluation Metric: 12.47193098050031
 Training Accuracy:0.47382936
 Testing Accuracy:0.47587076
-Training Accuracy:0.47514838
-Testing Accuracy:0.472094
-Training Accuracy:0.47502849
-Testing Accuracy:0.475591
+Evaluation Metric: 9.422197014041576
 Training Accuracy:0.47382936
 Testing Accuracy:0.47587076
-Training Accuracy:0.4748486
-Testing Accuracy:0.4740523
-Training Accuracy:0.47442892
-Testing Accuracy:0.4761505
+Evaluation Metric: 9.629823927047752
 Training Accuracy:0.47382936
 Testing Accuracy:0.47587076
-Training Accuracy:0.4741891
-Testing Accuracy:0.4761505
-Training Accuracy:0.47382936
-Testing Accuracy:0.47698978
+Evaluation Metric: 9.682774204712137
 Training Accuracy:0.47382936
 Testing Accuracy:0.47587076
-Training Accuracy:0.47358954
-Testing Accuracy:0.47810882
-Training Accuracy:0.4741891
-Testing Accuracy:0.4762904
+Evaluation Metric: 9.625900302958398
 Training Accuracy:0.47382936
 Testing Accuracy:0.47587076
-Training Accuracy:0.47466874
-Testing Accuracy:0.4754511
-Training Accuracy:0.47598776
-Testing Accuracy:0.4747517
+Evaluation Metric: 9.599659967680722
 Training Accuracy:0.47382936
 Testing Accuracy:0.47587076
-Training Accuracy:0.47436896
-Testing Accuracy:0.4768499
-Training Accuracy:0.47436896
-Testing Accuracy:0.47601062
+Evaluation Metric: 9.634837663368916
 Training Accuracy:0.47382936
 Testing Accuracy:0.47587076
-Training Accuracy:0.47466874
-Testing Accuracy:0.47698978
-Training Accuracy:0.47412914
-Testing Accuracy:0.47657016
+Evaluation Metric: 10.432997037408718
 Training Accuracy:0.47382936
 Testing Accuracy:0.47587076
-Training Accuracy:0.4737694
-Testing Accuracy:0.47671002
-Training Accuracy:0.47460878
-Testing Accuracy:0.47573087
+Evaluation Metric: 10.423534607256816
 Training Accuracy:0.47382936
 Testing Accuracy:0.47587076
-Training Accuracy:0.47412914
-Testing Accuracy:0.47643027
-Training Accuracy:0.47454885
-Testing Accuracy:0.47587076
+Evaluation Metric: 10.446238538327822
 Training Accuracy:0.47382936
 Testing Accuracy:0.47587076
-Training Accuracy:0.47532827
-Testing Accuracy:0.47461185
-Training Accuracy:0.47424906
-Testing Accuracy:0.47726956
+Evaluation Metric: 10.441485457161619
 Training Accuracy:0.47382936
 Testing Accuracy:0.47587076
-Training Accuracy:0.47424906
-Testing Accuracy:0.47643027
-Training Accuracy:0.47406918
-Testing Accuracy:0.4775493
+Evaluation Metric: 11.343656483284418
 Training Accuracy:0.47382936
 Testing Accuracy:0.47587076
-Training Accuracy:0.47412914
-Testing Accuracy:0.47712967
-Training Accuracy:0.471611
-Testing Accuracy:0.46593928
+Evaluation Metric: 11.372322067030192
 Training Accuracy:0.47382936
 Testing Accuracy:0.47587076
-Training Accuracy:0.47059175
-Testing Accuracy:0.46496013
-Training Accuracy:0.4721506
-Testing Accuracy:0.468597
+Evaluation Metric: 11.307315304776829
 Training Accuracy:0.47382936
 Testing Accuracy:0.47587076
-Training Accuracy:0.47221056
-Testing Accuracy:0.46565953
+Evaluation Metric: 11.3704957345705
 Training Accuracy:0.47382936
 Testing Accuracy:0.47587076
+Evaluation Metric: 11.330379684099583
 Training Accuracy:0.47382936
 Testing Accuracy:0.47587076
+Evaluation Metric: 12.541606985314813
 Training Accuracy:0.47382936
 Testing Accuracy:0.47587076
+Evaluation Metric: 12.512078890641646
 Training Accuracy:0.47382936
 Testing Accuracy:0.47587076
+Evaluation Metric: 12.185694113477265
 Training Accuracy:0.47382936
 Testing Accuracy:0.47587076
+Evaluation Metric: 12.117342633338955
 Training Accuracy:0.47382936
 Testing Accuracy:0.47587076
-Training Accuracy:0.4315007
-Testing Accuracy:0.4299902
-Training Accuracy:0.47382936
-Testing Accuracy:0.47587076
-Training Accuracy:0.43779603
-Testing Accuracy:0.43586516
-Training Accuracy:0.46723425
-Testing Accuracy:0.45642748
-Training Accuracy:0.47101146
-Testing Accuracy:0.46971604
-Training Accuracy:0.4550033
-Testing Accuracy:0.4450972
-Training Accuracy:0.47382936
-Testing Accuracy:0.47587076
-Training Accuracy:0.47382936
-Testing Accuracy:0.47587076
-Training Accuracy:0.47382936
-Testing Accuracy:0.47587076
-Training Accuracy:0.47382936
-Testing Accuracy:0.47587076
-Training Accuracy:0.47382936
-Testing Accuracy:0.47587076
-Training Accuracy:0.47382936
-Testing Accuracy:0.47587076
-Training Accuracy:0.47388932
-Testing Accuracy:0.47573087
+Evaluation Metric: 11.977570696996217

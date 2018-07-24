@@ -829,9 +829,15 @@ def main(argv = None):
 	labels = oneHot(labels)
 	trainLabels, trainData, trainNumber, testLabels, testData, testNumber = partitionData(data, labels)
 
+<<<<<<< HEAD
 	trainData, means, stdevs = std(trainData, trainNumber, timeScores)
 	testData = stdTest(testData, testNumber, means, stdevs, timeScores)
 
+=======
+
+	trainData, means, stdevs = std(trainData, trainNumber, timeScores)
+	testData = stdTest(testData, testNumber, means, stdevs, timeScores)
+>>>>>>> 4abbfdf4ac0c1ab4d2c55e63b2609dd23ee436fe
 	inputLayer = bodySize*maxEntries*3*numSections
 
 	#tf Graph input
@@ -905,7 +911,7 @@ def main(argv = None):
 
 	#construct model
 	logits = multilayer_perception(X, weights, biases)
-
+	print(logits)
 	#define loss and optimizer
 	regularization = FLAGS.regularization
 	regularizationRate = FLAGS.regularization_rate

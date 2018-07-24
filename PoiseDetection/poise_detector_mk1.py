@@ -94,7 +94,7 @@ FLAGS = tf.app.flags.FLAGS
 
 TRAIN_PERCENT = 0.7
 TEST_PERCENT = 0.3
-DATA_FOLDER = "DataCollection"
+DATA_FOLDER = "selectedData"
 
 batchIndex = 0
 
@@ -418,13 +418,11 @@ def tailor(i, refinement_rate):
 
 	jointActivity = []
 	for j in range(0,24):
-
-		activitySum = 0 
-		for line in open(dirname + "\\" + DATA_FOLDER + "\\test" + str(i)+ "\\Task_" + file_names_super[j]):
-
+		activitySum = 0
+		for line in open(dirname + "\\"+ DATA_FOLDER +"\\test" + str(i)+ "\\Task_" + file_names_super[j]):
 			row = line.split(',')
 			for l in range(0,3):
-				activitySum = activitySum + int(row[l])
+				activitySum = activitySum + float(row[l])
 
 		jointActivity.append((activitySum,j))
 
@@ -433,7 +431,7 @@ def tailor(i, refinement_rate):
 	jointIndexActivity = [x[1] for x in jointActivity]
 
 	if refinement_rate == 0:
-		return
+		return uniformRefinement()
 	
 	elif refinement_rate == 25:
 		selectedJoints = jointIndexActivity[-20:-1]
@@ -1013,6 +1011,8 @@ def main(argv = None):
 	print("TotalTime:" , totalTime)
 	n = ((200* evaluationAccuracy)/totalTime)
 	print("N:", n)
+	results2File.write("Evaluation Metric: " + str(n) + '\n')
+
 
 #needed in order to call main
 if __name__ == '__main__':
