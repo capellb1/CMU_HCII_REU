@@ -1,3 +1,8 @@
+<<<<<<< HEAD
+Training Accuracy:0.6122449
+Testing Accuracy:0.14285715
+Evaluation Metric:31.41564697579981
+=======
 Training Accuracy:0.5510204
 Testing Accuracy:0.3809524
 Training Accuracy:0.67346936
@@ -102,5 +107,9 @@ Training Accuracy:0.67346936
 Testing Accuracy:0.0952381
 Training Accuracy:0.75510204
 Testing Accuracy:0.14285715
+<<<<<<< HEAD
 Training Accuracy:0.53571427
 Testing Accuracy:0.5833333
+=======
+>>>>>>> 4ac95e9ff564aab15bf6e13a32698a891d712c20
+>>>>>>> 7790d7e880d1c52d47a5e278c5ddcc080f524c1f

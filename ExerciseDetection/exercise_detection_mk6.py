@@ -93,8 +93,12 @@ FLAGS = tf.app.flags.FLAGS
 
 TRAIN_PERCENT = 0.7
 TEST_PERCENT = 0.3
+<<<<<<< HEAD
+DATA_FOLDER = "DataWindow"
+=======
 DATA_FOLDER = "selectedData"
 THRESHOLD = 0.30
+>>>>>>> 4ac95e9ff564aab15bf6e13a32698a891d712c20
 
 batchIndex = 0
 
@@ -707,8 +711,13 @@ def partitionData(features, labels):
 		print("Test Lables (Randomized): ", testLabels)
 
 	return trainLabels, trainFeatures, train, testLabels, testFeatures, test
+<<<<<<< HEAD
+'''
+def std(data, numberTests, timeScores):
+=======
 
 def std(data, numberTests):
+>>>>>>> 4ac95e9ff564aab15bf6e13a32698a891d712c20
 	dataByBody = []
 	means = []
 	stdevs = []
@@ -752,7 +761,44 @@ def stdTest(data, numberTests, mean, stdev):
 			data[l][k] = dataByBody[k][l]
 
 	return data
+<<<<<<< HEAD
+'''
 
+def stdPersonXYZ(data, numberOfTests, timeScores):
+	print("original", data)
+	for i in range(0,int(numberOfTests)):
+		offset = 0
+		for j in range (1, numSections+1):
+			dataPointsX = []
+			dataPointsY = []
+			dataPointsZ = []
+			for k in range (offset, 3*j*timeScores[i]):
+				if (k%3 == 0):
+					dataPointsX.append(data[i][k])
+				elif (k%3 == 1):
+					dataPointsY.append(data[i][k])
+				elif (k%3 == 2):
+					dataPointsZ.append(data[i][k])
+
+			for k in range (offset, 3*j*timeScores[i]):
+				if (k%3 == 0):
+					data[i][k] = (data[i][k]- stat.mean(dataPointsX))/stat.stdev(dataPointsX)
+				elif (k%3 == 1):
+					data[i][k] = (data[i][k]-stat.mean(dataPointsY))/stat.stdev(dataPointsY)
+				elif (k%3 == 2):
+					data[i][k] = (data[i][k]-stat.mean(dataPointsZ))/stat.stdev(dataPointsZ)
+			offset = offset + 3*j*timeScores[i]
+			print("meanX", stat.mean(dataPointsX))
+			print("stdX", stat.stdev(dataPointsX))
+
+	print("z-scores:", data)
+	return data
+
+
+time1 = time.time()
+=======
+
+>>>>>>> 4ac95e9ff564aab15bf6e13a32698a891d712c20
 if FLAGS.refinement == "Uniform":
 	file_names = uniformRefinement()
 
@@ -793,8 +839,14 @@ def main(argv = None):
 	labels = oneHot(labels)
 	trainLabels, trainData, trainNumber, testLabels, testData, testNumber = partitionData(data, labels)
 
+	'''
 	trainData, means, stdevs = std(trainData, trainNumber, timeScores)
 	testData = stdTest(testData, testNumber, means, stdevs, timeScores)
+	'''
+	trainData = stdPersonXYZ(trainData, trainNumber, timeScores)
+	testData = stdPersonXYZ(testData, testNumber, timeScores)
+
+	print(testData)
 
 	inputLayer = bodySize*maxEntries*3*numSections
 
@@ -998,6 +1050,15 @@ def main(argv = None):
 		results2File.write("Training Accuracy:" + str(accuracy2.eval({X: trainData, Y: trainLabels})) + '\n')	
 		results2File.write("Testing Accuracy:" + str(accuracy2.eval({X: testData, Y: testLabels})) + '\n')	
 		evaluationAccuracy = accuracy2.eval({X: testData, Y: testLabels})
+<<<<<<< HEAD
+	time2 = time.time()
+	totalTime = (time2 - time1)/60
+	print("TotalTime:" , totalTime)
+	n = ((200* evaluationAccuracy)/totalTime)
+	print("N:", n)
+	results2File.write("Evaluation Metric:" + str(n) + '\n')	
+=======
+>>>>>>> 4ac95e9ff564aab15bf6e13a32698a891d712c20
 
 
 #needed in order to call main
