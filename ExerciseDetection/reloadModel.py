@@ -86,14 +86,16 @@ tf.app.flags.DEFINE_boolean('verbose', False, 'Determines how much information i
 tf.app.flags.DEFINE_string('refinement', "None", 'Determines which refinement process to use')
 tf.app.flags.DEFINE_integer('refinement_rate',0,'Determines the number of joints to include in the data')
 tf.app.flags.DEFINE_boolean('task', False, 'Determines if the task data is included when training')
-tf.app.flags.DEFINE_boolean('save', False, 'Determines whether the model is saved')
+tf.app.flags.DEFINE_boolean('save', False, 'Determines wether the model is saved')
 
 FLAGS = tf.app.flags.FLAGS
+
+DATA_FOLDER = "selectedData"
 
 batchIndex = 0
 
 arch = FLAGS.arch
-numberClasses = 11
+numberClasses = 7
 if (arch == 'method1'):
 	hiddenLayer1 = 60
 	hiddenLayer2 = 60
@@ -177,7 +179,7 @@ def writeFolderLabel():
 
 def calcNumTests():
 	dirname = os.path.realpath('.')
-	filename = dirname + '\\Data\\TestNumber.txt'
+	filename = dirname + '\\' + DATA_FOLDER + '\\TestNumber.txt'
 	numberTestFiles = open(filename,"r")
 	numberTests = numberTestFiles.read()
 	if FLAGS.verbose:
@@ -191,7 +193,7 @@ def calcMaxEntries():
 	timeScores = []
 	for i in range(0,int(numberTests)):
 		numEntries = 0
-		for line in open(dirname + "\\Data\\test" + str(i) + "\\" + FLAGS.source + "_" + file_names_super[0]):
+		for line in open(dirname + "\\"+ DATA_FOLDER +"\\test" + str(i)+ "\\Position_" + file_names_super[0]):
 			numEntries = numEntries + 1
 		if numEntries > maxEntries:
 			maxEntries = numEntries	
@@ -324,27 +326,19 @@ def oneHot(labels):
 	one_hot_labels = []
 	for i in range(0,len(labels)):
 		if labels[i].lower() == "y":
-			one_hot_labels.append([1,0,0,0,0,0,0,0,0,0,0])
-		elif labels[i].lower() == "cat":
-			one_hot_labels.append([0,1,0,0,0,0,0,0,0,0,0])
-		elif labels[i].lower() == "supine":
-			one_hot_labels.append([0,0,1,0,0,0,0,0,0,0,0])
+			one_hot_labels.append([1,0,0,0,0,0,0])
 		elif labels[i].lower() == "seated":
-			one_hot_labels.append([0,0,0,1,0,0,0,0,0,0,0])
+			one_hot_labels.append([0,1,0,0,0,0,0])
 		elif labels[i].lower() == "sumo":
-			one_hot_labels.append([0,0,0,0,1,0,0,0,0,0,0])
+			one_hot_labels.append([0,0,1,0,0,0,0])
 		elif labels[i].lower() == "mermaid":
-			one_hot_labels.append([0,0,0,0,0,1,0,0,0,0,0])
+			one_hot_labels.append([0,0,0,1,0,0,0])
 		elif labels[i].lower() == "towel":
-			one_hot_labels.append([0,0,0,0,0,0,1,0,0,0,0])
-		elif labels[i].lower() == "trunk":
-			one_hot_labels.append([0,0,0,0,0,0,0,1,0,0,0])
+			one_hot_labels.append([0,0,0,0,1,0,0])
 		elif labels[i].lower() == "wall":
-			one_hot_labels.append([0,0,0,0,0,0,0,0,1,0,0])
-		elif labels[i].lower() == "pretzel":
-			one_hot_labels.append([0,0,0,0,0,0,0,0,0,1,0])
+			one_hot_labels.append([0,0,0,0,0,1,0])
 		else: #OOV
-			one_hot_labels.append([0,0,0,0,0,0,0,0,0,0,1])
+			one_hot_labels.append([0,0,0,0,0,0,1])
 	one_hot_labels = np.asarray(one_hot_labels)
 	print("Lable Encoding Complete")
 	return one_hot_labels
@@ -365,23 +359,15 @@ def findExercise (predictions):
 		if predictions[i] == 0:
 			one_hot_labels.append("y")
 		elif predictions[i] == 1:
-			one_hot_labels.append("cat")
-		elif predictions[i] == 2:
-			one_hot_labels.append("supine")
-		elif predictions[i] == 3:
 			one_hot_labels.append("seated")
-		elif predictions[i] == 4:
+		elif predictions[i] == 2:
 			one_hot_labels.append("sumo")
-		elif predictions[i] == 5:
+		elif predictions[i] == 3:
 			one_hot_labels.append("mermaid")
-		elif predictions[i] == 6:
+		elif predictions[i] == 4:
 			one_hot_labels.append("towel")
-		elif predictions[i] == 7:
-			one_hot_labels.append("trunk")
-		elif predictions[i] == 8:
+		elif predictions[i] == 5:
 			one_hot_labels.append("wall")
-		elif predictions[i] == 9:
-			one_hot_labels.append("pretzel")
 		else: #OOV
 			one_hot_labels.append("oov")
 	one_hot_labels = np.asarray(one_hot_labels)
@@ -406,7 +392,7 @@ def tailor(i, refinement_rate):
 	jointActivity = []
 	for j in range(0,24):
 		activitySum = 0
-		for line in open(dirname + "\\Data\\test" + str(i)+ "\\Task_" + file_names_super[j]):
+		for line in open(dirname + "\\"+ DATA_FOLDER +"\\test" + str(i)+ "\\Task_" + file_names_super[j]):
 			row = line.split(',')
 			for l in range(0,3):
 				activitySum = activitySum + int(row[l])
@@ -418,7 +404,7 @@ def tailor(i, refinement_rate):
 	jointIndexActivity = [x[1] for x in jointActivity]
 
 	if refinement_rate == 0:
-		return
+		return uniformRefinement()
 	
 	elif refinement_rate == 25:
 		selectedJoints = jointIndexActivity[-20:-1]
@@ -454,35 +440,35 @@ def multilayer_perception(x, weights, biases):
 	'''
 	activation = FLAGS.activation
 	if (arch == "method1" and activation == "Sigmoid"):
-		print('Activation Layer: sigmoid \nArchitecture Used: method1 \n')
+		print('Activation Layer: sigmoid \nArchitecture Used: method2 \n')
 		#Layers
 		layer1 = tf.nn.sigmoid(tf.add(tf.matmul(x, weights['h1']), biases['b1']))
 		layer2 = tf.nn.sigmoid(tf.add(tf.matmul(layer1, weights['h2']), biases['b2']))
 		outLayer = tf.add(tf.matmul(layer2, weights['out']), biases['out'])
 		return outLayer
 	elif (arch == "method1" and activation == "Tanh"):
-		print('Activation Layer: tanh \nArchitecture Used: method1 \n')
+		print('Activation Layer: tanh \nArchitecture Used: method2 \n')
 		#Layers
 		layer1 = tf.nn.tanh(tf.add(tf.matmul(x, weights['h1']), biases['b1']))
 		layer2 = tf.nn.tanh(tf.add(tf.matmul(layer1, weights['h2']), biases['b2']))
 		outLayer = tf.add(tf.matmul(layer2, weights['out']), biases['out'])
 		return outLayer
 	elif (arch == "method1" and activation == "Relu"):
-		print('Activation Layer: relu \nArchitecture Used: method1 \n')
+		print('Activation Layer: relu \nArchitecture Used: method2 \n')
 		#Layers
 		layer1 = tf.nn.relu(tf.add(tf.matmul(x, weights['h1']), biases['b1']))
 		layer2 = tf.nn.relu(tf.add(tf.matmul(layer1, weights['h2']), biases['b2']))
 		outLayer = tf.add(tf.matmul(layer2, weights['out']), biases['out'])
 		return outLayer
 	elif (arch == "method1" and activation == "Default"):
-		print('Activation Layer: none \nArchitecture Used: method1 \n')
+		print('Activation Layer: none \nArchitecture Used: method2 \n')
 		#Layers
 		layer1 = tf.add(tf.matmul(x, weights['h1']), biases['b1'])
 		layer2 = tf.add(tf.matmul(layer1, weights['h2']), biases['b2'])
 		outLayer = tf.add(tf.matmul(layer2, weights['out']), biases['out'])
 		return outLayer
 	elif (arch == "method2" and activation == "Sigmoid"):
-		print('Activation Layer: sigmoid \nArchitecture Used: method2 \n')
+		print('Activation Layer: sigmoid \nArchitecture Used: method1 \n')
 		#Layers
 		layer1 = tf.nn.sigmoid(tf.add(tf.matmul(x, weights['h1']), biases['b1']))
 		layer2 = tf.nn.sigmoid(tf.add(tf.matmul(layer1, weights['h2']), biases['b2']))
@@ -490,7 +476,7 @@ def multilayer_perception(x, weights, biases):
 		outLayer = tf.add(tf.matmul(layer3, weights['out']), biases['out'])
 		return outLayer
 	elif (arch == "method2" and activation == "Tanh"):
-		print('Activation Layer: tanh \nArchitecture Used: method2 \n ')
+		print('Activation Layer: tanh \nArchitecture Used: method1 \n ')
 		#Layers
 		layer1 = tf.nn.tanh(tf.add(tf.matmul(x, weights['h1']), biases['b1']))
 		layer2 = tf.nn.tanh(tf.add(tf.matmul(layer1, weights['h2']), biases['b2']))
@@ -498,7 +484,7 @@ def multilayer_perception(x, weights, biases):
 		outLayer = tf.add(tf.matmul(layer3, weights['out']), biases['out'])
 		return outLayer
 	elif (arch == "method2" and activation == "Relu"):
-		print('Activation Layer: relu \nArchitecture Used: method2 \n ')
+		print('Activation Layer: relu \nArchitecture Used: method1 \n ')
 		#Layers
 		layer1 = tf.nn.relu(tf.add(tf.matmul(x, weights['h1']), biases['b1']))
 		layer2 = tf.nn.relu(tf.add(tf.matmul(layer1, weights['h2']), biases['b2']))
@@ -506,7 +492,7 @@ def multilayer_perception(x, weights, biases):
 		outLayer = tf.add(tf.matmul(layer3, weights['out']), biases['out'])
 		return outLayer
 	elif (arch == "method2" and activation == "Default"):
-		print('Activation Layer: none \nArchitecture Used: method2 \n ')
+		print('Activation Layer: none \nArchitecture Used: method1 \n ')
 		#Layers
 		layer1 = tf.add(tf.matmul(x, weights['h1']), biases['b1'])
 		layer2 = tf.add(tf.matmul(layer1, weights['h2']), biases['b2'])
@@ -552,7 +538,7 @@ def multilayer_perception(x, weights, biases):
 		return outLayer
 	
 	elif (arch == "method4" and activation == "Sigmoid"):
-		print('Activation Layer: sigmoid \nArchitecture Used: method4 \n')
+		print('Activation Layer: sigmoid \nArchitecture Used: method3 \n')
 		#Layers
 		layer1 = tf.nn.sigmoid(tf.add(tf.matmul(x, weights['h1']), biases['b1']))
 		layer2 = tf.nn.sigmoid(tf.add(tf.matmul(layer1, weights['h2']), biases['b2']))
@@ -562,7 +548,7 @@ def multilayer_perception(x, weights, biases):
 		outLayer = tf.add(tf.matmul(layer5, weights['out']), biases['out'])
 		return outLayer
 	elif (arch == "method4" and activation == "Tanh"):
-		print('Activation Layer: tanh \nArchitecture Used: method4 \n')
+		print('Activation Layer: tanh \nArchitecture Used: method3 \n')
 		#Layers
 		layer1 = tf.nn.sigmoid(tf.add(tf.matmul(x, weights['h1']), biases['b1']))
 		layer2 = tf.nn.sigmoid(tf.add(tf.matmul(layer1, weights['h2']), biases['b2']))
@@ -572,7 +558,7 @@ def multilayer_perception(x, weights, biases):
 		outLayer = tf.add(tf.matmul(layer5, weights['out']), biases['out'])
 		return outLayer
 	elif (arch == "method4" and activation == "Relu"):
-		print('Activation Layer: relu \nArchitecture Used: method4 \n')
+		print('Activation Layer: relu \nArchitecture Used: method3 \n')
 		#Layers
 		layer1 = tf.nn.sigmoid(tf.add(tf.matmul(x, weights['h1']), biases['b1']))
 		layer2 = tf.nn.sigmoid(tf.add(tf.matmul(layer1, weights['h2']), biases['b2']))
@@ -582,7 +568,7 @@ def multilayer_perception(x, weights, biases):
 		outLayer = tf.add(tf.matmul(layer5, weights['out']), biases['out'])
 		return outLayer
 	elif (arch == "method4" and activation == "Default"):
-		print('Activation Layer: none \nArchitecture Used: method4 \n')
+		print('Activation Layer: none \nArchitecture Used: method3 \n')
 		#Layers
 		layer1 = tf.nn.sigmoid(tf.add(tf.matmul(x, weights['h1']), biases['b1']))
 		layer2 = tf.nn.sigmoid(tf.add(tf.matmul(layer1, weights['h2']), biases['b2']))
@@ -614,17 +600,14 @@ def nextBatch(batchSize, trainNumber):
 
 def extractData():
 	'''
-		Moves data from the text files into flattened arrays.
-		Each time stamp is a single row and has a corresponding event label
-			[Arm1xyz, Head1xyz, Foot1xyz, ...] EVENT 10
-			[Arm2xyz, Head2xyz, Foot2xyz, ...] EVENT 2
-		
+		Moves data from the text files into flattened arrays:
+			[event] [HeadX1, HeadY1, HeadZ1, HeadX2....ArmX1, ArmY1, ArmZ1, ArmX2 etc]
+
 		Parameters: None
 		Returns:
-			nparray labels
-			nparray Data
+			nparray shuffledlabels
+			nparray shuffledData
 	'''
-	
 	data =  np.empty((int(numberTests), int(bodySize*maxEntries*3*numSections)))
 	
 	#enables downsampling by 50%
@@ -633,14 +616,14 @@ def extractData():
 
 	for i in range(0, int(numberTests)):
 		k = 0
-		
+
 		if FLAGS.refinement == "Tailored":
 			global file_names 
 			file_names = tailor(i, FLAGS.refinement_rate)
 
 		for j in range(0,bodySize):
 			if FLAGS.position:
-				for line in open(dirname + "\\Data\\test" + str(i)+ "\\Position_" + file_names[j]):
+				for line in open(dirname + "\\"+ DATA_FOLDER +"\\test" + str(i)+ "\\Position_" + file_names[j]):
 					if sample:
 						row = line.split(',')
 						for l in range(0,3):
@@ -651,17 +634,7 @@ def extractData():
 						sample = True
 
 			if FLAGS.velocity:
-				for line in open(dirname + "\\Data\\test" + str(i)+ "\\Velocity_" + file_names[j]):
-					if sample:
-						row = line.split(',')
-						for l in range(0,3):
-							data[i][k] = row[l]
-							k = k +1
-							sample = False
-					else:
-						sample = True
-			if FLAGS.task:
-				for line in open(dirname + "\\Data\\test" + str(i)+ "\\Task_" + file_names[j]):
+				for line in open(dirname + "\\"+ DATA_FOLDER +"\\test" + str(i)+ "\\Velocity_" + file_names[j]):
 					if sample:
 						row = line.split(',')
 						for l in range(0,3):
@@ -671,12 +644,322 @@ def extractData():
 					else:
 						sample = True
 
+			if FLAGS.task:
+				for line in open(dirname + "\\"+ DATA_FOLDER +"\\test" + str(i)+ "\\Task_" + file_names[j]):
+					if sample:
+						row = line.split(',')
+						for l in range(0,3):
+							data[i][k] = row[l]
+							k = k +1
+							sample = False
+					else:
+						sample = True
+		
 		#seperate the label from the name and event number stored within the label.csv file(s)
-		for line in open(dirname + "\\Data\\test" + str(i)+ "\\label.csv"):
+		for line in open(dirname + "\\"+ DATA_FOLDER +"\\test" + str(i)+ "\\label.csv"):
 			temporaryLabel = line.split()
 			labels.append(str(temporaryLabel[0]))
 
-	return data, labels
+	#shuffle the data
+	shuffledData = np.empty(data.shape, dtype=data.dtype)
+	shuffledLabels = labels
+	permutation = np.random.RandomState(seed=42).permutation(len(labels))
+	for old_index, new_index in enumerate(permutation):
+		shuffledData[new_index] = data[old_index]
+		shuffledLabels[new_index] = labels[old_index]
+
+	shuffledLabels = np.asarray(shuffledLabels)
+	return shuffledData, shuffledLabels
+
+def calcLableDist():
+	y_count = 0.1
+	seated_count = 0.1
+	sumo_count = 0.1
+	mermaid_count = 0.1
+	towel_count = 0.1
+	wall_count = 0.1
+	oov_count = 0.1
+
+	labelDist = []
+	labels = []
+
+			#seperate the label from the name and event number stored within the label.csv file(s)
+	for i in range(0, int(numberTests)):
+		for line in open(dirname + "\\"+ DATA_FOLDER +"\\test" + str(i)+ "\\label.csv"):
+			temporaryLabel = line.split()
+			labels.append(str(temporaryLabel[0]))
+
+	for i in range(0, len(labels)):
+
+		if (labels[i].lower() == "y"):
+			y_count = y_count + 1
+		elif (labels[i].lower() == "seated"):
+			seated_count = seated_count + 1
+		elif (labels[i].lower() == "sumo"):
+			sumo_count = sumo_count + 1
+		elif (labels[i].lower() == "mermaid"):
+			mermaid_count = mermaid_count + 1
+		elif (labels[i].lower() == "towel"):
+			towel_count = towel_count + 1
+		elif (labels[i].lower() == "wall"):
+			wall_count = wall_count + 1
+		else:
+			oov_count = oov_count + 1
+
+	labelDist.append(y_count)
+	labelDist.append(seated_count)
+	labelDist.append(sumo_count)
+	labelDist.append(mermaid_count)
+	labelDist.append(towel_count)
+	labelDist.append(wall_count)
+	labelDist.append(oov_count)
+
+	return labelDist 
+
+def std(data, numberTests):
+	dataByBody = []
+	means = []
+	stdevs = []
+
+	mean = 0
+	stdev = 0
+	for k in range(0,bodySize*3*numSections):
+		bodypartData = []
+		for l in range(0,len(data)):
+			bodypartData.append(data[l][k])
+
+		mean = stat.mean(bodypartData)
+		stdev = stat.stdev(bodypartData)
+		dataByBody.append(bodypartData)
+		means.append(mean)
+		stdevs.append(stdev)
+
+		for j in range(0, len(bodypartData)):
+			dataByBody[k][j] = (dataByBody[k][j] - mean)/stdev
+
+	for l in range(0,len(data)):
+		for k in range(0,bodySize*3*numSections):
+			data[l][k] = dataByBody[k][l]
+
+	return data, means, stdevs
+
+def stdTest(data, numberTests, mean, stdev):
+	dataByBody = []
+	for k in range(0,bodySize*3*numSections):
+		bodypartData = []
+		for l in range(0,len(data[:])):
+			bodypartData.append(data[l][k])
+
+		dataByBody.append(bodypartData)
+
+		for j in range(0, len(bodypartData)):
+			dataByBody[k][j] = (dataByBody[k][j] - mean[k])/stdev[k]
+
+	for l in range(0,len(data[:])):
+		for k in range(0,bodySize*3*numSections):
+			data[l][k] = dataByBody[k][l]
+
+	return data
+
+def draw(predictions, correctPredictions, dataTask):	
+	'''
+		Creates graphs that plot the accuracy of predictions for every frame in an action (Blue). Below, on 
+		the same image, a graph representing the number of tasks detected across each body part for 
+		that each frame (Red). This occurs for each example in the data.
+		
+		The function will also output a cumulative histogram for each action with more
+		than one example (Green). This cumulative histogram overlays the accuracy of every example of a given
+		exercise.
+	'''
+	start = 0	
+	dataRecord = np.zeros((7,maxEntries))
+	probRecord = np.zeros((7,maxEntries))
+	taskRecord = np.zeros((7,maxEntries))
+	offset = 0
+	#range from 0-10
+	timeRecord = [[0],[0],[0],[0],[0],[0],[0]]
+	
+			
+	for i in range (0, int(numberTests)):
+		graphData = []
+		graphDataX = []
+		taskData = []
+		for j in range (0, timeScores[i]):
+			if predictions[start+j] == correctPredictions[start]:
+				graphData.append(1)
+						
+				if (correctPredictions[start] == "y"):
+					dataRecord[0][j] = dataRecord[0][j] + 1
+				elif (correctPredictions[start] == "seated"):
+					dataRecord[1][j] = dataRecord[1][j] + 1
+				elif (correctPredictions[start] == "sumo"):
+					dataRecord[2][j] = dataRecord[2][j] + 1
+				elif (correctPredictions[start] == "mermaid"):
+					dataRecord[3][j] = dataRecord[3][j] + 1
+				elif (correctPredictions[start] == "towel"):
+					dataRecord[4][j] = dataRecord[4][j] + 1
+				elif (correctPredictions[start] == "wall"):
+					dataRecord[5][j] = dataRecord[5][j] + 1
+				elif (correctPredictions[start] == "oov"):
+					dataRecord[6][j] = dataRecord[6][j] + 1
+
+			else:
+				graphData.append(0)
+				
+
+			totalTask = sum(dataTask[offset+j][:])
+			taskData.append(totalTask)
+				
+			graphDataX.append(j)
+
+			#calculate probability rather than raw numbers
+			for k in range(0,7):
+				probRecord[k][j] = dataRecord[k][j]/labelDist[k]
+			
+
+
+		offset = timeScores[i]
+				
+		if (correctPredictions[start] == "y"):
+			timeRecord[0].append(graphDataX[-1])
+		elif (correctPredictions[start] == "seated"):
+			timeRecord[1].append(graphDataX[-1])
+		elif (correctPredictions[start] == "sumo"):
+			timeRecord[2].append(graphDataX[-1])
+		elif (correctPredictions[start] == "mermaid"):
+			timeRecord[3].append(graphDataX[-1])
+		elif (correctPredictions[start] == "towel"):
+			timeRecord[4].append(graphDataX[-1])
+		elif (correctPredictions[start] == "wall"):
+			timeRecord[5].append(graphDataX[-1])
+		elif (correctPredictions[start] == "oov"):
+			timeRecord[6].append(graphDataX[-1])
+				
+		if FLAGS.verbose:
+			print(timeScores[i])
+			print("My preditions", predictions[start:start + timeScores[i]])
+			print ("Correct predictions", correctPredictions[start])
+			print("Length of single test time scores: ", graphDataX[-1])
+			print(graphData)
+
+		width = .99
+		plt.bar(graphDataX, graphData, width, facecolor='blue')
+		plt.xlabel("Frames")
+		plt.annotate(str(graphDataX[-1]), xy = (graphDataX[-1], 1))
+		plt.ylabel("Accuracy (Bool)")
+		plt.title("Test" + str(i) +": " + str(correctPredictions[start]))
+		plt.grid(True)
+				
+
+		plt.tight_layout()
+		plt.savefig(newDir +"\\test" + str(i) + str(correctPredictions[start]) + ".png")
+		plt.close()
+		start = start + timeScores[i]
+		
+	totalDataX = range(0, maxEntries)
+			
+	
+	averageTs = []
+	for i in range(0,7):
+		current_avg = sum(timeRecord[i])/float(len(timeRecord[i]))
+		averageTs.append(int(current_avg))
+	
+
+	width = .99
+
+	#y
+	if len(timeRecord[0]) > 1:
+		plt.bar(totalDataX, probRecord[0][:], width, facecolor='green')
+		plt.xlabel("Frames")
+		plt.ylabel("Probability of an Accurate Prediction")
+		plt.title("Cumulative Y Exercise Data")
+		annotation = "Average Timespan: " + str(averageTs[0])
+		plt.annotate(annotation, xy = (averageTs[0], 0.5))
+		plt.grid(True)
+		
+		plt.savefig(newDir +"\\yTotalData.png")
+		plt.close()
+
+	#Seated
+	if len(timeRecord[1]) > 1:
+		plt.bar(totalDataX, probRecord[3][:], width, facecolor='green')
+		plt.xlabel("Frames")
+		plt.ylabel("Probability of an Accurate Prediction")
+		plt.title("Cumulative Seated Exercise Data")
+		annotation = "Average Timespan: " + str(averageTs[3])
+		plt.annotate(annotation, xy = (averageTs[3], 0.5))
+		plt.grid(True)
+		
+
+		plt.savefig(newDir +"\\seatedTotalData.png")
+		plt.close()
+
+	#sumo
+	if len(timeRecord[2]) > 1:
+		plt.bar(totalDataX, probRecord[4][:], width, facecolor='green')
+		plt.xlabel("Frames")
+		plt.ylabel("Probability of an Accurate Prediction")
+		plt.title("Cumulative Sumo Exercise Data")
+		annotation = "Average Timespan: " + str(averageTs[4])
+		plt.annotate(annotation, xy = (averageTs[4], 0.5))
+		plt.grid(True)
+		
+		plt.savefig(newDir +"\\sumoTotalData.png")
+		plt.close()
+
+	#mermaid
+	if len(timeRecord[3]) > 1:
+		plt.bar(totalDataX, probRecord[5][:], width, facecolor='green')
+		plt.xlabel("Frames")
+		plt.ylabel("Probability of an Accurate Prediction")
+		plt.title("Cumulative Mermaid Exercise Data")
+		annotation = "Average Timespan: " + str(averageTs[5])
+		plt.annotate(annotation, xy = (averageTs[5], 0.5))
+		plt.grid(True)
+		
+		plt.savefig(newDir +"\\mermaidTotalData.png")
+		plt.close()
+
+	#towel
+	if len(timeRecord[4]) > 1:
+		plt.bar(totalDataX, probRecord[6][:], width, facecolor='green')
+		plt.xlabel("Frames")
+		plt.ylabel("Probability of an Accurate Prediction")
+		plt.title("Cumulative Towel Exercise Data")
+		annotation = "Average Timespan: " + str(averageTs[6])
+		plt.annotate(annotation, xy = (averageTs[6], 0.5))
+		plt.grid(True)
+		
+
+		plt.savefig(newDir +"\\towelTotalData.png")
+		plt.close()
+
+	#wall
+	if len(timeRecord[5]) > 1:
+		plt.bar(totalDataX, probRecord[8][:], width, facecolor='green')
+		plt.xlabel("Frames")
+		plt.ylabel("Probability of an Accurate Prediction")
+		plt.title("Cumulative Wall Exercise Data")
+		annotation = "Average Timespan: " + str(averageTs[8])
+		plt.annotate(annotation, xy = (averageTs[8], 0.5))
+		plt.grid(True)
+		
+		plt.savefig(newDir +"\\wallTotalData.png")
+		plt.close()
+
+	#oov
+	if len(timeRecord[6]) > 1:
+		plt.bar(totalDataX, probRecord[10][:], width, facecolor='green')
+		plt.xlabel("Frames")
+		plt.ylabel("Probability of an Accurate Prediction")
+		plt.title("Cumulative OOV Data")
+		annotation = "Average Timespan: " + str(averageTs[10])
+		plt.annotate(annotation, xy = (averageTs[10], 0.5))
+		plt.grid(True)
+
+		plt.savefig(newDir +"\\oovTotalData.png")
+		plt.close()
+
 
 if FLAGS.refinement == "Uniform":
 	file_names = uniformRefinement()
@@ -692,6 +975,7 @@ folderName = writeFolderLabel()
 newDir = dirname + '\\Models&Results\\' + folderName
 if not (os.path.exists(newDir)):
 	os.makedirs(newDir)
+
 resultsFile = open(newDir + '\\Results.txt',"w+")
 
 numSections = calcSections()
@@ -701,6 +985,8 @@ bodySize = calcBodySize()
 numberTests = calcNumTests()
 
 maxEntries, timeScores = calcMaxEntries()
+
+labelDist = calcLableDist()
 
 def main(argv = None):
 	'''
@@ -713,14 +999,14 @@ def main(argv = None):
 	batchSize = FLAGS.batch_size
 	#display step
 
-	data, labels = extractData()
+	data, labels, dataTask = extractData()
 	labelText = labels
 	labels = oneHot(labels)
 
-	inputLayer = bodySize*maxEntries*3*numSections
+	trainData, means, stdevs = std(trainData, trainNumber, timeScores)
+	testData = stdTest(testData, testNumber, means, stdevs, timeScores)
 
-	#initialize global variables
-	init = tf.global_variables_initializer()
+	inputLayer = bodySize*3*numSections
 
 	#tf Graph input
 	X = tf.placeholder(data.dtype, [None, inputLayer])
@@ -738,8 +1024,6 @@ def main(argv = None):
 		'b2' : tf.Variable(tf.random_normal([hiddenLayer2], dtype=data.dtype, name = 'b2')),
 		'out' : tf.Variable(tf.random_normal([numberClasses], dtype=data.dtype, name = 'outb'))
 		}
-
-	
 	elif (arch == "method2"):
 		weights = {
 		'h1' : tf.Variable(tf.random_normal([inputLayer, hiddenLayer1], dtype=data.dtype, name='h1')),
@@ -812,10 +1096,19 @@ def main(argv = None):
 			print("My Predictions", predictions, '\n')
 			print("Actual Labels", labelText)
 		else: 		
-			predictions = tf.argmax(pred,1).eval()
-			predictions = findExercise(predictions) 
-			print("My preditions", predictions)
+			predictionsOg = tf.argmax(pred,1).eval()
+			predictions = findExercise(predictionsOg) 
+			correctPredictionsOg = tf.argmax(labels,1).eval()
+			correctPredictions = findExercise(correctPredictionsOg)
+			draw(predictions, correctPredictions, dataTask)
 
+		confusion_matrix = tf.confusion_matrix(correctPredictionsOg, predictionsOg).eval()
+		print("Confusion Matrix: ")
+		print(confusion_matrix)
+
+
+
+	
 #needed in order to call main
 if __name__ == '__main__':
 	main()

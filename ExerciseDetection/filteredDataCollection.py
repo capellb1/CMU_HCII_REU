@@ -3,6 +3,8 @@ import shutil
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
+
+
 dirname = os.path.realpath('.')
 filename = dirname + '\\selectedData\\TestNumber.txt'
 numberTestFiles = open(filename,"r")
@@ -53,6 +55,9 @@ for i in range(0, int(numberTests)):
 	for line in open(dirname + "\\selectedData\\test" + str(i)+ "\\label.csv"):
 		temporaryLabel = line.split()
 		temporaryLabel = temporaryLabel[0]
+	
+	resultsFileL = open("C:\\Users\\Admin\\BlakeDeepak\\CMU_HCII_REU\\ExerciseDetection\\DataWindow\\test" + str(i) +"\\label.csv", "a+")
+	resultsFileL.write(temporaryLabel) 
 
 	exerciseNumber = 0
 	if temporaryLabel.lower() == "y":
@@ -74,11 +79,11 @@ for i in range(0, int(numberTests)):
 	print (windowTime[exerciseNumber*2])									
 	k = 0
 	for j in range(0,bodySize):
-		resultsFileP = open("C:\\Users\\Admin\\BlakeDeepak\\CMU_HCII_REU\\ExerciseDetection\\selectedData\\test" + str(i) + "\\Position_" + file_names[j], "a+")
+		resultsFileP = open("C:\\Users\\Admin\\BlakeDeepak\\CMU_HCII_REU\\ExerciseDetection\\DataWindow\\test" + str(i) + "\\Position_" + file_names[j], "a+")
 		m = 0
-		sample = False
+		sample = True
 		for line in open(dirname + "\\selectedData\\test" + str(i)+ "\\Position_" + file_names[j]):
-			if m >= windowTime[2*exerciseNumber] and m < windowTime[2*exerciseNumber+ 1]:
+			if m >= 2*windowTime[2*exerciseNumber] and m < 2*windowTime[2*exerciseNumber+ 1]:
 				if sample:
 					row = line.split(',')
 					coords = []
@@ -91,11 +96,11 @@ for i in range(0, int(numberTests)):
 				else:
 					sample = True
 			m = m + 1
-		resultsFileV = open("C:\\Users\\Admin\\BlakeDeepak\\CMU_HCII_REU\\ExerciseDetection\\selectedData\\test" + str(i) + "\\Velocity_" + file_names[j], "a+")
+		resultsFileV = open("C:\\Users\\Admin\\BlakeDeepak\\CMU_HCII_REU\\ExerciseDetection\\DataWindow\\test" + str(i) + "\\Velocity_" + file_names[j], "a+")
 		m = 0
-		sample = False
+		sample = True
 		for line in open(dirname + "\\selectedData\\test" + str(i)+ "\\Velocity_" + file_names[j]):
-			if m >= windowTime[2*exerciseNumber] and m < windowTime[2*exerciseNumber + 1]:
+			if m >= 2*windowTime[2*exerciseNumber] and m < 2*windowTime[2*exerciseNumber + 1]:
 				if sample:
 					row = line.split(',')
 					coords = []
@@ -109,11 +114,11 @@ for i in range(0, int(numberTests)):
 					sample = True
 			m = m + 1
 
-		resultsFileT = open("C:\\Users\\Admin\\BlakeDeepak\\CMU_HCII_REU\\ExerciseDetection\\selectedData\\test" + str(i) + "\\Task_" + file_names[j], "a+")
+		resultsFileT = open("C:\\Users\\Admin\\BlakeDeepak\\CMU_HCII_REU\\ExerciseDetection\\DataWindow\\test" + str(i) + "\\Task_" + file_names[j], "a+")
 		m = 0
-		sample = False
+		sample = True
 		for line in open(dirname + "\\selectedData\\test" + str(i)+ "\\Task_" + file_names[j]):
-			if m >= windowTime[2*exerciseNumber] and m < windowTime[2*exerciseNumber + 1]:
+			if m >= 2*windowTime[2*exerciseNumber] and m < 2*windowTime[2*exerciseNumber + 1]:
 				if sample:
 					coords = []
 					row = line.split(',')

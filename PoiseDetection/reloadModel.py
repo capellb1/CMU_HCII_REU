@@ -90,10 +90,12 @@ tf.app.flags.DEFINE_boolean('save', False, 'Determines wether the model is saved
 
 FLAGS = tf.app.flags.FLAGS
 
+DATA_FOLDER = "selectedData"
+
 batchIndex = 0
 
 arch = FLAGS.arch
-numberClasses = 11
+numberClasses = 7
 if (arch == 'method1'):
 	hiddenLayer1 = 60
 	hiddenLayer2 = 60
@@ -177,7 +179,7 @@ def writeFolderLabel():
 
 def calcNumTests():
 	dirname = os.path.realpath('.')
-	filename = dirname + '\\Data\\TestNumber.txt'
+	filename = dirname + '\\' + DATA_FOLDER + '\\TestNumber.txt'
 	numberTestFiles = open(filename,"r")
 	numberTests = numberTestFiles.read()
 	if FLAGS.verbose:
@@ -191,7 +193,7 @@ def calcMaxEntries():
 	timeScores = []
 	for i in range(0,int(numberTests)):
 		numEntries = 0
-		for line in open(dirname + "\\Data\\test" + str(i) + "\\" + FLAGS.source + "_" + file_names_super[0]):
+		for line in open(dirname + "\\"+ DATA_FOLDER +"\\test" + str(i)+ "\\Position_" + file_names_super[0]):
 			numEntries = numEntries + 1
 		if numEntries > maxEntries:
 			maxEntries = numEntries	
@@ -324,27 +326,19 @@ def oneHot(labels):
 	one_hot_labels = []
 	for i in range(0,len(labels)):
 		if labels[i].lower() == "y":
-			one_hot_labels.append([1,0,0,0,0,0,0,0,0,0,0])
-		elif labels[i].lower() == "cat":
-			one_hot_labels.append([0,1,0,0,0,0,0,0,0,0,0])
-		elif labels[i].lower() == "supine":
-			one_hot_labels.append([0,0,1,0,0,0,0,0,0,0,0])
+			one_hot_labels.append([1,0,0,0,0,0,0])
 		elif labels[i].lower() == "seated":
-			one_hot_labels.append([0,0,0,1,0,0,0,0,0,0,0])
+			one_hot_labels.append([0,1,0,0,0,0,0])
 		elif labels[i].lower() == "sumo":
-			one_hot_labels.append([0,0,0,0,1,0,0,0,0,0,0])
+			one_hot_labels.append([0,0,1,0,0,0,0])
 		elif labels[i].lower() == "mermaid":
-			one_hot_labels.append([0,0,0,0,0,1,0,0,0,0,0])
+			one_hot_labels.append([0,0,0,1,0,0,0])
 		elif labels[i].lower() == "towel":
-			one_hot_labels.append([0,0,0,0,0,0,1,0,0,0,0])
-		elif labels[i].lower() == "trunk":
-			one_hot_labels.append([0,0,0,0,0,0,0,1,0,0,0])
+			one_hot_labels.append([0,0,0,0,1,0,0])
 		elif labels[i].lower() == "wall":
-			one_hot_labels.append([0,0,0,0,0,0,0,0,1,0,0])
-		elif labels[i].lower() == "pretzel":
-			one_hot_labels.append([0,0,0,0,0,0,0,0,0,1,0])
+			one_hot_labels.append([0,0,0,0,0,1,0])
 		else: #OOV
-			one_hot_labels.append([0,0,0,0,0,0,0,0,0,0,1])
+			one_hot_labels.append([0,0,0,0,0,0,1])
 	one_hot_labels = np.asarray(one_hot_labels)
 	print("Lable Encoding Complete")
 	return one_hot_labels
@@ -365,23 +359,15 @@ def findExercise (predictions):
 		if predictions[i] == 0:
 			one_hot_labels.append("y")
 		elif predictions[i] == 1:
-			one_hot_labels.append("cat")
-		elif predictions[i] == 2:
-			one_hot_labels.append("supine")
-		elif predictions[i] == 3:
 			one_hot_labels.append("seated")
-		elif predictions[i] == 4:
+		elif predictions[i] == 2:
 			one_hot_labels.append("sumo")
-		elif predictions[i] == 5:
+		elif predictions[i] == 3:
 			one_hot_labels.append("mermaid")
-		elif predictions[i] == 6:
+		elif predictions[i] == 4:
 			one_hot_labels.append("towel")
-		elif predictions[i] == 7:
-			one_hot_labels.append("trunk")
-		elif predictions[i] == 8:
+		elif predictions[i] == 5:
 			one_hot_labels.append("wall")
-		elif predictions[i] == 9:
-			one_hot_labels.append("pretzel")
 		else: #OOV
 			one_hot_labels.append("oov")
 	one_hot_labels = np.asarray(one_hot_labels)
@@ -406,7 +392,7 @@ def tailor(i, refinement_rate):
 	jointActivity = []
 	for j in range(0,24):
 		activitySum = 0
-		for line in open(dirname + "\\Data\\test" + str(i)+ "\\Task_" + file_names_super[j]):
+		for line in open(dirname + "\\"+ DATA_FOLDER +"\\test" + str(i)+ "\\Position_" + file_names_super[j]):
 			row = line.split(',')
 			for l in range(0,3):
 				activitySum = activitySum + int(row[l])
@@ -418,7 +404,7 @@ def tailor(i, refinement_rate):
 	jointIndexActivity = [x[1] for x in jointActivity]
 
 	if refinement_rate == 0:
-		return
+		return uniformRefinement()
 	
 	elif refinement_rate == 25:
 		selectedJoints = jointIndexActivity[-20:-1]
@@ -642,7 +628,7 @@ def extractData():
 			h=0
 			for j in range(0, bodySize):
 				if FLAGS.position:
-					fp = open(dirname + "\\Data\\test" + str(i)+ "\\Position_" + file_names[j])
+					fp = open(dirname + "\\"+ DATA_FOLDER +"\\test" + str(i)+ "\\Position_" + file_names[j])
 					for n, line in enumerate(fp):
 						if n == w:
 							row = line.split(',')
@@ -651,7 +637,7 @@ def extractData():
 								k = k + 1
 			
 				if FLAGS.velocity:
-					fp = open(dirname + "\\Data\\test" + str(i)+ "\\Velocity_" + file_names[j])
+					fp = open(dirname + "\\"+ DATA_FOLDER +"\\test" + str(i)+ "\\Velocity_" + file_names[j])
 					for n, line in enumerate(fp):
 						if n == w:
 							row = line.split(',')
@@ -659,7 +645,7 @@ def extractData():
 								data[l][k]= row[m]
 								k = k + 1
 				if FLAGS.task:
-					fp = open(dirname + "\\Data\\test" + str(i)+ "\\Task_" + file_names[j])
+					fp = open(dirname + "\\"+ DATA_FOLDER +"\\test" + str(i)+ "\\Task_" + file_names[j])
 					for n, line in enumerate(fp):
 						if n == w:
 							row = line.split(',')
@@ -668,7 +654,7 @@ def extractData():
 								k = k + 1
 				
 				#used for graphing task
-				fp = open(dirname + "\\Data\\test" + str(i)+ "\\Task_" + file_names[j])
+				fp = open(dirname + "\\"+ DATA_FOLDER +"\\test" + str(i)+ "\\Task_" + file_names[j])
 				for n, line in enumerate(fp):
 					if n == w:
 						row = line.split(',')
@@ -676,7 +662,7 @@ def extractData():
 							dataTask[l][h]= row[m]
 							h = h + 1
 
-			for line in open(dirname + "\\Data\\test" + str(i)+ "\\label.csv"):
+			for line in open(dirname + "\\"+ DATA_FOLDER +"\\test" + str(i)+ "\\label.csv"):
 				temporaryLabel = line.split()
 				labels.append(str(temporaryLabel[0]))
 			
@@ -693,15 +679,11 @@ def extractData():
 
 def calcLableDist():
 	y_count = 0.1
-	cat_count = 0.1
-	supine_count = 0.1
 	seated_count = 0.1
 	sumo_count = 0.1
 	mermaid_count = 0.1
 	towel_count = 0.1
-	trunk_count = 0.1
 	wall_count = 0.1
-	pretzel_count = 0.1
 	oov_count = 0.1
 
 	labelDist = []
@@ -709,50 +691,80 @@ def calcLableDist():
 
 			#seperate the label from the name and event number stored within the label.csv file(s)
 	for i in range(0, int(numberTests)):
-		for line in open(dirname + "\\Data\\test" + str(i)+ "\\label.csv"):
+		for line in open(dirname + "\\"+ DATA_FOLDER +"\\test" + str(i)+ "\\label.csv"):
 			temporaryLabel = line.split()
 			labels.append(str(temporaryLabel[0]))
 
 	for i in range(0, len(labels)):
-		
-		print("i: ", i, " ", labels[i])
 
-		if (labels[i] == "y"):
+		if (labels[i].lower() == "y"):
 			y_count = y_count + 1
-		elif (labels[i] == "cat"):
-			cat_count = cat_count + 1
-		elif (labels[i] == "supine"):
-			supine_count = supine_count + 1
-		elif (labels[i] == "seated"):
+		elif (labels[i].lower() == "seated"):
 			seated_count = seated_count + 1
-		elif (labels[i] == "sumo"):
+		elif (labels[i].lower() == "sumo"):
 			sumo_count = sumo_count + 1
-		elif (labels[i] == "mermaid"):
+		elif (labels[i].lower() == "mermaid"):
 			mermaid_count = mermaid_count + 1
-		elif (labels[i] == "towel"):
+		elif (labels[i].lower() == "towel"):
 			towel_count = towel_count + 1
-		elif (labels[i] == "trunk"):
-			trunk_count = trunk_count + 1
-		elif (labels[i] == "wall"):
+		elif (labels[i].lower() == "wall"):
 			wall_count = wall_count + 1
-		elif (labels[i] == "pretzel"):
-			pretzel_count = pretzel_count + 1
 		else:
 			oov_count = oov_count + 1
 
 	labelDist.append(y_count)
-	labelDist.append(cat_count)
-	labelDist.append(supine_count)
 	labelDist.append(seated_count)
 	labelDist.append(sumo_count)
 	labelDist.append(mermaid_count)
 	labelDist.append(towel_count)
-	labelDist.append(trunk_count)
 	labelDist.append(wall_count)
-	labelDist.append(pretzel_count)
 	labelDist.append(oov_count)
 
 	return labelDist 
+def std(data, numberTests):
+	dataByBody = []
+	means = []
+	stdevs = []
+
+	mean = 0
+	stdev = 0
+	for k in range(0,bodySize*3*numSections):
+		bodypartData = []
+		for l in range(0,len(data)):
+			bodypartData.append(data[l][k])
+
+		mean = stat.mean(bodypartData)
+		stdev = stat.stdev(bodypartData)
+		dataByBody.append(bodypartData)
+		means.append(mean)
+		stdevs.append(stdev)
+
+		for j in range(0, len(bodypartData)):
+			dataByBody[k][j] = (dataByBody[k][j] - mean)/stdev
+
+	for l in range(0,len(data)):
+		for k in range(0,bodySize*3*numSections):
+			data[l][k] = dataByBody[k][l]
+
+	return data, means, stdevs
+
+def stdTest(data, numberTests, mean, stdev):
+	dataByBody = []
+	for k in range(0,bodySize*3*numSections):
+		bodypartData = []
+		for l in range(0,len(data[:])):
+			bodypartData.append(data[l][k])
+
+		dataByBody.append(bodypartData)
+
+		for j in range(0, len(bodypartData)):
+			dataByBody[k][j] = (dataByBody[k][j] - mean[k])/stdev[k]
+
+	for l in range(0,len(data[:])):
+		for k in range(0,bodySize*3*numSections):
+			data[l][k] = dataByBody[k][l]
+
+	return data
 
 def draw(predictions, correctPredictions, dataTask):	
 	'''
@@ -765,14 +777,14 @@ def draw(predictions, correctPredictions, dataTask):
 		exercise.
 	'''
 	start = 0	
-	dataRecord = np.zeros((11,maxEntries))
-	probRecord = np.zeros((11,maxEntries))
-	taskRecord = np.zeros((11,maxEntries))
+	dataRecord = np.zeros((7,maxEntries))
+	probRecord = np.zeros((7,maxEntries))
+	taskRecord = np.zeros((7,maxEntries))
 	offset = 0
 	#range from 0-10
-	timeRecord = [[0],[0],[0],[0],[0],[0],[0],[0],[0],[0],[0]]
+	timeRecord = [[0],[0],[0],[0],[0],[0],[0]]
 	
-			
+	print("Predictions to get Graphed:", correctPredictions)		
 	for i in range (0, int(numberTests)):
 		graphData = []
 		graphDataX = []
@@ -783,65 +795,47 @@ def draw(predictions, correctPredictions, dataTask):
 						
 				if (correctPredictions[start] == "y"):
 					dataRecord[0][j] = dataRecord[0][j] + 1
-				elif (correctPredictions[start] == "cat"):
-					dataRecord[1][j] = dataRecord[1][j] + 1
-				elif (correctPredictions[start] == "supine"):
-					dataRecord[2][j] = dataRecord[2][j] + 1
 				elif (correctPredictions[start] == "seated"):
-					dataRecord[3][j] = dataRecord[3][j] + 1
+					dataRecord[1][j] = dataRecord[1][j] + 1
 				elif (correctPredictions[start] == "sumo"):
-					dataRecord[4][j] = dataRecord[4][j] + 1
+					dataRecord[2][j] = dataRecord[2][j] + 1
 				elif (correctPredictions[start] == "mermaid"):
-					dataRecord[5][j] = dataRecord[5][j] + 1
+					dataRecord[3][j] = dataRecord[3][j] + 1
 				elif (correctPredictions[start] == "towel"):
-					dataRecord[6][j] = dataRecord[6][j] + 1
-				elif (correctPredictions[start] == "trunk"):
-					dataRecord[7][j] = dataRecord[7][j] + 1
+					dataRecord[4][j] = dataRecord[4][j] + 1
 				elif (correctPredictions[start] == "wall"):
-					dataRecord[8][j] = dataRecord[8][j] + 1
-				elif (correctPredictions[start] == "pretzel"):
-					dataRecord[9][j] = dataRecord[9][j] + 1
+					dataRecord[5][j] = dataRecord[5][j] + 1
 				elif (correctPredictions[start] == "oov"):
-					dataRecord[10][j] = dataRecord[10][j] + 1
+					dataRecord[6][j] = dataRecord[6][j] + 1
 
 			else:
 				graphData.append(0)
 				
-
-			totalTask = sum(dataTask[offset+j][:])
-			taskData.append(totalTask)
 				
 			graphDataX.append(j)
 
 			#calculate probability rather than raw numbers
-			for k in range(0,11):
+			for k in range(0,7):
 				probRecord[k][j] = dataRecord[k][j]/labelDist[k]
+			
 
 
 		offset = timeScores[i]
 				
 		if (correctPredictions[start] == "y"):
 			timeRecord[0].append(graphDataX[-1])
-		elif (correctPredictions[start] == "cat"):
-			timeRecord[1].append(graphDataX[-1])
-		elif (correctPredictions[start] == "supine"):
-			timeRecord[2].append(graphDataX[-1])
 		elif (correctPredictions[start] == "seated"):
-			timeRecord[3].append(graphDataX[-1])
+			timeRecord[1].append(graphDataX[-1])
 		elif (correctPredictions[start] == "sumo"):
-			timeRecord[4].append(graphDataX[-1])
+			timeRecord[2].append(graphDataX[-1])
 		elif (correctPredictions[start] == "mermaid"):
-			timeRecord[5].append(graphDataX[-1])
+			timeRecord[3].append(graphDataX[-1])
 		elif (correctPredictions[start] == "towel"):
-			timeRecord[6].append(graphDataX[-1])
-		elif (correctPredictions[start] == "trunk"):
-			timeRecord[7].append(graphDataX[-1])
+			timeRecord[4].append(graphDataX[-1])
 		elif (correctPredictions[start] == "wall"):
-			timeRecord[8].append(graphDataX[-1])
-		elif (correctPredictions[start] == "pretzel"):
-			timeRecord[9].append(graphDataX[-1])
+			timeRecord[5].append(graphDataX[-1])
 		elif (correctPredictions[start] == "oov"):
-			timeRecord[10].append(graphDataX[-1])
+			timeRecord[6].append(graphDataX[-1])
 				
 		if FLAGS.verbose:
 			print(timeScores[i])
@@ -851,17 +845,12 @@ def draw(predictions, correctPredictions, dataTask):
 			print(graphData)
 
 		width = .99
-		plt.subplot(211)
 		plt.bar(graphDataX, graphData, width, facecolor='blue')
 		plt.xlabel("Frames")
 		plt.annotate(str(graphDataX[-1]), xy = (graphDataX[-1], 1))
 		plt.ylabel("Accuracy (Bool)")
 		plt.title("Test" + str(i) +": " + str(correctPredictions[start]))
 		plt.grid(True)
-				
-		plt.subplot(212)
-		plt.bar(graphDataX, taskData, width, facecolor='red')
-
 		plt.tight_layout()
 		plt.savefig(newDir +"\\test" + str(i) + str(correctPredictions[start]) + ".png")
 		plt.close()
@@ -869,11 +858,12 @@ def draw(predictions, correctPredictions, dataTask):
 		
 	totalDataX = range(0, maxEntries)
 			
+	
 	averageTs = []
-	for i in range(0,11):
+	for i in range(0,7):
 		current_avg = sum(timeRecord[i])/float(len(timeRecord[i]))
 		averageTs.append(int(current_avg))
-
+	
 
 	width = .99
 
@@ -890,40 +880,14 @@ def draw(predictions, correctPredictions, dataTask):
 		plt.savefig(newDir +"\\yTotalData.png")
 		plt.close()
 
-	#cat
+	#Seated
 	if len(timeRecord[1]) > 1:
 		plt.bar(totalDataX, probRecord[1][:], width, facecolor='green')
 		plt.xlabel("Frames")
 		plt.ylabel("Probability of an Accurate Prediction")
-		plt.title("Cumulative Cat Exercise Data")
+		plt.title("Cumulative Seated Exercise Data")
 		annotation = "Average Timespan: " + str(averageTs[1])
 		plt.annotate(annotation, xy = (averageTs[1], 0.5))
-		plt.grid(True)
-		
-		plt.savefig(newDir +"\\catTotalData.png")
-		plt.close()
-
-	#supine
-	if len(timeRecord[2]) > 1:
-		plt.bar(totalDataX, probRecord[2][:], width, facecolor='green')
-		plt.xlabel("Frames")
-		plt.ylabel("Probability of an Accurate Prediction")
-		plt.title("Cumulative Supine Exercise Data")
-		annotation = "Average Timespan: " + str(averageTs[2])
-		plt.annotate(annotation, xy = (averageTs[2], 0.5))
-		plt.grid(True)
-		
-		plt.savefig(newDir +"\\supineTotalData.png")
-		plt.close()
-
-	#Seated
-	if len(timeRecord[3]) > 1:
-		plt.bar(totalDataX, probRecord[3][:], width, facecolor='green')
-		plt.xlabel("Frames")
-		plt.ylabel("Probability of an Accurate Prediction")
-		plt.title("Cumulative Seated Exercise Data")
-		annotation = "Average Timespan: " + str(averageTs[3])
-		plt.annotate(annotation, xy = (averageTs[3], 0.5))
 		plt.grid(True)
 		
 
@@ -931,92 +895,66 @@ def draw(predictions, correctPredictions, dataTask):
 		plt.close()
 
 	#sumo
-	if len(timeRecord[4]) > 1:
-		plt.bar(totalDataX, probRecord[4][:], width, facecolor='green')
+	if len(timeRecord[2]) > 1:
+		plt.bar(totalDataX, probRecord[2][:], width, facecolor='green')
 		plt.xlabel("Frames")
 		plt.ylabel("Probability of an Accurate Prediction")
 		plt.title("Cumulative Sumo Exercise Data")
-		annotation = "Average Timespan: " + str(averageTs[4])
-		plt.annotate(annotation, xy = (averageTs[4], 0.5))
+		annotation = "Average Timespan: " + str(averageTs[2])
+		plt.annotate(annotation, xy = (averageTs[2], 0.5))
 		plt.grid(True)
 		
 		plt.savefig(newDir +"\\sumoTotalData.png")
 		plt.close()
 
 	#mermaid
-	if len(timeRecord[5]) > 1:
-		plt.bar(totalDataX, probRecord[5][:], width, facecolor='green')
+	if len(timeRecord[3]) > 1:
+		plt.bar(totalDataX, probRecord[3][:], width, facecolor='green')
 		plt.xlabel("Frames")
 		plt.ylabel("Probability of an Accurate Prediction")
 		plt.title("Cumulative Mermaid Exercise Data")
-		annotation = "Average Timespan: " + str(averageTs[5])
-		plt.annotate(annotation, xy = (averageTs[5], 0.5))
+		annotation = "Average Timespan: " + str(averageTs[3])
+		plt.annotate(annotation, xy = (averageTs[3], 0.5))
 		plt.grid(True)
 		
 		plt.savefig(newDir +"\\mermaidTotalData.png")
 		plt.close()
 
 	#towel
-	if len(timeRecord[6]) > 1:
-		plt.bar(totalDataX, probRecord[6][:], width, facecolor='green')
+	if len(timeRecord[4]) > 1:
+		plt.bar(totalDataX, probRecord[4][:], width, facecolor='green')
 		plt.xlabel("Frames")
 		plt.ylabel("Probability of an Accurate Prediction")
 		plt.title("Cumulative Towel Exercise Data")
-		annotation = "Average Timespan: " + str(averageTs[6])
-		plt.annotate(annotation, xy = (averageTs[6], 0.5))
+		annotation = "Average Timespan: " + str(averageTs[4])
+		plt.annotate(annotation, xy = (averageTs[4], 0.5))
 		plt.grid(True)
 		
 
 		plt.savefig(newDir +"\\towelTotalData.png")
 		plt.close()
-	#trunk
-	if len(timeRecord[7]) > 1:
-		plt.bar(totalDataX, probRecord[7][:], width, facecolor='green')
-		plt.xlabel("Frames")
-		plt.ylabel("Probability of an Accurate Prediction")
-		plt.title("Cumulative Trunk Exercise Data")
-		annotation = "Average Timespan: " + str(averageTs[7])
-		plt.annotate(annotation, xy = (averageTs[7], 0.5))
-		plt.grid(True)
-		
-
-		plt.savefig(newDir +"\\trunkTotalData.png")
-		plt.close()
 
 	#wall
-	if len(timeRecord[8]) > 1:
-		plt.bar(totalDataX, probRecord[8][:], width, facecolor='green')
+	if len(timeRecord[5]) > 1:
+		plt.bar(totalDataX, probRecord[5][:], width, facecolor='green')
 		plt.xlabel("Frames")
 		plt.ylabel("Probability of an Accurate Prediction")
 		plt.title("Cumulative Wall Exercise Data")
-		annotation = "Average Timespan: " + str(averageTs[8])
-		plt.annotate(annotation, xy = (averageTs[8], 0.5))
+		annotation = "Average Timespan: " + str(averageTs[5])
+		plt.annotate(annotation, xy = (averageTs[5], 0.5))
 		plt.grid(True)
 		
 		plt.savefig(newDir +"\\wallTotalData.png")
 		plt.close()
 
-	#Pretzel
-	if len(timeRecord[9]) > 1:
-		plt.bar(totalDataX, probRecord[9][:], width, facecolor='green')
-		plt.xlabel("Frames")
-		plt.ylabel("Probability of an Accurate Prediction")
-		plt.title("Cumulative Pretzel Exercise Data")
-		annotation = "Average Timespan: " + str(averageTs[9])
-		plt.annotate(annotation, xy = (averageTs[9], 0.5))
-		plt.grid(True)
-		
-		plt.savefig(newDir +"\\pretzelTotalData.png")
-		plt.close()
-
 	#oov
-	if len(timeRecord[10]) > 1:
-		plt.bar(totalDataX, probRecord[10][:], width, facecolor='green')
+	if len(timeRecord[6]) > 1:
+		plt.bar(totalDataX, probRecord[6][:], width, facecolor='green')
 		plt.xlabel("Frames")
 		plt.ylabel("Probability of an Accurate Prediction")
 		plt.title("Cumulative OOV Data")
-		annotation = "Average Timespan: " + str(averageTs[10])
-		plt.annotate(annotation, xy = (averageTs[10], 0.5))
+		annotation = "Average Timespan: " + str(averageTs[6])
+		plt.annotate(annotation, xy = (averageTs[6], 0.5))
 		plt.grid(True)
 
 		plt.savefig(newDir +"\\oovTotalData.png")
@@ -1037,6 +975,7 @@ folderName = writeFolderLabel()
 newDir = dirname + '\\Models&Results\\' + folderName
 if not (os.path.exists(newDir)):
 	os.makedirs(newDir)
+
 resultsFile = open(newDir + '\\Results.txt',"w+")
 
 numSections = calcSections()
@@ -1048,6 +987,7 @@ numberTests = calcNumTests()
 maxEntries, timeScores = calcMaxEntries()
 
 labelDist = calcLableDist()
+print("Label Distribution: ", labelDist)
 
 def main(argv = None):
 	'''
@@ -1063,6 +1003,9 @@ def main(argv = None):
 	data, labels, dataTask = extractData()
 	labelText = labels
 	labels = oneHot(labels)
+
+	trainData, means, stdevs = std(trainData, trainNumber, timeScores)
+	testData = stdTest(testData, testNumber, means, stdevs, timeScores)
 
 	inputLayer = bodySize*3*numSections
 
@@ -1154,12 +1097,15 @@ def main(argv = None):
 			print("My Predictions", predictions, '\n')
 			print("Actual Labels", labelText)
 		else: 		
-			predictions = tf.argmax(pred,1).eval()
-			predictions = findExercise(predictions) 
-			correctPredictions = tf.argmax(labels,1).eval()
-			correctPredictions = findExercise(correctPredictions)
+			predictionsOg = tf.argmax(pred,1).eval()
+			predictions = findExercise(predictionsOg) 
+			correctPredictionsOg = tf.argmax(labels,1).eval()
+			correctPredictions = findExercise(correctPredictionsOg)
 			draw(predictions, correctPredictions, dataTask)
 
+		confusion_matrix = tf.confusion_matrix(correctPredictionsOg, predictionsOg).eval()
+		print("Confusion Matrix: ")
+		print(confusion_matrix)
 
 
 	
