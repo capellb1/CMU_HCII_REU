@@ -94,7 +94,7 @@ FLAGS = tf.app.flags.FLAGS
 
 TRAIN_PERCENT = 0.7
 TEST_PERCENT = 0.3
-DATA_FOLDER = "selectedData"
+DATA_FOLDER = "DataWindow"
 
 batchIndex = 0
 
