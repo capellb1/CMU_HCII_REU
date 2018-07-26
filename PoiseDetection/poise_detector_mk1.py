@@ -59,7 +59,6 @@ from tensorflow.python.data import Dataset
 import numpy as np
 import pandas as pd
 import math 
-import time
 
 #Display libraries for visualization
 from IPython import display
@@ -94,12 +93,9 @@ FLAGS = tf.app.flags.FLAGS
 
 TRAIN_PERCENT = 0.7
 TEST_PERCENT = 0.3
-<<<<<<< HEAD
+
 DATA_FOLDER = "DataWindow"
-=======
-DATA_FOLDER = "Data"
 THRESHOLD = 0.30
->>>>>>> 4ac95e9ff564aab15bf6e13a32698a891d712c20
 
 batchIndex = 0
 
@@ -693,7 +689,6 @@ def extractData():
 
 	for i in range(0, len(edges)):
 		print(labels[edges[i]])
-	dgsg
 	fp.close()
 	#shuffle the data
 	shuffledData = np.empty(data.shape, dtype=data.dtype)
@@ -1033,16 +1028,8 @@ def main(argv = None):
 		results2File.write("Training Accuracy:" + str(accuracy.eval({X: trainData, Y: trainLabels})) + '\n')
 		results2File.write("Testing Accuracy:" + str(accuracy.eval({X: testData, Y: testLabels})) + '\n')
 		evaluationAccuracy = accuracy.eval({X: testData, Y: testLabels})
-<<<<<<< HEAD
-	time2 = time.time()
-	totalTime = (time2 - time1)/60
-	print("TotalTime:" , totalTime)
-	n = ((200* evaluationAccuracy)/totalTime)
-	print("N:", n)
-	results2File.write("Evaluation Metric: " + str(n) + '\n')
 
-=======
->>>>>>> 4ac95e9ff564aab15bf6e13a32698a891d712c20
+
 
 #needed in order to call main
 if __name__ == '__main__':
