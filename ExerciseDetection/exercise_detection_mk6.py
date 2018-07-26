@@ -93,12 +93,9 @@ FLAGS = tf.app.flags.FLAGS
 
 TRAIN_PERCENT = 0.7
 TEST_PERCENT = 0.3
-<<<<<<< HEAD
+
 DATA_FOLDER = "DataWindow"
-=======
-DATA_FOLDER = "selectedData"
 THRESHOLD = 0.30
->>>>>>> 4ac95e9ff564aab15bf6e13a32698a891d712c20
 
 batchIndex = 0
 
@@ -711,7 +708,7 @@ def partitionData(features, labels):
 		print("Test Lables (Randomized): ", testLabels)
 
 	return trainLabels, trainFeatures, train, testLabels, testFeatures, test
-<<<<<<< HEAD
+
 '''
 def std(data, numberTests, timeScores):
 =======
@@ -761,7 +758,6 @@ def stdTest(data, numberTests, mean, stdev):
 			data[l][k] = dataByBody[k][l]
 
 	return data
-<<<<<<< HEAD
 '''
 
 def stdPersonXYZ(data, numberOfTests, timeScores):
@@ -796,9 +792,7 @@ def stdPersonXYZ(data, numberOfTests, timeScores):
 
 
 time1 = time.time()
-=======
 
->>>>>>> 4ac95e9ff564aab15bf6e13a32698a891d712c20
 if FLAGS.refinement == "Uniform":
 	file_names = uniformRefinement()
 
@@ -1050,15 +1044,13 @@ def main(argv = None):
 		results2File.write("Training Accuracy:" + str(accuracy2.eval({X: trainData, Y: trainLabels})) + '\n')	
 		results2File.write("Testing Accuracy:" + str(accuracy2.eval({X: testData, Y: testLabels})) + '\n')	
 		evaluationAccuracy = accuracy2.eval({X: testData, Y: testLabels})
-<<<<<<< HEAD
 	time2 = time.time()
 	totalTime = (time2 - time1)/60
 	print("TotalTime:" , totalTime)
 	n = ((200* evaluationAccuracy)/totalTime)
 	print("N:", n)
 	results2File.write("Evaluation Metric:" + str(n) + '\n')	
-=======
->>>>>>> 4ac95e9ff564aab15bf6e13a32698a891d712c20
+
 
 
 #needed in order to call main

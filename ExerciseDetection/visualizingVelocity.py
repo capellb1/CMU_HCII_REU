@@ -49,6 +49,9 @@ filename = dirname + '\\selectedData\\TestNumber.txt'
 numberTestFiles = open(filename,"r")
 numberTests = numberTestFiles.read()
 
+bodySize = 25
+numSections = 1
+
 def calcMaxEntries():
 	maxEntries = 0
 	timeScores = []
@@ -64,55 +67,39 @@ def calcMaxEntries():
 
 def extractData():
 	'''
-		Moves data from the text files into flattened arrays.
-		Each time stamp is a single row and has a corresponding event label
-			[Arm1xyz, Head1xyz, Foot1xyz, ...] EVENT 10
-			[Arm2xyz, Head2xyz, Foot2xyz, ...] EVENT 2
-		
+		Moves data from the text files into flattened arrays:
+			[event] [HeadX1, HeadY1, HeadZ1, HeadX2....ArmX1, ArmY1, ArmZ1, ArmX2 etc]
+
 		Parameters: None
 		Returns:
-			nparray labels
-			nparray Data
+			nparray shuffledlabels
+			nparray shuffledData
 	'''
-	maxTime = 0
-	for i in range (0 ,int(numberTests)):
-		maxTime = maxTime + timeScores[i]//2
-
-	data =  np.empty((maxTime, int(25*3)))
+	data =  np.empty((int(numberTests), int(bodySize*maxEntries*3*numSections)))
+	
+	#enables downsampling by 50%
 	sample = True
-	numTimeStamps = 0
 	labels = []
-	c=0
 
 	for i in range(0, int(numberTests)):
-		#Determine the number of time stamps in this event
-		w=0
-		for l in range(numTimeStamps,numTimeStamps+timeScores[i]//2):
-			k=0
-			h=0
-			for j in range(0, 25):
-				fp = open(dirname + "\\selectedData\\test" + str(i)+ "\\Velocity_" + file_names[j])
-				for n, line in enumerate(fp):
-					if n == w:
-						row = line.split(',')
-						for m in range(0,3):
-							data[l][k]= row[m]
-							k = k + 1
-				fp.close()
-			for line in open(dirname + "\\selectedData\\test" + str(i)+ "\\label.csv"):
-				temporaryLabel = line.split()
-				labels.append(str(temporaryLabel[0]))
-				
-			w=w+2	
-					
-		numTimeStamps = timeScores[i]//2 + numTimeStamps
+		k = 0
 
-	print(timeScores[0] + timeScores[1])
-	print(data[0])
-	print (data[1])
-	print("date", len(data))
-	print("lables", len(labels))
-	print(labels[0], labels[0 + timeScores[0]//2])
+		for j in range(0,bodySize):
+			for line in open(dirname + "\\selectedData\\test" + str(i)+ "\\Velocity_" + file_names[j]):
+				if sample:
+					row = line.split(',')
+					for l in range(0,3):
+						data[i][k] = row[l]
+						k = k +1
+						sample = False
+				else:
+					sample = True
+
+			
+		#seperate the label from the name and event number stored within the label.csv file(s)
+		for line in open(dirname + "\\selectedData\\test" + str(i)+ "\\label.csv"):
+			temporaryLabel = line.split()
+			labels.append(str(temporaryLabel[0]))
 
 	return data, labels
 
@@ -124,7 +111,7 @@ def stdPersonXYZ(data, numberOfTests, timeScores):
 			dataPointsX = []
 			dataPointsY = []
 			dataPointsZ = []
-			for k in range (offset, 3*j*timeScores[i]):
+			for k in range (offset, offset + 3*j*timeScores[i]):
 				if (k%3 == 0):
 					dataPointsX.append(data[i][k])
 				elif (k%3 == 1):
@@ -132,7 +119,7 @@ def stdPersonXYZ(data, numberOfTests, timeScores):
 				elif (k%3 == 2):
 					dataPointsZ.append(data[i][k])
 
-			for k in range (offset, 3*j*timeScores[i]):
+			for k in range (offset, offset + 3*j*timeScores[i]):
 				if (k%3 == 0):
 					data[i][k] = (data[i][k]- stat.mean(dataPointsX))/stat.stdev(dataPointsX)
 				elif (k%3 == 1):

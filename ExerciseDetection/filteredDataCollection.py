@@ -16,7 +16,6 @@ if not (os.path.exists(newDir)):
 	os.makedirs(newDir)
 
 #set up with start, end
-windowTime = [0 , 75, 0 , 60 , 0  , 80 , 40 , 75 ,0  ,40 , 35 , 65 , 0  ,400]
 
 #list of all possible files
 file_names =[

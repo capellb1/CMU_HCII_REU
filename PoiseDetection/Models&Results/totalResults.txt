@@ -51,3 +51,11 @@ Testing Accuracy:0.4766041
 Training Accuracy:0.42551357
 Testing Accuracy:0.42593834
 >>>>>>> 4ac95e9ff564aab15bf6e13a32698a891d712c20
+Training Accuracy:0.33102852
+Testing Accuracy:0.37903225
+Training Accuracy:0.33102852
+Testing Accuracy:0.37903225
+Training Accuracy:0.33102852
+Testing Accuracy:0.37903225
+Training Accuracy:0.33016422
+Testing Accuracy:0.37903225
