@@ -4,11 +4,11 @@ import math
 import io
 import statistics as stat
 
-DATA_FOLDER = "DataCollectionSample"
+DATA_FOLDER = "Data"
 
 #determine num of files in dataset
 dirname = os.path.realpath('.')
-filename = dirname + '\\DataCollectionSample\\TestNumber.txt'
+filename = dirname + '\\' + DATA_FOLDER +'\\TestNumber.txt'
 numberTestFiles = open(filename,"r")
 numberTests = numberTestFiles.read()
 
@@ -54,7 +54,7 @@ def main(argv = None):
 
 	print("Labels:", labels)
 	#parse list for desired examples
-	removeIndex = [label[1] for label in labels if (label[0] == "Cat" or label[0] == "Supine" or label[0] == "Trunk" or  label[0] == "Pretzel")]
+	removeIndex = [label[1] for label in labels if (label[0] == "Cat" or label[0] == "Supine" or label[0] == "Trunk" or  label[0] == "Pretzel" or label[0] == "oov" )]
 	LabelsIndex = [label[1] for label in labels]
 	print("Remove Index:", removeIndex)
 	print("Labels Index:", LabelsIndex)

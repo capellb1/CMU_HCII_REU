@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 Training Accuracy:0.47412914
 Testing Accuracy:0.47671002
@@ -59,3 +60,5 @@ Training Accuracy:0.33102852
 Testing Accuracy:0.37903225
 Training Accuracy:0.33016422
 Testing Accuracy:0.37903225
+=======
+>>>>>>> 98faa6bcb1d7fb5ab5523b46133c7f142fcdcc20

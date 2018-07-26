@@ -1,2 +1,7 @@
+<<<<<<< HEAD
 Optimization Finished 
 Training Accuracy:0.33102852
+=======
+Confusion Matrix:[[   0 3509]
+ [   0 4100]]
+>>>>>>> 98faa6bcb1d7fb5ab5523b46133c7f142fcdcc20

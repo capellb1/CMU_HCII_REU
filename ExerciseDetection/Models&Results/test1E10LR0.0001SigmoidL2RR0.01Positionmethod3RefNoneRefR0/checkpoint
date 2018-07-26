@@ -1,0 +1,2 @@
+model_checkpoint_path: "D:\\CMU\\CMU_HCII_REU\\ExerciseDetection\\Models&Results\\test1E10LR0.0001SigmoidL2RR0.01Positionmethod3RefNoneRefR0\\ExercisePredicter"
+all_model_checkpoint_paths: "D:\\CMU\\CMU_HCII_REU\\ExerciseDetection\\Models&Results\\test1E10LR0.0001SigmoidL2RR0.01Positionmethod3RefNoneRefR0\\ExercisePredicter"
