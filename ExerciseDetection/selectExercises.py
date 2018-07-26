@@ -4,7 +4,7 @@ import math
 import io
 import statistics as stat
 
-DATA_FOLDER = "Data"
+DATA_FOLDER = "stdData"
 
 #determine num of files in dataset
 dirname = os.path.realpath('.')
@@ -54,7 +54,7 @@ def main(argv = None):
 
 	print("Labels:", labels)
 	#parse list for desired examples
-	removeIndex = [label[1] for label in labels if (label[0] == "Cat" or label[0] == "Supine" or label[0] == "Trunk" or  label[0] == "Pretzel" or label[0] == "oov" )]
+	removeIndex = [label[1] for label in labels if (label[0].lower() == "cat" or label[0].lower() == "supine" or label[0].lower() == "trunk" or  label[0].lower() == "pretzel" or label[0].lower() == "oov" )]
 	LabelsIndex = [label[1] for label in labels]
 	print("Remove Index:", removeIndex)
 	print("Labels Index:", LabelsIndex)
@@ -76,19 +76,6 @@ def main(argv = None):
 	#update the numbering on remaining files
 	for i in range(0, len(LabelsIndex)):
 		os.rename((dirname + "\\selectedData\\test" + str(LabelsIndex[i])), (dirname + "\\selectedData\\test"+ str(i)))
-
-	
-
-	maxEntries = 0
-	timeScores = []
-	for i in range(0,int(numberTests)):
-		numEntries = 0
-		for line in open(dirname + "\\"+ DATA_FOLDER +"\\test" + str(i) + "\\Position_" + file_names[0]):
-			numEntries = numEntries + 1
-		if numEntries > maxEntries:
-			maxEntries = numEntries	
-		timeScores.append(numEntries)
-		features = []
 
 	print("Data Stored in: ", dirname, "\\selectedData")
 

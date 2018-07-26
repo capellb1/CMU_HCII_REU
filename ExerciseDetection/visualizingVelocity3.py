@@ -152,10 +152,11 @@ def draw(velocity):
 		print("about to print")
 		for g in range (0, 25):
 			n, bins, patches = plt.hist(velocityData[g], 'auto', normed=1, facecolor='green', alpha=0.75)
-
+			bodyName = file_names_super[g]
+			bodyName = bodyName[:-3]
 			plt.xlabel('Velocity Z Scores')
-			plt.ylabel('Number of Frames')
-			plt.title('Velocity Z Score vs Frames')
+			plt.ylabel('Proportion of Frames')
+			plt.title('Trial' + str(i) + ': ' + str(bodyName) + ' Velocity Histogram')
 			plt.axis('auto')
 			plt.grid(True)
 			plt.savefig(newDir2 +"\\bodypartHisto" + str(g) + ".png")
@@ -163,6 +164,9 @@ def draw(velocity):
 
 			width = .99
 			plt.bar(graphDataX, velocityData[g], width, facecolor='blue')
+			plt.xlabel('Frame')
+			plt.ylabel('Cumulative Velocity Across All Axis')
+			plt.title('Trial' + str(i) + ': ' + str(bodyName) + 'Velocity Plot')
 			plt.savefig(newDir2 +"\\bodypartBar" + str(g) + ".png")
 			plt.close()
 		

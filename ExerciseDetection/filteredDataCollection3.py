@@ -49,7 +49,7 @@ file_names_super =[
 file_names = file_names_super
 
 dirname = os.path.realpath('.')
-filename = dirname + '\\stdData\\TestNumber.txt'
+filename = dirname + '\\selectedData\\TestNumber.txt'
 numberTestFiles = open(filename,"r")
 numberTests = numberTestFiles.read()
 bodySize = 25
@@ -61,7 +61,7 @@ def calcMaxEntries():
 
 	for i in range(0,int(numberTests)):			
 		numEntries = 0
-		for line in open(dirname + "\\stdData\\test" + str(i) + "\\" + "Velocity_" + file_names_super[0] + ".csv"):
+		for line in open(dirname + "\\selectedData\\test" + str(i) + "\\" + "Velocity_" + file_names_super[0] + ".csv"):
 			numEntries = numEntries + 1
 		if numEntries > maxEntries:
 			maxEntries = numEntries	
@@ -89,7 +89,7 @@ def extractData():
 		for j in range(0,bodySize):
 			k = j*maxEntries*3
 			
-			for line in open(dirname + "\\stdData\\test" + str(i)+ "\\Velocity_" + file_names[j] + ".csv"):
+			for line in open(dirname + "\\selectedData\\test" + str(i)+ "\\Velocity_" + file_names[j] + ".csv"):
 				if k < j*maxEntries*3 + maxEntries*3:
 					row = line.split(',')
 					for l in range(0,3):
@@ -97,7 +97,7 @@ def extractData():
 						k = k +1
 			
 		#seperate the label from the name and event number stored within the label.csv file(s)
-		for line in open(dirname + "\\stdData\\test" + str(i)+ "\\label.csv"):
+		for line in open(dirname + "\\selectedData\\test" + str(i)+ "\\label.csv"):
 			temporaryLabel = line.split()
 			labels.append(str(temporaryLabel[0]))
 	return data, labels
@@ -108,16 +108,16 @@ velocityData, labels = extractData()
 
 for i in range(0, int(numberTests)):
 	offset = 0
-	newDir2 = "C:\\Users\\Admin\\BlakeDeepak\\CMU_HCII_REU\\ExerciseDetection\\DataWindow\\test" + str(i)
+	newDir2 = dirname + "\\DataWindow\\test" + str(i)
 	if not (os.path.exists(newDir2)):
 		os.makedirs(newDir2)
 
-	for line in open(dirname + "\\stdData\\test" + str(i)+ "\\label.csv"):
+	for line in open(dirname + "\\selectedData\\test" + str(i)+ "\\label.csv"):
 		temporaryLabel = line.split()
 		temporaryLabel = temporaryLabel[0]
 	
 	
-	resultsFileL = open("C:\\Users\\Admin\\BlakeDeepak\\CMU_HCII_REU\\ExerciseDetection\\DataWindow\\test" + str(i) +"\\label.csv", "a+")
+	resultsFileL = open(dirname + "\\DataWindow\\test" + str(i) +"\\label.csv", "a+")
 	resultsFileL.write(temporaryLabel)
 	
 	velocityAboveThreshold = np.zeros((25, timeScores[i]))
@@ -215,10 +215,10 @@ for i in range(0, int(numberTests)):
 
 	k = 0
 	for j in range(0,bodySize):
-		resultsFileP = open("C:\\Users\\Admin\\BlakeDeepak\\CMU_HCII_REU\\ExerciseDetection\\DataWindow\\test" + str(i) + "\\Position_" + file_names[j], "a+")
+		resultsFileP = open(dirname + "\\DataWindow\\test" + str(i) + "\\Position_" + file_names[j], "a+")
 		m = 0
 		sample = True
-		for line in open(dirname + "\\stdData\\test" + str(i)+ "\\Position_" + file_names[j] + ".csv"):
+		for line in open(dirname + "\\selectedData\\test" + str(i)+ "\\Position_" + file_names[j] + ".csv"):
 			if m >= range1 and m <= range2:
 				if sample:
 					row = line.split(',')
@@ -232,10 +232,10 @@ for i in range(0, int(numberTests)):
 				else:
 					sample = True
 			m = m + 1
-		resultsFileV = open("C:\\Users\\Admin\\BlakeDeepak\\CMU_HCII_REU\\ExerciseDetection\\DataWindow\\test" + str(i) + "\\Velocity_" + file_names[j], "a+")
+		resultsFileV = open(dirname + "\\DataWindow\\test" + str(i) + "\\Velocity_" + file_names[j], "a+")
 		m = 0
 		sample = True
-		for line in open(dirname + "\\stdData\\test" + str(i)+ "\\Velocity_" + file_names[j] + ".csv"):
+		for line in open(dirname + "\\selectedData\\test" + str(i)+ "\\Velocity_" + file_names[j] + ".csv"):
 			if m >= range1 and m <= range2:
 				if sample:
 					row = line.split(',')
@@ -249,8 +249,8 @@ for i in range(0, int(numberTests)):
 				else:
 					sample = True
 			m = m + 1
-
-		resultsFileT = open("C:\\Users\\Admin\\BlakeDeepak\\CMU_HCII_REU\\ExerciseDetection\\DataWindow\\test" + str(i) + "\\Task_" + file_names[j], "a+")
+		'''
+		resultsFileT = open(dirname + "\\DataWindow\\test" + str(i) + "\\Task_" + file_names[j], "a+")
 		m = 0
 		sample = True
 		for line in open(dirname + "\\selectedData\\test" + str(i)+ "\\Task_" + file_names[j]):
@@ -267,6 +267,6 @@ for i in range(0, int(numberTests)):
 				else:
 					sample = True
 			m = m + 1
-
+		'''
 print ("done")
 
