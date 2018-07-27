@@ -100,7 +100,7 @@ THRESHOLD = 0.30
 batchIndex = 0
 
 arch = FLAGS.arch
-numberClasses = 7
+numberClasses = 6
 if (arch == 'method1'):
 	hiddenLayer1 = 60
 	hiddenLayer2 = 60
@@ -338,19 +338,17 @@ def oneHot(labels):
 	one_hot_labels = []
 	for i in range(0,len(labels)):
 		if labels[i].lower() == "y":
-			one_hot_labels.append([1,0,0,0,0,0,0])
+			one_hot_labels.append([1,0,0,0,0,0])
 		elif labels[i].lower() == "seated":
-			one_hot_labels.append([0,1,0,0,0,0,0])
+			one_hot_labels.append([0,1,0,0,0,0])
 		elif labels[i].lower() == "sumo":
-			one_hot_labels.append([0,0,1,0,0,0,0])
+			one_hot_labels.append([0,0,1,0,0,0])
 		elif labels[i].lower() == "mermaid":
-			one_hot_labels.append([0,0,0,1,0,0,0])
+			one_hot_labels.append([0,0,0,1,0,0])
 		elif labels[i].lower() == "towel":
-			one_hot_labels.append([0,0,0,0,1,0,0])
+			one_hot_labels.append([0,0,0,0,1,0])
 		elif labels[i].lower() == "wall":
-			one_hot_labels.append([0,0,0,0,0,1,0])
-		else: #OOV
-			one_hot_labels.append([0,0,0,0,0,0,1])
+			one_hot_labels.append([0,0,0,0,0,1])
 	one_hot_labels = np.asarray(one_hot_labels)
 	print("Lable Encoding Complete")
 	return one_hot_labels
@@ -623,11 +621,8 @@ def extractData():
 			nparray shuffledData
 	'''
 	#average
-	timeScores2 = []
-	for i in range(0, len(timeScores)):
-		timeScores2.append(timeScores[i]//2)
-
-	data =  np.empty((sum(timeScores2), int(bodySize*3*numSections)))
+	print(timeScores[0])
+	data =  np.empty((sum(timeScores), int(bodySize*3*numSections)))
 	sample = True
 
 	numTimeStamps = 0
@@ -642,7 +637,7 @@ def extractData():
 			global file_names 
 			file_names = tailor(i, FLAGS.refinement_rate)
 
-		for l in range(numTimeStamps,numTimeStamps+(timeScores[i]//2)):
+		for l in range(numTimeStamps,numTimeStamps+(timeScores[i])):
 			k=0
 			for j in range(0, bodySize):
 				if FLAGS.position:
@@ -678,14 +673,34 @@ def extractData():
 				temporaryLabel = line.split()
 				labels.append(str(temporaryLabel[0]))
 
-			w=w+2	
+			w=w+1	
 		
 		edges.append(numTimeStamps)
 		
-		numTimeStamps = (timeScores[i]//2) + numTimeStamps
+		numTimeStamps = (timeScores[i]) + numTimeStamps
 	
 	print(len(data))
 	print(len(labels))
+
+	'''
+	newDir2 = "C:\\Users\\Admin\\BlakeDeepak\\CMU_HCII_REU\\PoiseDetection\\DataStructure"
+	if not (os.path.exists(newDir2)):
+		os.makedirs(newDir2)
+	resultsFileL = open("C:\\Users\\Admin\\BlakeDeepak\\CMU_HCII_REU\\PoiseDetection\\DataStructure\\data" + ".csv", "a+")
+
+	for i in range( 0, len(data)):
+		resultsFileL.write("new frame" + str(i) + '\n')
+		resultsFileL.write(labels[i] + '\n')
+		tempString = ''
+		for j in range (0, len(data[0])):
+			if (j == 0):
+				tempString = tempString + str(data[i][j])
+			else:
+				tempString = tempString + "," + str(data[i][j])
+		print(tempString)
+		tempString = tempString + '\n'
+		resultsFileL.write(tempString)	
+	'''
 
 	for i in range(0, len(edges)):
 		print(labels[edges[i]])
@@ -699,9 +714,10 @@ def extractData():
 		shuffledLabels[new_index] = labels[old_index]
 
 	shuffledLabels = np.asarray(shuffledLabels)
+
 	return shuffledData, shuffledLabels
 
-def partitionData(features, labels):
+def partitionData(data, labels):
 	'''
 		Divides the total data up into training, validation, and test sets.
 		Division based off of percentages stored at the top of the code. Accepts arrays
@@ -714,26 +730,156 @@ def partitionData(features, labels):
 			nparray trainLabels, trainFeatures, testLabels, testFeatures
 			int train, test
 	'''
+
+	'''
 	train = math.floor(float(len(features)) * TRAIN_PERCENT)
 	test = math.ceil(float(len(features)) * TEST_PERCENT)
 
+	
 	trainLabels = labels[:train]
 	trainFeatures = features[:train]
 
 	testLabels = labels[train:train+test]
 	testFeatures = features[train:train+test]
+	'''
+
+	distLabels = np.zeros((6))
+	for i in range(0,len(labels)):
+		if labels[i][0] == 1:
+			distLabels[0] = distLabels[0] + 1
+		elif labels[i][1] == 1:
+			distLabels[1] = distLabels[1] + 1
+		elif labels[i][2] == 1:
+			distLabels[2] = distLabels[2] + 1
+		elif labels[i][3] == 1:
+			distLabels[3] = distLabels[3] + 1
+		elif labels[i][4] == 1:
+			distLabels[4] = distLabels[4] + 1
+		elif labels[i][5] == 1:
+			distLabels[5] = distLabels[5] + 1
 	
+	minFrames = min(distLabels)
+	trainMin = math.floor(minFrames*.7)
+
+	train = trainMin*6
+	test = sum(timeScores) - train
+
+	print("train min", trainMin)
+	print("train", train)
+	print("test", test)
+
+
+	trainMinData = np.empty((train, int(bodySize*3*numSections)))
+	trainMinLabels = []
+	testMinData = np.empty((test, int(bodySize*3*numSections)))
+	testMinLabels = []
+
+	print("total size", len(data))
+
+	distLabels2 = np.zeros((6))
+	inRange = 0
+	outRange = 0
+	for i in range (0, len(labels)):
+		print(distLabels2)
+		print(inRange)
+		print(outRange)
+		if labels[i][0] == 1 and distLabels2[0] < trainMin:
+			distLabels2[0] = distLabels2[0] + 1
+			for j in range (0 , len(data[i])):
+				trainMinData[inRange][j] = data[i][j]
+			trainMinLabels.append([1,0,0,0,0,0])
+			inRange = inRange + 1
+
+		elif labels[i][1] == 1 and distLabels2[1] < trainMin:
+			distLabels2[1] = distLabels2[1] + 1
+			for j in range (0 ,len(data[i])):
+				trainMinData[inRange][j] = data[i][j]
+			trainMinLabels.append([0,1,0,0,0,0])
+			inRange = inRange + 1
+
+		elif labels[i][2] == 1 and distLabels2[2] < trainMin:
+			distLabels2[2] = distLabels2[2] + 1
+			for j in range (0 ,len(data[i])):
+				trainMinData[inRange][j] = data[i][j]
+			trainMinLabels.append([0,0,1,0,0,0])
+			inRange = inRange + 1
+
+		elif labels[i][3] == 1 and distLabels2[3] < trainMin:
+			distLabels2[3] = distLabels2[3] + 1
+			for j in range (0 ,len(data[i])):
+				trainMinData[inRange][j] = data[i][j]
+			trainMinLabels.append([0,0,0,1,0,0])
+			inRange = inRange + 1
+
+		elif labels[i][4] == 1 and distLabels2[4] < trainMin:
+			distLabels2[4] = distLabels2[4] + 1
+			for j in range (0 ,len(data[i])):
+				trainMinData[inRange][j] = data[i][j]
+			trainMinLabels.append([0,0,0,0,1,0])
+			inRange = inRange + 1
+
+		elif labels[i][5] == 1 and distLabels2[5] < trainMin:
+			distLabels2[5] = distLabels2[5] + 1
+			for j in range (0 ,len(data[i])):
+				trainMinData[inRange][j] = data[i][j]
+			trainMinLabels.append([0,0,0,0,0,1])
+			inRange = inRange + 1
+
+		elif labels[i][0] == 1 and distLabels2[0] >= trainMin:
+			for j in range (0 ,len(data[i])):
+				testMinData[outRange][j] = data[i][j]
+			testMinLabels.append([1,0,0,0,0,0])
+			outRange = outRange + 1
+
+		elif labels[i][1] == 1 and distLabels2[1] >= trainMin:
+			for j in range (0 ,len(data[i])):
+				testMinData[outRange][j] = data[i][j]
+			testMinLabels.append([0,1,0,0,0,0])
+			outRange = outRange + 1
+
+		elif labels[i][2] == 1 and distLabels2[2] >= trainMin:
+			for j in range (0 ,len(data[i])):
+				testMinData[outRange][j] = data[i][j]
+			testMinLabels.append([0,0,1,0,0,0])
+			outRange = outRange + 1
+
+		elif labels[i][3] == 1 and distLabels2[3] >= trainMin:
+			for j in range (0 ,len(data[i])):
+				testMinData[outRange][j] = data[i][j]
+			testMinLabels.append([0,0,0,1,0,0])
+			outRange = outRange + 1
+
+		elif labels[i][4] == 1 and distLabels2[4] >= trainMin:
+			for j in range (0 ,len(data[i])):
+				testMinData[outRange][j] = data[i][j]
+			testMinLabels.append([0,0,0,0,1,0])
+			outRange = outRange + 1
+
+		elif labels[i][5] == 1 and distLabels2[5] >= trainMin:
+			for j in range (0 ,len(data[i])):
+				testMinData[outRange][j] = data[i][j]
+			testMinLabels.append([0,0,0,0,0,1])		
+			outRange = outRange + 1
+
+	trainMinLabels = np.asarray(trainMinLabels)
+	testMinLabels = np.asarray(testMinLabels)
+
+	print("data", len(testMinData))
+	print("labels", len(testMinLabels))
+	print("data", len(trainMinData))
+	print("labels", len(trainMinLabels))
+
 	if FLAGS.verbose:
 		#Output details on the data we are using
 		print("Number of Training Cases: ", train)
 		resultsFile.write("Number of Training Cases: " + str(train) + '\n')
-		print("Training Labels (Randomized): ", trainLabels)
+		print("Training Labels (Randomized): ", trainMinLabels)
 	
 		print("Number of Test Cases: ", test)
 		resultsFile.write("Number of Test Cases: " + str(test) + '\n')
-		print("Test Lables (Randomized): ", testLabels)
+		print("Test Lables (Randomized): ", testMinLabels)
 
-	return trainLabels, trainFeatures, train, testLabels, testFeatures, test
+	return trainMinLabels, trainMinData, train, testMinLabels, testMinData, test
 
 def std(data, numberTests):
 	dataByBody = []
@@ -818,11 +964,8 @@ def main(argv = None):
 
 	data, labels = extractData()
 	labels = oneHot(labels)
-
 	trainLabels, trainData, trainNumber, testLabels, testData, testNumber = partitionData(data, labels)
 
-	trainData, means, stdevs = std(trainData, trainNumber)
-	testData = stdTest(testData, testNumber, means, stdevs)
 
 	inputLayer = bodySize*3*numSections
 
@@ -999,23 +1142,8 @@ def main(argv = None):
 		probabilityResults = probs.eval({X: testData})
 		
 		for i in range(0, len(probabilityResults)):
-			if  probabilityResults[i] >= THRESHOLD:
 				predicList.append((probabilityResults[i], probIndexRes[i], labelIndexRes[i]))
-			else:
-				predicList.append((-1,-1,-1))
 
-		Right = 0.0
-		Total = 0.0
-		for i in range(0, len(predicList)):
-			if predicList[i][0] == predicList[i][2]:
-				Right = Right + 1.0
-				Total = Total + 1.0
-			elif predicList[i][0] == -1:
-				print("No Conclusion for ", labelsIndex[i])
-			else:
-				Total = Total + 1.0
-
-		truePos = Right/Total
 		print(predicList)
 
 		correctPrediction = tf.equal(tf.argmax(pred,1), tf.argmax(Y,1))

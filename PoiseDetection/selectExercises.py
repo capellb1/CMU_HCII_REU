@@ -4,11 +4,11 @@ import math
 import io
 import statistics as stat
 
-DATA_FOLDER = "Data"
+DATA_FOLDER = "stdData"
 
 #determine num of files in dataset
 dirname = os.path.realpath('.')
-filename = dirname + '\\' + DATA_FOLDER + '\\TestNumber.txt'
+filename = dirname + '\\stdData\\TestNumber.txt'
 numberTestFiles = open(filename,"r")
 numberTests = numberTestFiles.read()
 
@@ -41,8 +41,8 @@ file_names =[
 'FootLeft.csv']
 
 def main(argv = None):
-	if (os.path.exists(dirname + "\\selectedData")):
-		shutil.rmtree(dirname + "\\selectedData")
+	if (os.path.exists(dirname + "\\stdData2")):
+		shutil.rmtree(dirname + "\\stdData2")
 
 	labels = []
 
@@ -54,28 +54,28 @@ def main(argv = None):
 
 	print("Labels:", labels)
 	#parse list for desired examples
-	removeIndex = [label[1] for label in labels if (label[0] == "Cat" or label[0] == "Supine" or label[0] == "Trunk" or  label[0] == "Pretzel" or label[0] == "oov")]
+	removeIndex = [label[1] for label in labels if (label[0] == "Cat" or label[0] == "Supine" or label[0] == "Trunk" or  label[0] == "Pretzel" or label[0] == "OOV")]
 	LabelsIndex = [label[1] for label in labels]
 	print("Remove Index:", removeIndex)
 	print("Labels Index:", LabelsIndex)
 
 	#move desired exercises out of the folder
-	shutil.copytree(dirname + "\\" + DATA_FOLDER, dirname + "\\selectedData")
+	shutil.copytree(dirname + "\\" + DATA_FOLDER, dirname + "\\stdData2")
 	for i in range(0, len(removeIndex)):
-		shutil.rmtree(dirname + "\\selectedData\\test" + str(removeIndex[i]))
+		shutil.rmtree(dirname + "\\stdData2\\test" + str(removeIndex[i]))
 		LabelsIndex.remove(removeIndex[i])
 
 	print("Updated Labels Index:", LabelsIndex)
 
 	#update the numTests file
-	numberTestFiles = open(dirname + "\\selectedData\\TestNumber.txt","w+")
+	numberTestFiles = open(dirname + "\\stdData2\\TestNumber.txt","w+")
 	print("New File Size: ", len(LabelsIndex))
 	numberTestFiles.write(str(len(LabelsIndex)))
 	numberTestsSel = len(LabelsIndex)
 
 	#update the numbering on remaining files
 	for i in range(0, len(LabelsIndex)):
-		os.rename((dirname + "\\selectedData\\test" + str(LabelsIndex[i])), (dirname + "\\selectedData\\test"+ str(i)))
+		os.rename((dirname + "\\stdData2\\test" + str(LabelsIndex[i])), (dirname + "\\stdData2\\test"+ str(i)))
 
 	
 
@@ -90,7 +90,7 @@ def main(argv = None):
 		timeScores.append(numEntries)
 		features = []
 
-	print("Data Stored in: ", dirname, "\\selectedData")
+	print("Data Stored in: ", dirname, "\\stdData2")
 
 if __name__ == '__main__':
 	main()
