@@ -119,7 +119,7 @@ for i in range(0, int(numberTests)):
 	
 	resultsFileL = open(dirname + "\\DataWindow\\test" + str(i) +"\\label.csv", "a+")
 	resultsFileL.write(temporaryLabel)
-	
+	#A
 	velocityAboveThreshold = np.zeros((25, timeScores[i]))
 
 	for j in range(0,25):

@@ -19,6 +19,8 @@ import statistics as stat
 
 import numpy as np
 
+print(os.getcwd())
+
 file_names_super =[
 	'Head.csv',   
 	'Neck.csv',    
@@ -60,9 +62,9 @@ def calcMaxEntries():
 	timeScores = []
 
 	for i in range(0,int(numberTests)):	
-		newDir = "C:\\Users\\Admin\\BlakeDeepak\\CMU_HCII_REU\\ExerciseDetection\\stdData\\test" + str(i)
+		newDir = dirname + "\\stdData\\test" + str(i)
 		numEntries = 0
-		for line in open(newDir + "\\Velocity_" + file_names_super[int(0)] + ".csv"):
+		for line in open("D:\\CMU\\CMU_HCII_REU\\ExerciseDetection\\stdData\\test" + str(i) +"\\Velocity_Head.csv.csv"):
 			numEntries = numEntries + 1
 		if numEntries > maxEntries:
 			maxEntries = numEntries	
@@ -85,7 +87,7 @@ def extractData():
 	labels = []
 
 	for i in range(0, int(numberTests)):
-		newDir = "C:\\Users\\Admin\\BlakeDeepak\\CMU_HCII_REU\\ExerciseDetection\\stdData\\test" + str(i)
+		newDir = dirname + "\\stdData\\test" + str(i)
 		for j in range(0,bodySize):
 
 			k = j*maxEntries*3
@@ -105,7 +107,7 @@ def extractData():
 	return data, labels
 
 
-def draw(velocity):	
+def draw(velocity , thresh):	
 	'''
 		Creates graphs that plot the accuracy of predictions for every frame in an action (Blue). Below, on 
 		the same image, a graph representing the number of tasks detected across each body part for 
@@ -118,7 +120,7 @@ def draw(velocity):
 	start = 0	
 	offset = 0
 
-	newDir = "C:\\Users\\Admin\\BlakeDeepak\\CMU_HCII_REU\\ExerciseDetection\\Visualization3"
+	newDir = dirname + "\\Visualization3"
 	if not (os.path.exists(newDir)):
 		os.makedirs(newDir)
 	
@@ -141,19 +143,19 @@ def draw(velocity):
 
 			offset = offset + maxEntries*3
 
-		newDir2 = "C:\\Users\\Admin\\BlakeDeepak\\CMU_HCII_REU\\ExerciseDetection\\Visualization3\\test" + str(i)
+		newDir2 = dirname + "\\Visualization3\\test" + str(i)
 		if not (os.path.exists(newDir2)):
 			os.makedirs(newDir2)
 
 		graphDataX = []
 		for j in range(0, timeScores[i]):
 			graphDataX.append(j)
-		
+		'''
 		print("about to print")
 		for g in range (0, 25):
-			n, bins, patches = plt.hist(velocityData[g], 'auto', normed=1, facecolor='green', alpha=0.75)
+			n, bins, patches = plt.hist(velocityData[g], 'auto', normed=1, facecolor='#800000', alpha=0.75)
 			bodyName = file_names_super[g]
-			bodyName = bodyName[:-3]
+			bodyName = bodyName[:-4]
 			plt.xlabel('Velocity Z Scores')
 			plt.ylabel('Proportion of Frames')
 			plt.title('Trial' + str(i) + ': ' + str(bodyName) + ' Velocity Histogram')
@@ -163,15 +165,62 @@ def draw(velocity):
 			plt.close()
 
 			width = .99
-			plt.bar(graphDataX, velocityData[g], width, facecolor='blue')
+			plt.bar(graphDataX, velocityData[g], width, facecolor='#800000')
 			plt.xlabel('Frame')
-			plt.ylabel('Cumulative Velocity Across All Axis')
-			plt.title('Trial' + str(i) + ': ' + str(bodyName) + 'Velocity Plot')
+			plt.ylabel('Cumulative Velocity Across All Axes')
+			plt.title('Trial' + str(i) + ': ' + str(bodyName) + ' Velocity Plot')
+			plt.grid(True)
 			plt.savefig(newDir2 +"\\bodypartBar" + str(g) + ".png")
 			plt.close()
-		
+		'''
 		totalVelocityData.append(velocityData)
+
+	width = .99
+	fig, ax = plt.subplots()
+	print(len(totalVelocityData[44][0]), len(totalVelocityData[46][0]), len(totalVelocityData[48][0]))
+	ax.bar(range(0,len(totalVelocityData[48][0])), totalVelocityData[48][0], width, facecolor='#F2B8C6', label = "Trial 48: Mermaid") #Crepe
+	ax.bar(range(0,len(totalVelocityData[44][0])), totalVelocityData[44][0], width, facecolor='#800000', label = "Trial 44: Sumo") #Maroon
+	ax.plot(range(0,len(totalVelocityData[44][0])), ([3.6]*len(totalVelocityData[44][0])), '--', label = "Threshold", color = '#FDA50F') #Orange
+	plt.legend()
+	plt.xlabel('Frame')
+	plt.ylabel('Cumulative Velocity Across All Axes')
+	plt.title('Velocity of Head Across Multiple Exercises')
+	plt.grid(True)
+	plt.savefig(newDir +"\\overlapBar.png")
+	plt.close()
+
+	width = .99
+	fig, ax = plt.subplots()
+	
+	ax.bar(range(0,len(totalVelocityData[0][0])), totalVelocityData[0][0], width, facecolor='#800000', label = "Trial 0: Y") #Crepe
+	ax.plot(range(0,len(thresh[0])), thresh[0], '--', label = "Transition", color = '#FDA50F')
+	
+	plt.ylabel('Cumulative Velocity Across All Axes')
+	plt.legend(loc = 2)
+	plt.xlabel('Frame')
+	plt.title('Velocity of Head')
+	plt.grid(True)
+	plt.savefig(newDir +"\\section.png")
+	plt.close()
 
 maxEntries, timeScores = calcMaxEntries()
 velocityData, labels = extractData()
-draw(velocityData)
+
+offset = 0
+velocityAboveThreshold = np.zeros((25, timeScores[0]))
+
+for j in range(0,25):
+	l = 0
+	for k in range(offset, offset + maxEntries*3):
+		if k%(maxEntries*3) < timeScores[0]*3:
+			if (k%3 == 0):
+				dataPointScore = math.fabs(velocityData[0][k]) + math.fabs(velocityData[0][k+1]) + math.fabs(velocityData[0][k+2])
+				if (dataPointScore > 3.6):
+					velocityAboveThreshold[j][l] = 8
+				else:
+					velocityAboveThreshold[j][l] = 0
+				l = l + 1
+
+	offset = offset + maxEntries*3
+
+draw(velocityData, velocityAboveThreshold)
