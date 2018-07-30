@@ -8,7 +8,11 @@
 
 ### Assisting Professors: Dr. Asim Smailagic & Dr. Roberta Klatzky
 
-This project includes code related to the creation of a cognitive assistant using the Microsoft Kinect 2 through real time data processing and machine learning.
+#### Models/Training
+
+*__WARNING:__* In cleaning up the file tree in order to reduce the number of duplicate files, the pathing has changed. This change will primarily be seen in the process of reading the data and storing results
+
+This project includes code related to the creation of a cognitive assistant using the _Microsoft Kinect 2_ through real time data processing and machine learning.
 
 The source of the data being used to train the fully connected neural net is the X, Y, and Z position of 25 different joints:
 
@@ -38,20 +42,18 @@ The source of the data being used to train the fully connected neural net is the
 	AnkleLeft     
 	FootLeft
 
-
-
  In the experiment, the team specifically explored the use of several tools in order to determine the best possible performance 
  for a task detector and classifier:
  	
- Uniformed Refinement: Predefining the joints to include
+ -Uniformed Refinement: Predefining the joints to include
  
- Tailored Refinement: Dynamically choosing the joints to use by examining the activity of each joint
+ -Tailored Refinement: Dynamically choosing the joints to use by examining the activity of each joint
  
- Transformed Features: The input data can be toggled between the natural data (Position) and any combination of synthetic						 calculated features (Position, Task, Velocity) for each joint.
+ -Transformed Features: The input data can be toggled between the natural data (Position) and any combination of synthetic						 calculated features (Position, Task, Velocity) for each joint.
  
- Downsampling (50%)
+ -Downsampling (50%)
  
- Dynamic Scope Definition: Change what portion of the activity the model is evaluating based on characterestics taken from
+ -Dynamic Scope Definition: Change what portion of the activity the model is evaluating based on characterestics taken from
  							the frame by frame analysis
 
 Many flags might not be used in every file, they were included for consistency between the multiple training files:
@@ -59,7 +61,7 @@ Many flags might not be used in every file, they were included for consistency b
 	poise_detector_mk*.py
 	exercise_detection_mk*.py
 
-Unless otherwise stated, assume highest number to be the most current/advanced file
+Unless otherwise stated, assume highest number to be the most current/advanced file. Older files will be stored in the ARCHIVED folder.
 
 The other files included in the github are for various different utilities. The most important of these being:
 
@@ -68,10 +70,13 @@ The other files included in the github are for various different utilities. The 
 This file restores a saved model and uses it to predict/test on new data. The poise variant of this file also provides a histogram
 that illustrates the cumulative frame by frame accuracy on each exercise. In order to reload a model, add the same flags you used to train the model to the command line input for reloadModel.py
 
-You must have at least 5 files in order to train a model
+Other tools related to data preprocessing and error correction can be found in the -'Tools'- folder in the home directory. Each file contains a header with basic information on the file's function. As they are currently written, the files must be run in the same directory that holds the data you are using. The name of this folder can be easily changed by changing the "DATA_FOLDER" constant.
 
-Assumes that you are reading from a data library constructed by the task_sequencer_v2.pde file
-If not, organize your data as follows:
+With the current setup, you must have at least 5 files in order to train a model. This is due to the training, testing split of 70 and 30. In some of the archived files you will also see a validation data split, however this was discarded later in the project.
+
+Assumes that you are reading from a data library constructed by the task_sequencer_v2.pde file. An equally distributed subsample of this data that includes 10 examples of each exercise exists in the 'DataCollectionSample' folder. This is the primary set of data the team used in testing models.
+
+If you are looking to use your own data, organize your data as follows:
 
 	Data
 		test0
@@ -91,7 +96,7 @@ Otherwise, organize code as you see fit
 
 Unless stated, the input for flags can be any keyboard input
 
-Flags:
+__Flags:__
 
 	batch_size 
 		number of randomly sampled images from the training set
@@ -148,3 +153,21 @@ Flags:
 		method4 = 24x24x24x24x24
 			DEFAULT: method1
 			Options: method1, method2, method3, method4
+
+#### Dataset
+
+Data collected by a __Kinect V2__ as a set of X, Y, Z coordinates at 60fps. The program used to record this data was adapted from _Thomas Sanchez Langeling’s_ skeleton recording code.  The file was set to record data for each body part as a separate file, repeated for each exercise. These coordinates were chosen to have an origin centered at the subject’s upper chest. Data collection was standardized to the following conditions:
+-Kinect placed at the height of 2ft and 3in
+-Subject consistently positioned 6.5 feet away from the camera with their chests facing the camera
+-Followed Script and Tutorial Video
+Data was collected from the following population:
+-Adults ages 18-21
+-Girls: 4
+-Guys: 5
+The following types of pre-processing occurred at the time of data collection.
+-Velocity Data: Calculated using a discrete derivative equation with a spacing of 5 samples 
+	5 frames chosen to reduce sensitivity of the velocity function
+ -v[n]=(x[n]-x[n-5])/5
+-Task Data: Built on the philosophy that zero velocity points will mark the end of an action
+	At the point under consideration, if there are 5 points ahead and 5 points behind that are opposite signs, a binary value of 1 is recorded. Otherwise a zero is recorded
+ -Occurs for all body parts and all axis individually

@@ -91,15 +91,19 @@ tf.app.flags.DEFINE_boolean('task', False, 'Determines if the task data is inclu
 tf.app.flags.DEFINE_boolean('save', False, 'Determines whether the model is saved')
 
 FLAGS = tf.app.flags.FLAGS
-
+#Define constants used for splitting training data
 TRAIN_PERCENT = 0.7
 TEST_PERCENT = 0.3
 
+#Define constant of where to draw data from
 DATA_FOLDER = "DataWindow"
+#Threshold initially used for ROC analysis
 THRESHOLD = 0.30
 
+#Global batch var used for batching data
 batchIndex = 0
 
+#Determining the architecture of the model based off of a flag
 arch = FLAGS.arch
 numberClasses = 7
 if (arch == 'method1'):
@@ -124,7 +128,7 @@ else:
 	hiddenLayer4 = 24
 	hiddenLayer5 = 24
 
-#list of all possible files
+#list of all possible bodypart data files. Used in data extraction
 file_names_super =[
 	'Head.csv',   
 	'Neck.csv',    
@@ -184,6 +188,12 @@ def writeFolderLabel():
 	return folderName
 
 def calcNumTests():
+	'''
+		Extracts the number of tests from the file stored alogside the data
+
+		Returns
+			String
+	'''
 	dirname = os.path.realpath('.')
 	filename = dirname + "\\"+ DATA_FOLDER +"\\" + 'TestNumber.txt'
 	numberTestFiles = open(filename,"r")
@@ -195,6 +205,13 @@ def calcNumTests():
 	return numberTests
 
 def calcMaxEntries():
+	'''
+		Calculates both the maximum number of timestamps in a single exercise and the number of timestamps per 
+		exercise. Used often in manipulating the data
+
+		Returns
+			int, int
+	'''	
 	maxEntries = 0
 	timeScores = []
 	for i in range(0,int(numberTests)):
@@ -296,8 +313,8 @@ def uniformRefinement():
 
 def calcSections():
 	'''
-		Determines the number of datasets being used. Values range from 0-3.
-		Used for matrix size allocation
+		Determines the number of datasets being used. Values range from 0-3. (Position, Velocity, Task)
+		Used for matrix size allocation. Will throw error if no data selected
 
 		Returns:
 			int numSections
@@ -310,7 +327,7 @@ def calcSections():
 	if FLAGS.task:
 		numSections = numSections + 1	
 	if numSections == 0:
-		print("NO DATA SELECTED")
+		NO DATA SELECTED
 
 	if FLAGS.verbose:
 		print("Number of sections: ", numSections)
@@ -433,7 +450,7 @@ def tailor(i, refinement_rate):
 
 	return new_file_names
 
-def multilayer_perception(x, weights, biases):
+def network(x, weights, biases):
 	'''
 		Define the activation layer and mathematical operations to occur at each level.
 		Creates the model
@@ -820,7 +837,7 @@ def main(argv = None):
 
 	
 	#construct model
-	logits = multilayer_perception(X, weights, biases)
+	logits = network(X, weights, biases)
 	
 	#define loss and optimizer
 	regularization = FLAGS.regularization
@@ -909,7 +926,7 @@ def main(argv = None):
 
 		pred2 = tf.nn.softmax(logits)
 		
-	    #test model 
+	    #test model for ROC based on confidence thresholds
 		probs = tf.reduce_max(pred, 1)
 		probsIndex = tf.argmax(pred, 1)
 		labelsIndex = tf.argmax(Y,1)

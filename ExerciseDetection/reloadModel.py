@@ -2,7 +2,7 @@
 CMU HCII REU Summer 2018
 PI: Dr. Sieworek
 Students:  Blake Capella & Deepak Subramanian
-Date: 07/09/18
+Date: 07/30/18
 
 The following code is used to either train or visualize the results of a neural net. The project's goal is to analyze the
 difference in performance between multi frame analysis (exercise_detector) and single frame analysis (poise_detector). Built
@@ -10,39 +10,7 @@ in to each of the files are a large number of flags used change numerous feature
 to network architecture and other hyperparameters. For more detailed information on the flags, see the code or visit 
 https://github.com/capellb1/CMU_HCII_REU.git
 
-Many flags might not be used in this file, they were included for consistency between the multiple training files.
-	poise_detector_mk*.py
-	exercise_detection_mk*.py
-	reloadModel.py
-
-	Unless otherwise stated, assume highest number to be the most current/advanced file
-
-MUST HAVE AT LEAST 5 files in order to be used
-
-Assumes that you are reading from a data library constructed by the task_sequencer_v2.pde file
-If not, organize your data as follows:
-	Data
-		test0
-			Position_Head.csv (organized by x,y,z,ts)
-			Position_Neck.csv
-			.
-			.
-			.
-			Velocity_Head.csv
-			.
-			.
-			.
-			Task_Head.csv
-		test1
-		test2
-		.
-		.
-		.
-		TestNumber.txt (stores total number of examples/identified actions)
-	THIS FILE
-
-Otherwise, organize code as you see fit
-
+Mirror of poise mk3 up until the main function. Instead of training, reloads variables from already trained model.
 '''
 
 #Import Libraries

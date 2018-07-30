@@ -10,39 +10,10 @@ in to each of the files are a large number of flags used change numerous feature
 to network architecture and other hyperparameters. For more detailed information on the flags, see the code or visit 
 https://github.com/capellb1/CMU_HCII_REU.git
 
-Many flags might not be used in this file, they were included for consistency between the multiple training files.
-	poise_detector_mk*.py
-	exercise_detection_mk*.py
-	reloadModel.py
+This is the most up to date model, due to this it was also the model used to generate the data used for the poster. Due to this
+it will be commented more than most other files.
 
-	Unless otherwise stated, assume highest number to be the most current/advanced file
-
-MUST HAVE AT LEAST 5 files in order to be used
-
-Assumes that you are reading from a data library constructed by the task_sequencer_v2.pde file
-If not, organize your data as follows:
-	Data
-		test0
-			Position_Head.csv (organized by x,y,z,ts)
-			Position_Neck.csv
-			.
-			.
-			.
-			Velocity_Head.csv
-			.
-			.
-			.
-			Task_Head.csv
-		test1
-		test2
-		.
-		.
-		.
-		TestNumber.txt (stores total number of examples/identified actions)
-	THIS FILE
-
-Otherwise, organize code as you see fit
-
+The model is currently set up to classify the 6 exercises that can accurately tracked by the kinect
 '''
 
 #Import Libraries
@@ -70,7 +41,8 @@ import seaborn as sns
 import glob
 import statistics as stat
 
-#Define Flags to change the Hyperperameters and other variables
+#Define Flags to change the Hyperperameters and other variables used in training
+#Note the default values listed after the flag's name
 tf.app.flags.DEFINE_integer('batch_size',100,'number of randomly sampled images from the training set')
 tf.app.flags.DEFINE_float('learning_rate',0.001,'how quickly the model progresses along the loss curve during optimization')
 tf.app.flags.DEFINE_integer('epochs',10,'number of passes over the training data')
@@ -89,16 +61,25 @@ tf.app.flags.DEFINE_integer('refinement_rate',0,'Determines the number of joints
 tf.app.flags.DEFINE_boolean('task', False, 'Determines if the task data is included when training')
 tf.app.flags.DEFINE_boolean('save', False, 'Determines wether the model is saved')
 
+#Create shortcut to call flags
 FLAGS = tf.app.flags.FLAGS
 
+#List of constants
+#Percent of dataset chosen to go towards training and testing
 TRAIN_PERCENT = 0.7
 TEST_PERCENT = 0.3
 
+#Data Folder to extract the data from
 DATA_FOLDER = "DataWindow"
+
+#Threshold initially used for an attempt at ROC curve
 THRESHOLD = 0.30
 
+#Global variable used to batch data
 batchIndex = 0
 
+#Use flag to determine how many nodes and hidden layers the model would have
+#AKA the model's architecture
 arch = FLAGS.arch
 numberClasses = 6
 if (arch == 'method1'):
@@ -123,7 +104,7 @@ else:
 	hiddenLayer4 = 24
 	hiddenLayer5 = 24
 
-#list of all possible files
+#list of all possible files used for data acess
 file_names_super =[
 	'Head.csv',   
 	'Neck.csv',    
@@ -151,12 +132,13 @@ file_names_super =[
 	'AnkleLeft.csv',     
 	'FootLeft.csv']
 
-#Open file used to store accuracy scores and any other printed data
+#create relative path used in many data storage and access functions
 dirname = os.path.realpath('.')
 
 def writeFolderLabel():
 	'''
-		Creating a unuiqe folder name to save the results
+		Creating a unuiqe folder name to save the results. Folder name is dependent on
+		the flags and hyperparameters used to define it
 
 		Returns
 			String
@@ -186,6 +168,12 @@ def writeFolderLabel():
 	return folderName
 
 def calcNumTests():
+	'''
+		Extracts the number of tests from the file stored alogside the data
+
+		Returns
+			String
+	'''
 	dirname = os.path.realpath('.')
 
 	filename = dirname + '\\' + DATA_FOLDER + '\\TestNumber.txt'
@@ -199,6 +187,13 @@ def calcNumTests():
 	return numberTests
 
 def calcMaxEntries():
+	'''
+		Calculates both the maximum number of timestamps in a single exercise and the number of timestamps per 
+		exercise. Used often in manipulating the data
+
+		Returns
+			int, int
+	'''
 	maxEntries = 0
 	timeScores = []
 	for i in range(0,int(numberTests)):
@@ -302,8 +297,8 @@ def uniformRefinement():
 
 def calcSections():
 	'''
-		Determines the number of datasets being used. Values range from 0-3.
-		Used for matrix size allocation
+		Determines the number of datasets being used. Values range from 0-3. (Position, Velocity, Task)
+		Used for matrix size allocation. Will throw error if no data selected
 
 		Returns:
 			int numSections
@@ -315,7 +310,7 @@ def calcSections():
 		numSections = numSections + 1
 	
 	if numSections == 0:
-		print("NO DATA SELECTED")
+		NO DATA SELECTED
 
 	if FLAGS.verbose:
 		print("Number of sections: ", numSections)
@@ -434,7 +429,7 @@ def tailor(i, refinement_rate):
 
 	return new_file_names
 
-def multilayer_perception(x, weights, biases):
+def network(x, weights, biases):
 	'''
 		Define the activation layer and mathematical operations to occur at each level.
 		Creates the model
@@ -451,8 +446,8 @@ def multilayer_perception(x, weights, biases):
 	if (arch == "method1" and activation == "Sigmoid"):
 		print('Activation Layer: sigmoid \nArchitecture Used: method2 \n')
 		#Layers
-		layer1 = tf.nn.sigmoid(tf.add(tf.matmul(x, weights['h1']), biases['b1']))
-		layer2 = tf.nn.sigmoid(tf.add(tf.matmul(layer1, weights['h2']), biases['b2']))
+		layer1 = tf.add(tf.matmul(x, weights['h1']), biases['b1'])
+		layer2 = tf.add(tf.matmul(layer1, weights['h2']), biases['b2'])
 		outLayer = tf.add(tf.matmul(layer2, weights['out']), biases['out'])
 		return outLayer
 	elif (arch == "method1" and activation == "Tanh"):
@@ -711,7 +706,8 @@ def partitionData(data, labels):
 	'''
 		Divides the total data up into training, validation, and test sets.
 		Division based off of percentages stored at the top of the code. Accepts arrays
-		and returns separated data along with indicator of how many files are in each division
+		and returns separated data along with indicator of how many files are in each division.
+		Adapted to ensure that each exercise in train has the same number of examples to train on
 
 		Accepts:
 			nparray features, lables
@@ -719,18 +715,6 @@ def partitionData(data, labels):
 		Returns:
 			nparray trainLabels, trainFeatures, testLabels, testFeatures
 			int train, test
-	'''
-
-	'''
-	train = math.floor(float(len(features)) * TRAIN_PERCENT)
-	test = math.ceil(float(len(features)) * TEST_PERCENT)
-
-	
-	trainLabels = labels[:train]
-	trainFeatures = features[:train]
-
-	testLabels = labels[train:train+test]
-	testFeatures = features[train:train+test]
 	'''
 
 	distLabels = np.zeros((6))
@@ -862,6 +846,17 @@ def partitionData(data, labels):
 	return trainMinLabels, trainMinData, train, testMinLabels, testMinData, test
 
 def std(data, numberTests):
+	'''
+		Method used to calculate the Z scores of all the training data. Exports
+		the means and stdvs for each exercise to be applied to testing data.
+
+		WARNING: Depreciated, incorrectly calculates the z score across an entire exercise
+		or in other words, multiple people. The proper calculations can be seen in the std
+		program in the tool folder
+
+		Returns
+			Data array, list of float, list of float
+	'''
 	dataByBody = []
 	means = []
 	stdevs = []
@@ -889,6 +884,17 @@ def std(data, numberTests):
 	return data, means, stdevs
 
 def stdTest(data, numberTests, mean, stdev):
+	'''
+		Method used to calculate the Z scores of all the training data. Exports
+		the means and stdvs for each exercise to be applied to testing data.
+
+		WARNING: Depreciated, incorrectly calculates the z score across an entire exercise
+		or in other words, multiple people. The proper calculations can be seen in the std
+		program in the tool folder
+
+		Returns
+			Data array
+	'''
 	dataByBody = []
 	for k in range(0,bodySize*3*numSections):
 		bodypartData = []
@@ -914,6 +920,7 @@ elif FLAGS.refinement == "None":
 
 folderName = writeFolderLabel()
 
+#create file to store results
 newDir = dirname + '\\Models&Results\\' + folderName
 if not (os.path.exists(newDir)):
 	os.makedirs(newDir)
@@ -946,13 +953,14 @@ def main(argv = None):
 	labels = oneHot(labels)
 	trainLabels, trainData, trainNumber, testLabels, testData, testNumber = partitionData(data, labels)
 
-
+	#Declare size of the input layer
 	inputLayer = bodySize*3*numSections
 
-	#tf Graph input
+	#tf Graph input as tensorflow placeholder objects
 	X = tf.placeholder(data.dtype, [None, inputLayer])
 	Y = tf.placeholder(labels.dtype, [None, numberClasses])
 
+	#Defines mathematical architecture of the model given the flag passed in
 	if (arch == 'method1'):
 		weights = {
 		'h1' : tf.Variable(tf.random_normal([inputLayer, hiddenLayer1], dtype=data.dtype, name='h1')),
@@ -1017,14 +1025,15 @@ def main(argv = None):
 		'out' : tf.Variable(tf.random_normal([numberClasses], dtype=data.dtype, name = 'bout'))
 		}
 
-	#construct model
-	logits = multilayer_perception(X, weights, biases)
+	#construct model by calling the network function
+	logits = network(X, weights, biases)
 
 	#define loss and optimizer
 	regularization = FLAGS.regularization
 	regularizationRate = FLAGS.regularization_rate
 	lossOp = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits_v2(logits=logits, labels=Y)) 
 
+	#If the flag indicates, apply a regularization method to the data
 	if (regularization == "L1"):
 		print('Regularization: L1 \n')
 		l1_regularizer = tf.contrib.layers.l1_regularizer(scale=regularizationRate, scope=None)
@@ -1041,13 +1050,14 @@ def main(argv = None):
 		print('Regularization: none \n')
 		lossOp = lossOp
 
+	#Call and run the optimizer set to minimize loss
 	optimizer = tf.train.AdamOptimizer(learning_rate=learningRate)
 	trainOp = optimizer.minimize(lossOp)
 
 	#initialize global variables
 	init = tf.global_variables_initializer()
 
-	#initialize arrays for losses
+	#initialize arrays for losses and probabilites of each prediction
 	trainingLoss = []
 	predicList = []
 	
@@ -1067,6 +1077,7 @@ def main(argv = None):
 			totalBatch = int(trainNumber/batchSize)
 
 			for i in range(totalBatch):
+				#batch and shuffle the data fed into the model
 				batchStart, batchEnd = nextBatch(batchSize, trainNumber)
 				batchData = trainData[batchStart:batchEnd]
 				batchLabels = trainLabels[batchStart:batchEnd]
@@ -1121,13 +1132,13 @@ def main(argv = None):
 		labelIndexRes = labelsIndex.eval({Y: testLabels})
 		probabilityResults = probs.eval({X: testData})
 		
-		
+		#print the probabilites/confidence of each prediction along with the correct prediction in the form
+		#of a tuple
 		for i in range(0, len(probabilityResults)):
 			predicList.append((probabilityResults[i], probIndexRes[i], labelIndexRes[i]))
 
 		print(predicList)
 		
-
 		correctPrediction = tf.equal(tf.argmax(pred,1), tf.argmax(Y,1))
 		
 	    #calculate accuracy
