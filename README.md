@@ -2,13 +2,13 @@
 
 ## Research Experience for Undergraduates (REU) Summer 2018
 
-### Students: Blake Capella & Deepak Subramanian
+#### Students: Blake Capella & Deepak Subramanian
 
-### PI: Dr. Daniel Siewiorek
+#### PI: Dr. Daniel Siewiorek
 
-### Assisting Professors: Dr. Asim Smailagic & Dr. Roberta Klatzky
+#### Assisting Professors: Dr. Asim Smailagic & Dr. Roberta Klatzky
 
-#### Models/Training
+### Models/Training
 
 *__WARNING:__* In cleaning up the file tree in order to reduce the number of duplicate files, the pathing has changed. This change will primarily be seen in the process of reading the data and storing results
 
@@ -154,7 +154,7 @@ __Flags:__
 			DEFAULT: method1
 			Options: method1, method2, method3, method4
 
-#### Dataset
+### Dataset
 
 Data collected by a __Kinect V2__ as a set of X, Y, Z coordinates at 60fps. The program used to record this data was adapted from _Thomas Sanchez Langeling’s_ skeleton recording code.  The file was set to record data for each body part as a separate file, repeated for each exercise. These coordinates were chosen to have an origin centered at the subject’s upper chest. Data collection was standardized to the following conditions:
 
