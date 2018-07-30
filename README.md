@@ -45,15 +45,15 @@ The source of the data being used to train the fully connected neural net is the
  In the experiment, the team specifically explored the use of several tools in order to determine the best possible performance 
  for a task detector and classifier:
  	
- -Uniformed Refinement: Predefining the joints to include
+ - Uniformed Refinement: Predefining the joints to include
  
- -Tailored Refinement: Dynamically choosing the joints to use by examining the activity of each joint
+ - Tailored Refinement: Dynamically choosing the joints to use by examining the activity of each joint
  
- -Transformed Features: The input data can be toggled between the natural data (Position) and any combination of synthetic						 calculated features (Position, Task, Velocity) for each joint.
+ - Transformed Features: The input data can be toggled between the natural data (Position) and any combination of synthetic						 calculated features (Position, Task, Velocity) for each joint.
  
- -Downsampling (50%)
+ - Downsampling (50%)
  
- -Dynamic Scope Definition: Change what portion of the activity the model is evaluating based on characterestics taken from
+ - Dynamic Scope Definition: Change what portion of the activity the model is evaluating based on characterestics taken from
  							the frame by frame analysis
 
 Many flags might not be used in every file, they were included for consistency between the multiple training files:
@@ -157,17 +157,21 @@ __Flags:__
 #### Dataset
 
 Data collected by a __Kinect V2__ as a set of X, Y, Z coordinates at 60fps. The program used to record this data was adapted from _Thomas Sanchez Langeling’s_ skeleton recording code.  The file was set to record data for each body part as a separate file, repeated for each exercise. These coordinates were chosen to have an origin centered at the subject’s upper chest. Data collection was standardized to the following conditions:
--Kinect placed at the height of 2ft and 3in
--Subject consistently positioned 6.5 feet away from the camera with their chests facing the camera
--Followed Script and Tutorial Video
+
+- Kinect placed at the height of 2ft and 3in
+- Subject consistently positioned 6.5 feet away from the camera with their chests facing the camera
+- Followed Script and Tutorial Video
+
 Data was collected from the following population:
--Adults ages 18-21
--Girls: 4
--Guys: 5
+
+- Adults ages 18-21
+- Girls: 4
+- Guys: 5
+
 The following types of pre-processing occurred at the time of data collection.
--Velocity Data: Calculated using a discrete derivative equation with a spacing of 5 samples 
+- Velocity Data: Calculated using a discrete derivative equation with a spacing of 5 samples 
 	5 frames chosen to reduce sensitivity of the velocity function
- -v[n]=(x[n]-x[n-5])/5
--Task Data: Built on the philosophy that zero velocity points will mark the end of an action
+  - v[n]=(x[n]-x[n-5])/5
+- Task Data: Built on the philosophy that zero velocity points will mark the end of an action
 	At the point under consideration, if there are 5 points ahead and 5 points behind that are opposite signs, a binary value of 1 is recorded. Otherwise a zero is recorded
- -Occurs for all body parts and all axis individually
+  - Occurs for all body parts and all axis individually
