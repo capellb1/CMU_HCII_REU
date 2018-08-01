@@ -10,10 +10,8 @@ in to each of the files are a large number of flags used change numerous feature
 to network architecture and other hyperparameters. For more detailed information on the flags, see the code or visit 
 https://github.com/capellb1/CMU_HCII_REU.git
 
-This is the most up to date model, due to this it was also the model used to generate the data used for the poster. Due to this
-it will be commented more than most other files.
-
-The model is currently set up to classify the 6 exercises that can accurately tracked by the kinect
+This model was created after the poster was submitted and printed to explore the use of more advanced preprocessing along with
+synthetic features.
 '''
 
 #Import Libraries

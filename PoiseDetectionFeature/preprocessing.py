@@ -2,15 +2,20 @@ import os
 import random
 import numpy as np
 import math
+import statistics as stat
+
+DATA_FOLDER = 'Data'
 
 class preprocess:
 	
 	all_labels = []
 	feature_vector = []
+	std_feature_vector = []
 	
 	def __init__(self, data):
 		self.data = data
 		
+		#Calculate Center of Mass
 		sumX = 0
 		sumY = 0
 		sumZ = 0
@@ -27,6 +32,7 @@ class preprocess:
 		self.comY = float((sumY)/25)
 		self.comZ = float((sumZ)/25)
 
+		#Calculate Distance from Wrist to Ankle
 		handX = (self.data[30] + self.data[45])/2
 		handY = (self.data[31] + self.data[46])/2
 		handZ = (self.data[32] + self.data[47])/2
@@ -34,7 +40,8 @@ class preprocess:
 		footY = (self.data[61] + self.data[70])/2
 		footZ = (self.data[62] + self.data[71])/2
 		self.wrist_to_ankle = math.sqrt((handX-footX)*(handX-footX) + (handY-footY)*(handY-footY) + (handZ-footZ)*(handZ-footZ)) 
-			
+		
+		#Calculate Distance from Chest to Knee	
 		chestX = self.data[9]
 		chestY = self.data[10]
 		chestZ = self.data[11]
@@ -43,6 +50,7 @@ class preprocess:
 		kneeZ = (self.data[59] + self.data[68])/2
 		self.chest_to_knee = math.sqrt((chestX-kneeX)*(chestX-kneeX) + (chestY-kneeY)*(chestY-kneeY) + (chestZ-kneeZ)*(chestZ-kneeZ)) 
 
+		#Calculate normal vector from chest
 		ShoulderLeft = np.zeros((3))
 		ShoulderRight = np.zeros((3)) 
 		Chest = np.zeros((3))
@@ -63,16 +71,25 @@ class preprocess:
 		self.chestY = Normal[1]
 		self.chestZ = Normal[2]
 
-	def add_label(self, label):
-		self.all_labels.append(label)
-		self.label = label
 
 	def add_feat(self):
+		#add a single feature vector frame to the exercise's list
 		feat_vec = [self.comX, self.comY, self.comZ, self.wrist_to_ankle, self.chest_to_knee, self.chestX, self.chestY, self.chestZ]
 		self.feature_vector.append(feat_vec)
 
+	def add_std_ft(self, feature, label):
+		#add entire exercise worth of standardized data to the overall list
+		std_feat_vec = feature
+		for i in range(0, len(std_feat_vec)):
+			self.std_feature_vector.append(std_feat_vec[i])
+			self.all_labels.append(label)
+	
+	def cl_feat(self):
+		#used to reset feature vector at the end of each exercise
+		self.feature_vector = []
 
-def extract_data():
+
+def extract_data(i):
 	
 	file_names =[
 	'Head.csv',   
@@ -105,39 +122,33 @@ def extract_data():
 	labels = []
 	dirname = os.path.realpath('.')
 
-	filename = dirname + '\\selectedData\\TestNumber.txt'
-
-	numberTestFiles = open(filename,"r")
-	numberTests = numberTestFiles.read()	
-	numTests = int(numberTests)
-
-	for i in range(0,numTests):
-		line_ct = 0
-
-		sample = open(dirname + "\\selectedData\\test" + str(i)+ "\\Position_" + file_names[0])
-		for line in sample:
-			line_ct = line_ct + 1
-
-		for line in open(dirname + "\\selectedData\\test" + str(i)+ "\\label.csv"):
-			temporaryLabel = line.split()
-			labels.append(str(temporaryLabel[0]))
+	line_ct = 0
 
 
-		for k in range(0, line_ct):
+	sample = open(dirname + "\\" + DATA_FOLDER + "\\test" + str(i)+ "\\Position_" + file_names[0])
+	for line in sample:
+		line_ct = line_ct + 1
+
+	for line in open(dirname + "\\" + DATA_FOLDER + "\\test" + str(i)+ "\\label.csv"):
+		temporaryLabel = line.split()
+		labels.append(str(temporaryLabel[0]))
+
+
+	for k in range(0, line_ct):
 	
-			line_data = []
+		line_data = []
 
-			for j in range(0,25):
-				fr = open(dirname + "\\selectedData\\test" + str(i)+ "\\Position_" + file_names[j])
-				for l, line in enumerate(fr):
-					if l == k:
-						#reads the (k-1)th line
-						row = line.split(',')
-						for m in range(0,3):
-							line_data.append(row[m])
+		for j in range(0,25):
+			fr = open(dirname + "\\" + DATA_FOLDER + "\\test" + str(i)+ "\\Position_" + file_names[j])
+			for l, line in enumerate(fr):
+				if l == k:
+					#reads the (k-1)th line
+					row = line.split(',')
+					for m in range(0,3):
+						line_data.append(row[m])
 
-			data.append(line_data)
-			labels.append(str(temporaryLabel[0]))
+		data.append(line_data)
+		labels.append(str(temporaryLabel[0]))
 
 	#shuffle
 	combined = list(zip(data, labels))
@@ -146,40 +157,103 @@ def extract_data():
 
 	return data, labels
 
-def store_raw(data, labels):
+def store_std(data, labels):
 	dirname = os.path.realpath('.')
-	new_file = open(dirname + '\\raw_data.csv', 'w+') #create if doesnt already exist
-
+	new_file_std = open(dirname + '\\std_data.csv', 'w+') #create if doesnt already exist
+	print(len(data) == len(labels))
 	for i in range(0,len(data)):
 		data_str = str(data[i]).replace('\'', '')
 		data_str = data_str.replace('[', '')
 		data_str = data_str.replace(']', '')
-		new_file.write(labels[i] + ',' + data_str + '\n')
+		new_file_std.write(labels[i] + ',' + data_str + '\n')
 
-def store_calc(data, labels):
-	dirname = os.path.realpath('.')
-	new_file = open(dirname + '\\calc_data.csv', 'w+') #create if doesnt already exist
+	print("STD Stored")
 
-	for i in range(0,len(data)):
-		data_str = str(data[i]).replace('\'', '')
-		data_str = data_str.replace('[', '')
-		data_str = data_str.replace(']', '')
-		new_file.write(labels[i] + ',' + data_str + '\n')
+def std(features):
+	
+	feature_vector = []
+	synthetic_feat = [[],[],[],[],[],[],[],[]]
+
+	for i in range(0,8):
+		for j in range(0,len(features)):
+			if i == 0:
+				synthetic_feat[i].append(features[j][i])
+			if i == 1:
+				synthetic_feat[i].append(features[j][i])
+			if i == 2:
+				synthetic_feat[i].append(features[j][i])
+			if i == 3:
+				synthetic_feat[i].append(features[j][i])
+			if i == 4:
+				synthetic_feat[i].append(features[j][i])
+			if i == 5:
+				synthetic_feat[i].append(features[j][i])
+			if i == 6:
+				synthetic_feat[i].append(features[j][i])
+			if i == 7:
+				synthetic_feat[i].append(features[j][i])
+	
+	mean  = []
+	stdev = []
+	std_feat = [[],[],[],[],[],[],[],[]]
+	for i in range(0,8):
+		mean.append(stat.mean(synthetic_feat[i]))
+		stdev.append(stat.stdev(synthetic_feat[i]))
+		for j in range(0,len(synthetic_feat[0])):			
+			if i == 0:
+				std_feat[i].append((synthetic_feat[i][j]-mean[i])/(stdev[i]))
+			if i == 1:
+				std_feat[i].append((synthetic_feat[i][j]-mean[i])/(stdev[i]))
+			if i == 2:
+				std_feat[i].append((synthetic_feat[i][j]-mean[i])/(stdev[i]))
+			if i == 3:
+				std_feat[i].append((synthetic_feat[i][j]-mean[i])/(stdev[i]))
+			if i == 4:
+				std_feat[i].append((synthetic_feat[i][j]-mean[i])/(stdev[i]))
+			if i == 5:
+				std_feat[i].append((synthetic_feat[i][j]-mean[i])/(stdev[i]))
+			if i == 6:
+				std_feat[i].append((synthetic_feat[i][j]-mean[i])/(stdev[i]))
+			if i == 7:
+				std_feat[i].append((synthetic_feat[i][j]-mean[i])/(stdev[i]))
+
+	for j in range(0,len(std_feat[0])):
+		feature_vector.append([std_feat[0][j],std_feat[1][j],std_feat[2][j],std_feat[3][j],std_feat[4][j],std_feat[5][j],std_feat[6][j],std_feat[7][j]])
+
+	return feature_vector
 
 def main(argv = None):
 
-	data, labels = extract_data()
-	store_raw(data, labels)
-	for i in range(0, len(data)):
-		
-		for j in range(0,len(data[i])):
-			data[i][j] = float(data[i][j])
+	#determine number of tests in dataset
+	dirname = os.path.realpath('.')
+	filename = dirname + '\\' + DATA_FOLDER + '\\TestNumber.txt'
+	numberTestFiles = open(filename,"r")
+	numberTests = numberTestFiles.read()	
+	numTests = int(numberTests)
 
-		feat = preprocess(data[i])
-		feat.add_feat()
-		feat.add_label(labels[i])
+	for i in range(0, numTests):
+		#extract all data for a single test
+		data, labels = extract_data(i)
+		for j in range(0, len(data)):
+			#isolate a single frame
+			for k in range(0,len(data[j])):
+				#Float cast every value in the frame
+				data[j][k] = float(data[j][k])
 
-	store_calc(feat.feature_vector, feat.all_labels)
+			feat = preprocess(data[j]) #preprocess frame
+			feat.add_feat() #add to overall feature vector
+
+		std_feature_vector = std(feat.feature_vector) #Standardize for entire exercise
+		feat.add_std_ft(std_feature_vector, labels[j]) #Add to overall std feature vector
+		feat.cl_feat()#reset feature vector at end of exercise
+
+	#shuffle
+	combined = list(zip(feat.std_feature_vector, feat.all_labels))
+	random.shuffle(combined)
+	std_feature_vector, all_labels = zip(*combined)
+	store_std(std_feature_vector, all_labels)
+
+	
 
 
 #needed in order to call main
