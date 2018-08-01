@@ -105,7 +105,7 @@ def extract_data():
 	labels = []
 	dirname = os.path.realpath('.')
 
-	filename = dirname + '\\TwoDataCollectionSample\\TestNumber.txt'
+	filename = dirname + '\\selectedData\\TestNumber.txt'
 
 	numberTestFiles = open(filename,"r")
 	numberTests = numberTestFiles.read()	
@@ -114,11 +114,11 @@ def extract_data():
 	for i in range(0,numTests):
 		line_ct = 0
 
-		sample = open(dirname + "\\TwoDataCollectionSample\\test" + str(i)+ "\\Position_" + file_names[0])
+		sample = open(dirname + "\\selectedData\\test" + str(i)+ "\\Position_" + file_names[0])
 		for line in sample:
 			line_ct = line_ct + 1
 
-		for line in open(dirname + "\\TwoDataCollectionSample\\test" + str(i)+ "\\label.csv"):
+		for line in open(dirname + "\\selectedData\\test" + str(i)+ "\\label.csv"):
 			temporaryLabel = line.split()
 			labels.append(str(temporaryLabel[0]))
 
@@ -128,7 +128,7 @@ def extract_data():
 			line_data = []
 
 			for j in range(0,25):
-				fr = open(dirname + "\\TwoDataCollectionSample\\test" + str(i)+ "\\Position_" + file_names[j])
+				fr = open(dirname + "\\selectedData\\test" + str(i)+ "\\Position_" + file_names[j])
 				for l, line in enumerate(fr):
 					if l == k:
 						#reads the (k-1)th line

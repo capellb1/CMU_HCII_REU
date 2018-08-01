@@ -70,7 +70,7 @@ TRAIN_PERCENT = 0.7
 TEST_PERCENT = 0.3
 
 #Data Folder to extract the data from
-DATA_FOLDER = 'TwoDataCollectionSample' 
+DATA_FOLDER = 'selectedData' 
 newData = 'calc_data.csv'
 
 #Threshold initially used for an attempt at ROC curve
