@@ -4,7 +4,7 @@ import numpy as np
 import math
 import statistics as stat
 
-DATA_FOLDER = 'Data'
+DATA_FOLDER = 'DataWindow'
 
 class preprocess:
 	
