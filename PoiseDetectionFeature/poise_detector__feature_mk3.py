@@ -470,7 +470,7 @@ def extractData():
 				for n, line in enumerate(fp):
 					if n == w:
 						row = line.split(',')
-						for m in range(0,9):
+						for m in range(0,12):
 							if (m == 0):
 								labels.append(row[m])
 							else:
