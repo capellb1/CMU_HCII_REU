@@ -70,7 +70,7 @@ TEST_PERCENT = 0.3
 
 #Data Folder to extract the data from
 DATA_FOLDER = 'selectedData' 
-newData = 'std_data.csv'
+newData = 'std_data_expanded.csv'
 
 #Threshold initially used for an attempt at ROC curve
 THRESHOLD = FLAGS.threshold

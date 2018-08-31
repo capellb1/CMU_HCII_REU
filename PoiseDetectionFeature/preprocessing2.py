@@ -48,7 +48,7 @@ class preprocess:
 		LfootX = (self.data[69])
 		LfootY = (self.data[70])
 		LfootZ = (self.data[71])
-		self.feetDistance = math.sqrt((Rfootx - LfootX)*(Rfootx - LfootX) + (RfootY - LfootY)*(RfootY - LfootY)+ (RfootZ - LfootZ)*(RfootZ - LfootZ))
+		self.feetDistance = math.sqrt((RfootX - LfootX)*(RfootX - LfootX) + (RfootY - LfootY)*(RfootY - LfootY)+ (RfootZ - LfootZ)*(RfootZ - LfootZ))
 
 		#calculates distance from Left Foot to Right Hand
 		RhandX = (self.data[30])
@@ -57,7 +57,7 @@ class preprocess:
 		LhandX = (self.data[45])
 		LhandY = (self.data[46])
 		LhandZ = (self.data[47])
-		self.handDistance = math.sqrt((Rhandx - LhandX)*(RhandX - LhandX) + (RhandY - LhandY)*(RhandY - LhandY)+ (RhandZ - LhandZ)*(RhandZ - LhandZ))
+		self.handDistance = math.sqrt((RhandX - LhandX)*(RhandX - LhandX) + (RhandY - LhandY)*(RhandY - LhandY)+ (RhandZ - LhandZ)*(RhandZ - LhandZ))
 
 		#calculate angle between Feet
 		spineBottomX = self.data[12]
@@ -199,6 +199,7 @@ def extract_data(i):
 					for m in range(0,3):
 						line_data.append(row[m])
 
+		print(k,"..",len(line_data))
 		data.append(line_data)
 		labels.append(str(temporaryLabel[0]))
 
@@ -211,7 +212,7 @@ def extract_data(i):
 
 def store_std(data, labels):
 	dirname = os.path.realpath('.')
-	new_file_std = open(dirname + '\\std_data.csv', 'w+') #create if doesnt already exist
+	new_file_std = open(dirname + '\\std_data_expanded.csv', 'w+') #create if doesnt already exist
 	print(len(data) == len(labels))
 	for i in range(0,len(data)):
 		data_str = str(data[i]).replace('\'', '')
@@ -305,8 +306,8 @@ def main(argv = None):
 			#isolate a single frame
 			for k in range(0,len(data[j])):
 				#Float cast every value in the frame
-				data[j][k] = float(data[j][k])
-
+				data[j][k] = float(data[j][k])	
+			
 			feat = preprocess(data[j]) #preprocess frame
 			feat.add_feat() #add to overall feature vector
 
@@ -320,6 +321,7 @@ def main(argv = None):
 	std_feature_vector, all_labels = zip(*combined)
 	store_std(std_feature_vector, all_labels)
 
+	
 	
 
 
