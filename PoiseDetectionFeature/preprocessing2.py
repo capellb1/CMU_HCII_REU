@@ -244,11 +244,18 @@ def std(features):
 				synthetic_feat[i].append(features[j][i])
 			if i == 7:
 				synthetic_feat[i].append(features[j][i])
-	
+			if i == 8:
+				synthetic_feat[i].append(features[j][i])
+			if i == 9:
+				synthetic_feat[i].append(features[j][i])
+			if i == 10:
+				synthetic_feat[i].append(features[j][i])
+			if i == 11:
+				synthetic_feat[i].append(features[j][i])
 	mean  = []
 	stdev = []
 	std_feat = [[],[],[],[],[],[],[],[],[],[],[],[]]
-	for i in range(0,8):
+	for i in range(0,12):
 		mean.append(stat.mean(synthetic_feat[i]))
 		stdev.append(stat.stdev(synthetic_feat[i]))
 		for j in range(0,len(synthetic_feat[0])):			
@@ -267,6 +274,14 @@ def std(features):
 			if i == 6:
 				std_feat[i].append((synthetic_feat[i][j]-mean[i])/(stdev[i]))
 			if i == 7:
+				std_feat[i].append((synthetic_feat[i][j]-mean[i])/(stdev[i]))
+			if i == 8:
+				std_feat[i].append((synthetic_feat[i][j]-mean[i])/(stdev[i]))
+			if i == 9:
+				std_feat[i].append((synthetic_feat[i][j]-mean[i])/(stdev[i]))
+			if i == 10:
+				std_feat[i].append((synthetic_feat[i][j]-mean[i])/(stdev[i]))
+			if i == 11:
 				std_feat[i].append((synthetic_feat[i][j]-mean[i])/(stdev[i]))
 
 	for j in range(0,len(std_feat[0])):
