@@ -669,6 +669,7 @@ if not (os.path.exists(newDir)):
 	os.makedirs(newDir)
 resultsFile = open(newDir + '\\Results.txt',"w+")
 results2File = open(dirname + '\\Models&Results\\totalResults.txt',"a")
+matrix = open(dirname + '\\confusionMatrix.txt',"a+")
 
 numSections = calcSections()
 
@@ -901,6 +902,8 @@ def main(argv = None):
 
 		print("prediction list", predicList)
 		print("confusion matrix", confusionMatrix)
+		matrix.write(str(FLAGS.threshold) + '\n' + str(confusionMatrix) + '\n')
+
 		print(Accurate/Total)
 		
 		correctPrediction = tf.equal(tf.argmax(pred,1), tf.argmax(Y,1))
