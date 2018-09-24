@@ -60,6 +60,7 @@ tf.app.flags.DEFINE_integer('refinement_rate',0,'Determines the number of joints
 tf.app.flags.DEFINE_boolean('task', False, 'Determines if the task data is included when training')
 tf.app.flags.DEFINE_boolean('save', False, 'Determines wether the model is saved')
 
+
 #Create shortcut to call flags
 FLAGS = tf.app.flags.FLAGS
 
@@ -70,10 +71,11 @@ TEST_PERCENT = 0.3
 
 #Data Folder to extract the data from
 DATA_FOLDER = 'selectedData' 
-newData = 'std_data_expanded.csv'
+newData = 'std_data_expanded_3.csv'
 
 #Threshold initially used for an attempt at ROC curve
 THRESHOLD = FLAGS.threshold
+
 
 #Global variable used to batch data
 batchIndex = 0
@@ -452,6 +454,7 @@ def extractData():
 			nparray shuffledData
 	'''
 	#average
+	hasLabel = False
 	data =  np.empty((sum(timeScores), 12))
 
 	numTimeStamps = 0
@@ -469,8 +472,9 @@ def extractData():
 				fp = open(dirname + "\\"+ newData)
 				for n, line in enumerate(fp):
 					if n == w:
+						hasLabel = False
 						row = line.split(',')
-						for m in range(0,12):
+						for m in range(0,12): 
 							if (m == 0):
 								labels.append(row[m])
 							else:
@@ -669,7 +673,7 @@ if not (os.path.exists(newDir)):
 	os.makedirs(newDir)
 resultsFile = open(newDir + '\\Results.txt',"w+")
 results2File = open(dirname + '\\Models&Results\\totalResults.txt',"a")
-matrix = open(dirname + '\\confusionMatrix.txt',"a+")
+matrix = open(dirname + '\\confusionMatrix_mk2.txt',"a+")
 
 numSections = calcSections()
 
@@ -900,7 +904,7 @@ def main(argv = None):
 				confusionMatrix[predicList[i][2]][predicList[i][1]] = confusionMatrix[predicList[i][2]][predicList[i][1]] + 1
 				Total = Total + 1
 
-		print("prediction list", predicList)
+		#rint("prediction list", predicList)
 		print("confusion matrix", confusionMatrix)
 		matrix.write(str(FLAGS.threshold) + '\n' + str(confusionMatrix) + '\n')
 

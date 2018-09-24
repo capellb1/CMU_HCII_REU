@@ -70,7 +70,7 @@ TEST_PERCENT = 0.3
 
 #Data Folder to extract the data from
 DATA_FOLDER = 'selectedData' 
-newData = 'std_data.csv'
+newData = 'std_data_expanded_3.csv'
 
 #Threshold initially used for an attempt at ROC curve
 THRESHOLD = FLAGS.threshold
@@ -669,6 +669,7 @@ if not (os.path.exists(newDir)):
 	os.makedirs(newDir)
 resultsFile = open(newDir + '\\Results.txt',"w+")
 results2File = open(dirname + '\\Models&Results\\totalResults.txt',"a")
+matrix = open(dirname + '\\confusionMatrix_mk1.txt',"a+")
 
 numSections = calcSections()
 
@@ -899,8 +900,9 @@ def main(argv = None):
 				confusionMatrix[predicList[i][2]][predicList[i][1]] = confusionMatrix[predicList[i][2]][predicList[i][1]] + 1
 				Total = Total + 1
 
-		print("prediction list", predicList)
+		#print("prediction list", predicList)
 		print("confusion matrix", confusionMatrix)
+		matrix.write(str(FLAGS.threshold) + '\n' + str(confusionMatrix) + '\n')
 		print(Accurate/Total)
 		
 		correctPrediction = tf.equal(tf.argmax(pred,1), tf.argmax(Y,1))

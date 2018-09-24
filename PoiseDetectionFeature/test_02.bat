@@ -1,0 +1,3 @@
+py poise_detector__feature_mk3.py --learning_rate 0.001 --epochs 1000 --position --activation Relu --label test1 --arch method3 --threshold 0.2 --regularization l2
+py poise_detector__feature_mk3.py --learning_rate 0.001 --epochs 1000 --position --activation Relu --label test1 --arch method3 --threshold 0.2 --regularization l2 
+py poise_detector__feature_mk3.py --learning_rate 0.001 --epochs 1000 --position --activation Relu --label test1 --arch method3 --threshold 0.2 --regularization l2 

@@ -159,7 +159,7 @@ def extract_data(i):
 
 def store_std(data, labels):
 	dirname = os.path.realpath('.')
-	new_file_std = open(dirname + '\\std_data.csv', 'w+') #create if doesnt already exist
+	new_file_std = open(dirname + '\\std_data_oirignal_recalc.csv', 'w+') #create if doesnt already exist
 	print(len(data) == len(labels))
 	for i in range(0,len(data)):
 		data_str = str(data[i]).replace('\'', '')

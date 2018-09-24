@@ -70,6 +70,7 @@ numberTestFiles = open(filename,"r")
 numberTests = numberTestFiles.read()
 bodySize = 25
 numSection = 1
+THRESH = 3.0
 
 def calcMaxEntries():
 	maxEntries = 0
@@ -145,7 +146,7 @@ for i in range(0, int(numberTests)):
 			if k%(maxEntries*3) < timeScores[i]*3:
 				if (k%3 == 0):
 					dataPointScore = math.fabs(velocityData[i][k]) + math.fabs(velocityData[i][k+1]) + math.fabs(velocityData[i][k+2])
-					if (dataPointScore > .75):
+					if (dataPointScore > THRESH):
 						velocityAboveThreshold[j][l] = 1
 					else:
 						velocityAboveThreshold[j][l] = 0
